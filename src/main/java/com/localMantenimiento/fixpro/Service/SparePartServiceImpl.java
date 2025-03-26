@@ -38,6 +38,11 @@ public class SparePartServiceImpl implements SparePartService {
   }
 
   @Override
+  public List<SparePart> GetAllSpareParts() {
+    return sparePartRepository.findAll();
+  }
+
+  @Override
   public List<SparePart> GetSparePartByBrand(String brand) {
     return sparePartRepository.findByBrand(brand);
   }

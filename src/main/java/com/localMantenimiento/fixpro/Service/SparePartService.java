@@ -11,6 +11,7 @@ public interface SparePartService {
   public Optional<SparePart> GetSparePartById(Long sparePartId);
   public Optional<SparePart> GetSparePartByName(String name);
 
+  public List<SparePart> GetAllSpareParts();
   public List<SparePart> GetSparePartByBrand(String brand);
 
   public String UpdateSparePart(Long SparePartId, SparePart updatedSparePart);
