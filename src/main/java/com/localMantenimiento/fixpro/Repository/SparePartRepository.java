@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface SparePartRepository extends JpaRepository<SparePart, Long> {
   boolean existsByName(String name);
-  boolean existsById(Long personId);
+  boolean existsById(Long SparePartId);
 
   Optional<SparePart> findByName(String name);
 
