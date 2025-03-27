@@ -1,0 +1,198 @@
+/* Paleta de colores */
+.color1 {
+    background-color: #c9d1d3; /* Fondo formularios */
+}
+
+.color2 {
+    background-color: #f7f7f7; /* Fondo principal */
+}
+
+.color3 {
+    background-color: #9dd3df; /* Botones */
+}
+
+.color4 {
+    background-color: #3b3737; /* Header y Footer */
+    color: #f7f7f7; /* Texto contrastante */
+}
+
+.color5 {
+    background-color: #991818; /* Acentos o detalles */
+}
+
+/* Aplicar estilos personalizados */
+body {
+    background-color: #f7f7f7; /* Fondo general */
+    padding-top: 70px; /* Espacio para el nav fijo */
+}
+
+/* Estilos para la barra de navegación */
+.navbar {
+    background-color: #3b3737; /* Fondo del nav */
+    position: fixed; /* Hace el nav fijo */
+    top: 0; /* Lo coloca en la parte superior */
+    left: 0; /* Lo alinea a la izquierda */
+    width: 100%; /* Ocupa todo el ancho */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    padding: 0.5rem 1rem; /* Reduce el padding para hacerlo más pequeño */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave para mejor visibilidad */
+}
+
+/* Estilos para el logo */
+.navbar-brand img {
+    height: 40px; /* Ajusta el tamaño del logo */
+}
+
+/* Estilos para los enlaces de la barra de navegación */
+.navbar-nav .nav-link {
+    color: #f7f7f7 !important; /* Color del texto en los enlaces del nav */
+    font-size: 0.9rem; /* Reduce el tamaño de la fuente */
+    padding: 0.5rem 1rem; /* Reduce el padding de los enlaces */
+}
+
+.navbar-nav .nav-link:hover {
+    color: #9dd3df !important; /* Color del texto en los enlaces del nav al pasar el ratón */
+}
+
+/* Estilos para el botón del toggler en móviles */
+.navbar-toggler {
+    padding: 0.25rem 0.5rem; /* Reduce el padding del botón */
+    font-size: 0.9rem; /* Reduce el tamaño del ícono */
+}
+
+/* Estilos para los botones */
+button, .btn {
+    background-color: #9dd3df; /* Fondo de los botones */
+    color: #3b3737; /* Color del texto de los botones */
+    border: none; /* Elimina el borde */
+    padding: 0.5rem 1rem; /* Ajusta el padding */
+    font-size: 0.9rem; /* Reduce el tamaño de la fuente */
+    cursor: pointer; /* Cambia el cursor al pasar */
+}
+
+button:hover, .btn:hover {
+    background-color: #991818; /* Fondo de los botones al pasar el ratón */
+    color: #f7f7f7; /* Color del texto de los botones al pasar el ratón */
+}
+
+/* Estilos para los formularios */
+form {
+    background-color: #c9d1d3; /* Fondo de los formularios */
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 1rem; /* Espacio superior */
+}
+
+/* Estilos para el footer */
+footer {
+    background-color: #3b3737; /* Fondo del footer */
+    color: #f7f7f7; /* Color del texto del footer */
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 2rem; /* Espacio superior */
+}
+
+/* Estilos para las tarjetas */
+.card {
+    margin-bottom: 1rem; /* Espacio entre tarjetas */
+    border: none; /* Elimina el borde */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.card-img-top {
+    border-radius: 5px 5px 0 0; /* Bordes redondeados en la parte superior */
+}
+
+.card-body {
+    padding: 1rem; /* Espaciado interno */
+}
+
+.card-title {
+    font-size: 1.1rem; /* Tamaño del título */
+    margin-bottom: 0.5rem; /* Espacio inferior */
+}
+
+.card-text {
+    font-size: 0.9rem; /* Tamaño del texto */
+}
+
+/* Estilos para la sección de contacto */
+#contacto {
+    margin-top: 2rem; /* Espacio superior */
+    padding: 2rem 0; /* Espaciado interno */
+    background-color: #f7f7f7; /* Fondo de la sección */
+}
+
+.contact-form {
+    background-color: #ffffff; /* Fondo del formulario */
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    margin-bottom: 2rem; /* Espacio inferior */
+}
+
+.contact-form h3 {
+    font-size: 1.5rem; /* Tamaño del título del formulario */
+    margin-bottom: 1rem; /* Espacio inferior */
+    color: #3b3737; /* Color del texto */
+}
+
+.contact-form label {
+    font-weight: bold; /* Texto en negrita */
+    color: #3b3737; /* Color del texto */
+}
+
+.contact-form .form-control {
+    border-radius: 5px; /* Bordes redondeados */
+    border: 1px solid #c9d1d3; /* Borde sutil */
+    padding: 0.75rem; /* Espaciado interno */
+}
+
+.contact-form .form-control:focus {
+    border-color: #9dd3df; /* Color del borde al enfocar */
+    box-shadow: 0 0 0 0.2rem rgba(157, 211, 223, 0.25); /* Sombra al enfocar */
+}
+
+.contact-info {
+    background-color: #ffffff; /* Fondo de la información de contacto */
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    margin-bottom: 2rem; /* Espacio inferior */
+}
+
+.contact-info p {
+    margin-bottom: 0.5rem; /* Espacio inferior */
+    color: #3b3737; /* Color del texto */
+}
+
+.contact-info a {
+    color: #9dd3df; /* Color del enlace */
+    text-decoration: none; /* Sin subrayado */
+}
+
+.contact-info a:hover {
+    color: #991818; /* Color del enlace al pasar el ratón */
+}
+
+.social-media {
+    text-align: center; /* Centrar contenido */
+    margin-top: 1rem; /* Espacio superior */
+}
+
+.social-media h3 {
+    font-size: 1.25rem; /* Tamaño del título */
+    margin-bottom: 1rem; /* Espacio inferior */
+    color: #3b3737; /* Color del texto */
+}
+
+.social-media img {
+    width: 40px; /* Tamaño de los íconos */
+    height: 40px;
+    margin: 0 10px; /* Espacio entre íconos */
+    transition: transform 0.3s ease; /* Animación al pasar el ratón */
+}
+
+.social-media img:hover {
+    transform: scale(1.1); /* Efecto de escala al pasar el ratón */
+}

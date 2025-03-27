@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Datos</title>
+    <link rel="icon" type="image/png" href="img/logofixpro.png">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/Styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg color4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="img/logofixpro.png" alt="Fixpro Logo" class="d-inline-block align-text-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="quienes-somos.html">Quiénes Somos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Nuestros-Trabajos.html">Nuestros Trabajos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Registro.html">Equipos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Repuestos.html">Repuestos</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="container mt-5">
+        <h1 class="text-center">Registro de Datos</h1>
+        <div class="mt-4">
+            <form id="equipo" action="/registrar-equipo" method="POST" class="color1 p-4 rounded">
+                <h2>Registro de Equipo</h2>
+                <div class="mb-3">
+                    <label class="form-label">ID Equipo</label>
+                    <input type="text" name="id_equipo" class="form-control" required>
+                </div>
+                <div class="mb-3"></div>
+                    <label class="form-label">Marca</label>
+                    <input type="text" name="marca" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Modelo</label>
+                    <input type="text" name="modelo" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Estado</label>
+                    <select name="estado" class="form-select" required>
+                        <option value="En reparación">En reparación</option>
+                        <option value="Reparado">Reparado</option>
+                        <option value="Entregado">Entregado</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn color3">Registrar</button>
+            </form>
+
+            <form id="cliente" action="/registrar-cliente" method="POST" class="color1 p-4 rounded mt-4">
+                <h2>Registro de Cliente</h2>
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" name="nombre" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Apellido</label>
+                    <input type="text" name="apellido" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Cédula</label>
+                    <input type="text" name="id_cliente" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Dirección</label>
+                    <input type="text" name="direccion" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Teléfono</label>
+                    <input type="tel" name="telefono" class="form-control" required>
+                </div>
+                <button type="submit" class="btn color3">Registrar</button>
+            </form>
+
+            <form id="tecnico" action="/registrar-tecnico" method="POST" class="color1 p-4 rounded mt-4">
+                <h2>Registro de Técnico</h2>
+                <div class="mb-3">
+                    <label class="form-label">ID Técnico</label>
+                    <input type="text" name="id_tecnico" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" name="nombre" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Teléfono</label>
+                    <input type="tel" name="telefono" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Especialidad</label>
+                    <input type="text" name="especialidad" class="form-control" required>
+                </div>
+                <button type="submit" class="btn color3">Registrar</button>
+            </form>
+
+            <form id="dano" action="/registrar-dano" method="POST" class="color1 p-4 rounded mt-4">
+                <h2>Registro de Daño</h2>
+                <div class="mb-3">
+                    <label class="form-label">ID Daño</label>
+                    <input type="text" name="id_dano" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" name="descripcion" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Gravedad</label>
+                    <input type="text" name="gravedad" class="form-control" required>
+                </div>
+                <button type="submit" class="btn color3">Registrar</button>
+            </form>
+
+            <form id="orden" action="/registrar-orden" method="POST" class="color1 p-4 rounded mt-4">
+                <h2>Registro de Orden de Reparación</h2>
+                <div class="mb-3">
+                    <label class="form-label">ID Orden</label>
+                    <input type="text" name="id_orden" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Fecha de Ingreso</label>
+                    <input type="date" name="fecha_ingreso" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Costo</label>
+                    <input type="number" step="0.01" name="costo" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Fecha de Entrega</label>
+                    <input type="date" name="fecha_entrada" class="form-control" required>
+                </div>
+                <button type="submit" class="btn color3">Registrar</button>
+            </form>
+
+            <form id="repuesto" action="/registrar-repuesto" method="POST" class="color1 p-4 rounded mt-4">
+                <h2>Registro de Repuesto</h2>
+                <div class="mb-3">
+                    <label class="form-label">ID Repuesto</label>
+                    <input type="text" name="id_repuesto" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" name="nombre" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" name="cantidad" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Costo</label>
+                    <input type="number" step="0.01" name="costo" class="form-control" required>
+                </div>
+                <button type="submit" class="btn color3">Registrar</button>
+            </form>
+        </div>
+    </section>
+    <footer class="text-center mt-5 color4">
+        <p>@Todos los derechos reservados a FixPro</p>
+    </footer>
+</body>
+</html>
