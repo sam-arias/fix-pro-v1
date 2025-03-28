@@ -1,37 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Fixpro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FixPro - Inicio de Sesión</title>
     <link rel="icon" type="image/png" href="img/logofixpro.png">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/Styles.css">
-    <script src="js/Scrip.js" defer></script>
+    <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
-    <section class="container mt-5">
-        <div class="text-center">  
-            <h1>Fixpro</h1>
-            <img src="img/fixpro.png" alt="logo" class="img-fluid"/>
-        </div>
-        <div class="mt-4">      
-            <h1 class="text-center">Inicio de Sesión</h1>
-            <form onsubmit="return false;" class="color1 p-4 rounded">
-                <div class="mb-3">
-                    <label for="usuario" class="form-label">Usuario</label>
-                    <input type="text" id="usuario" class="form-control" required>
+    <!-- Contenido Principal -->
+    <div class="container-fluid">
+        <div class="row main-content bg-success text-center align-items-center">
+            <!-- Logo de la empresa -->
+            <div class="col-md-4 text-center company__info d-none d-md-flex">
+                <img src="img/fixpro.png" alt="FixPro Logo" class="img-fluid mt-4" width="100">
+                <h4 class="company_title">FixPro</h4>
+            </div>
+            <!-- Formulario de Inicio de Sesión -->
+            <div class="col-md-8 col-12 login_form">
+                <div class="container-fluid">
+                    <div class="row">
+                        <h2>Inicio de Sesión</h2>
+                    </div>
+                    <div class="row">
+                        <form class="form-group" onsubmit="return false;" aria-label="Formulario de inicio de sesión">
+                            <div class="row">
+                                <input type="text" name="usuario" id="usuario" class="form__input" placeholder="Usuario" required aria-label="Usuario">
+                            </div>
+                            <div class="row">
+                                <input type="password" name="contraseña" id="contraseña" class="form__input" placeholder="Contraseña" required aria-label="Contraseña">
+                            </div>
+                            <div class="row">
+                                <input type="checkbox" name="remember_me" id="remember_me" aria-label="Recordarme">
+                                <label for="remember_me">Recordarme</label>
+                            </div>
+                            <div class="row">
+                                <button type="submit" onclick="login()" class="btn btn-primary">Iniciar Sesión</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="row">
+                        <p>¿No tienes una cuenta? <a href="#" aria-label="Registrarse">Regístrate aquí</a></p>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="contraseña" class="form-label">Contraseña</label>
-                    <input type="password" id="contraseña" class="form-control" required>
-                </div>
-                <button onclick="login()" class="btn color3">Iniciar sesión</button>
-            </form>
+            </div>
         </div>
-    </section>
-    <footer class="text-center mt-5 color4">
-        <p>@Todos los derechos reservados a FixPro</p>
+    </div>
+    <!-- Pie de Página -->
+    <footer class="container-fluid text-center mt-4">
+        <p>&copy; Todos los derechos reservados a FixPro</p>
     </footer>
+    
+    <script src="js/Scrip.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
