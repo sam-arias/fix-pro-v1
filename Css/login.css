@@ -1,15 +1,30 @@
+/* Estilos generales */
+body {
+    background-color: #f7f7f7; /* color2 */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: center;
+    justify-content: center;
+}
+
+/* Contenedor principal */
 .main-content {
     width: 90%;
     max-width: 800px;
     border-radius: 20px;
-    box-shadow: 0 5px 5px rgba(0, 0, 0, .4);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     margin: 2em auto;
     display: flex;
     flex-wrap: wrap;
     overflow: hidden;
+    background-color: #fff;
 }
+
+/* Sección de información de la empresa */
 .company__info {
-    background-color: #008080;
+    background-color: #9dd3df; /* color3 */
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
     display: flex;
@@ -17,69 +32,169 @@
     justify-content: center;
     align-items: center;
     padding: 2em;
-    color: #fff;
+    color: #3b3737; /* color4 */
 }
-.fa-android {
-    font-size: 3em;
+
+.company_title {
+    margin-top: 1rem;
+    font-weight: 600;
+    font-size: 1.5rem;
 }
+
+/* Sección del formulario */
+.login_form {
+    background-color: #fff;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    padding: 2.5em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Título del formulario */
+.row > h2 {
+    color: #991818; /* color5 */
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Estilos del formulario */
+form {
+    padding: 0;
+}
+
+.form-group {
+    width: 100%;
+}
+
+.custom-green-bg {
+    background-color: #9dd3df; 
+}
+
+.bg-success {
+    background-color: #9dd3df !important;
+}
+
+/* Estilos para las filas del formulario */
+.form-group .row {
+    margin-bottom: 1.25rem;
+    align-items: center;
+}
+
+/* Estilos para los inputs */
+.form__input {
+    width: 100%;
+    border: 0px solid transparent;
+    border-radius: 0;
+    border-bottom: 1px solid #c9d1d3; /* color1 */
+    padding: 0.75em 0.5em;
+    outline: none;
+    transition: all 0.3s ease;
+    background-color: transparent;
+}
+
+.form__input:focus {
+    border-bottom-color: #991818; /* color5 */
+    box-shadow: 0 5px 5px -5px rgba(153, 24, 24, 0.4); /* color5 con transparencia */
+}
+
+/* Estilos para el checkbox */
+.form-group .row input[type="checkbox"] {
+    width: auto;
+    margin-right: 0.5rem;
+}
+
+.form-group .row label {
+    margin-bottom: 0;
+    color: #3b3737; /* color4 */
+    cursor: pointer;
+}
+
+/* Estilos para el botón */
+.btn {
+    transition: all 0.3s ease;
+    width: 100%;
+    border-radius: 30px;
+    color: #f7f7f7; /* color2 */
+    font-weight: 600;
+    background-color: #991818; /* color5 */
+    border: 1px solid #991818; /* color5 */
+    padding: 0.75rem;
+    margin-top: 1rem;
+}
+
+.btn:hover, .btn:focus {
+    background-color: #7a1313;
+    border-color: #7a1313;
+    color: #f7f7f7; /* color2 */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Enlace de registro */
+.row p {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #3b3737; /* color4 */
+}
+
+.row p a {
+    color: #991818; /* color5 */
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.row p a:hover {
+    text-decoration: underline;
+}
+
+/* Pie de página */
+footer {
+    margin-top: auto;
+    padding: 1rem 0;
+    color: #3b3737; /* color4 */
+    font-size: 0.9rem;
+}
+
+/* Media queries para diseño responsive */
 @media screen and (max-width: 640px) {
     .main-content {
         flex-direction: column;
     }
+    
     .company__info {
         display: none;
     }
+    
     .login_form {
         border-radius: 20px;
+        padding: 2em;
     }
 }
+
 @media screen and (min-width: 641px) and (max-width: 800px) {
     .main-content {
         width: 80%;
     }
 }
-.row > h2 {
-    color: #008080;
+
+/* Efectos adicionales para mejor experiencia de usuario */
+.form__input::placeholder {
+    color: #c9d1d3; /* color1 */
+    transition: all 0.3s ease;
 }
-.login_form {
-    background-color: #fff;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-    border-top: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    padding: 2em;
+
+.form__input:focus::placeholder {
+    color: transparent;
 }
-form {
-    padding: 0 2em;
+
+/* Animación para el logo */
+.company__info img {
+    transition: transform 0.3s ease;
 }
-.form__input {
-    width: 100%;
-    border: 0px solid transparent;
-    border-radius: 0;
-    border-bottom: 1px solid #aaa;
-    padding: 1em .5em .5em;
-    padding-left: 2em;
-    outline: none;
-    margin: 1.5em auto;
-    transition: all .5s ease;
-}
-.form__input:focus {
-    border-bottom-color: #008080;
-    box-shadow: 0 0 5px rgba(0, 80, 80, .4);
-    border-radius: 4px;
-}
-.btn {
-    transition: all .5s ease;
-    width: 70%;
-    border-radius: 30px;
-    color: #008080;
-    font-weight: 600;
-    background-color: #fff;
-    border: 1px solid #008080;
-    margin-top: 1.5em;
-    margin-bottom: 1em;
-}
-.btn:hover, .btn:focus {
-    background-color: #008080;
-    color: #fff;
+
+.company__info img:hover {
+    transform: scale(1.05);
 }
