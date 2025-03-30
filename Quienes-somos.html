@@ -3,24 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiénes Somos - Frixpro</title>
+    <title>Quiénes Somos - FixPro</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/Styles.css">
+    <link rel="icon" type="image/png" href="img/logofixpro.png">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg color4">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="img/logofixpro.png" alt="Fixpro Logo" class="d-inline-block align-text-top">
+    <!-- Navbar Mejorado -->
+    <nav class="navbar navbar-expand-lg navbar-dark color4 fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="img/logofixpro.png" alt="FixPro Logo" class="d-inline-block align-text-top logo-brand">
+                <span class="brand-name">FixPro</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="quienes-somos.html">Quiénes Somos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="quienes-somos.html">Quiénes Somos</a></li>
                     <li class="nav-item"><a class="nav-link" href="Nuestros-Trabajos.html">Nuestros Trabajos</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
                     <li class="nav-item"><a class="nav-link" href="Registro.html">Equipos</a></li>
@@ -29,35 +33,242 @@
             </div>
         </div>
     </nav>
-    <section class="container mt-5">
-        <h1 class="text-center">Quiénes Somos</h1>
-        <p>En <strong>Frixpro</strong>, somos un equipo apasionado por la tecnología, dedicado exclusivamente a la reparación y reacondicionamiento de dispositivos móviles. Nos esforzamos en devolverle la funcionalidad a tus equipos mediante soluciones efectivas y de calidad. Con una combinación de experiencia, innovación y compromiso, garantizamos que cada dispositivo reciba la mejor atención posible.</p>
-    
-        <h2>Nuestra Misión</h2>
-        <p>Proporcionar un servicio confiable, rápido y transparente en la reparación de dispositivos móviles. Nos enfocamos en brindar soluciones efectivas y duraderas, utilizando repuestos de alta calidad y técnicas avanzadas, asegurando la satisfacción total de nuestros clientes y prolongando la vida útil de sus dispositivos.</p>
-    
-        <h2>Nuestra Visión</h2>
-        <h3>Corto Plazo</h3>
-        <p>Posicionarnos como el principal servicio técnico de reparación de dispositivos móviles en nuestra comunidad, destacándonos por nuestra atención personalizada, tiempos de respuesta rápidos y precios accesibles.</p>
-    
-        <h3>Largo Plazo</h3>
-        <p>Expandir nuestra presencia a nivel nacional, abriendo múltiples centros de reparación en diferentes ciudades, ofreciendo un servicio de excelencia y promoviendo el reacondicionamiento de dispositivos como una alternativa sostenible para reducir la generación de desechos electrónicos.</p>
-    
-        <h2>Nuestra Historia</h2>
-        <p>Frixpro nació con el propósito de ofrecer una solución accesible y confiable para quienes buscan recuperar sus dispositivos móviles sin necesidad de adquirir uno nuevo. Lo que comenzó como un pequeño taller con herramientas básicas se ha convertido en un centro de reparación con equipos de última tecnología y técnicos altamente capacitados. Nuestra evolución ha sido impulsada por la confianza de nuestros clientes y nuestro deseo constante de mejorar y perfeccionar cada aspecto de nuestro servicio.</p>
-    
-        <h2>Nuestros Valores</h2>
-        <p><strong>Compromiso:</strong> Nos dedicamos con pasión y responsabilidad a cada reparación, asegurando los mejores resultados.</p>
-        <p><strong>Calidad:</strong> Empleamos repuestos originales y técnicas de reparación avanzadas para garantizar el mejor desempeño de los dispositivos.</p>
-        <p><strong>Transparencia:</strong> Proporcionamos diagnósticos claros y soluciones honestas sin costos ocultos.</p>
-        <p><strong>Innovación:</strong> Nos mantenemos actualizados con las últimas tecnologías para ofrecer un servicio de vanguardia.</p>
-        <p><strong>Sostenibilidad:</strong> Fomentamos el reacondicionamiento de dispositivos para reducir el impacto ambiental y contribuir a una economía circular.</p>
-    
-        <h2>Por qué Elegirnos</h2>
-        <p>En Frixpro, entendemos lo importante que es tu dispositivo para ti. Es por ello que ofrecemos un servicio rápido, confiable y con garantía. Nuestro equipo de expertos trabaja con dedicación para asegurarse de que tu equipo vuelva a funcionar como nuevo en el menor tiempo posible.</p>
+
+    <!-- Hero Section para Quiénes Somos -->
+    <header class="hero-section">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12 text-center">
+                    <h1 class="display-3 fw-bold">Nuestra Historia</h1>
+                    <p class="lead">Conoce más sobre nuestra pasión por la tecnología y el servicio</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sección Quiénes Somos Mejorada -->
+    <section class="about-section py-5">
+        <div class="container">
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <img src="img/team-working.jpg" alt="Equipo de FixPro trabajando" class="img-fluid rounded shadow-lg">
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="section-title mb-4">Quiénes Somos</h2>
+                    <div class="about-content">
+                        <p>En <strong class="text-accent">FixPro</strong>, somos un equipo apasionado por la tecnología, dedicado exclusivamente a la reparación y reacondicionamiento de dispositivos móviles. Nos esforzamos en devolverle la funcionalidad a tus equipos mediante soluciones efectivas y de calidad.</p>
+                        <p>Con una combinación de experiencia, innovación y compromiso, garantizamos que cada dispositivo reciba la mejor atención posible.</p>
+                        
+                        <div class="stats-grid mt-4">
+                            <div class="stat-item text-center">
+                                <div class="stat-number" data-count="5">8</div>
+                                <div class="stat-label">Años de experiencia</div>
+                            </div>
+                            <div class="stat-item text-center">
+                                <div class="stat-number" data-count="1000">1340</div>
+                                <div class="stat-label">Dispositivos reparados</div>
+                            </div>
+                            <div class="stat-item text-center">
+                                <div class="stat-number" data-count="98">96</div>
+                                <div class="stat-label">% Satisfacción</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Misión y Visión -->
+            <div class="row mission-vision">
+                <div class="col-lg-6 mb-5">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-bullseye icon-lg color5 mb-3"></i>
+                            <h3 class="card-title">Nuestra Misión</h3>
+                            <p class="card-text">Proporcionar un servicio confiable, rápido y transparente en la reparación de dispositivos móviles. Nos enfocamos en brindar soluciones efectivas y duraderas, utilizando repuestos de alta calidad y técnicas avanzadas, asegurando la satisfacción total de nuestros clientes.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-eye icon-lg color3 mb-3"></i>
+                            <h3 class="card-title">Nuestra Visión</h3>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <h4>Corto Plazo</h4>
+                                    <p>Posicionarnos como el principal servicio técnico de reparación de dispositivos móviles en nuestra comunidad, destacándonos por nuestra atención personalizada y tiempos de respuesta rápidos.</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <h4>Largo Plazo</h4>
+                                    <p>Expandir nuestra presencia a nivel nacional, promoviendo el reacondicionamiento de dispositivos como una alternativa sostenible para reducir la generación de desechos electrónicos.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nuestra Historia -->
+            <div class="row mt-5 history-section">
+                <div class="col-12">
+                    <h2 class="section-title text-center mb-5">Nuestra Historia</h2>
+                    <div class="history-content">
+                        <p>FixPro nació con el propósito de ofrecer una solución accesible y confiable para quienes buscan recuperar sus dispositivos móviles sin necesidad de adquirir uno nuevo. Lo que comenzó como un pequeño taller con herramientas básicas se ha convertido en un centro de reparación con equipos de última tecnología y técnicos altamente capacitados.</p>
+                        <p>Nuestra evolución ha sido impulsada por la confianza de nuestros clientes y nuestro deseo constante de mejorar y perfeccionar cada aspecto de nuestro servicio.</p>
+                        
+                        <div class="milestones mt-4">
+                            <div class="milestone-item">
+                                <div class="milestone-year">2019</div>
+                                <div class="milestone-content">Apertura de nuestro primer local en Santiago Centro</div>
+                            </div>
+                            <div class="milestone-item">
+                                <div class="milestone-year">2021</div>
+                                <div class="milestone-content">Certificación como Centro de Servicio Autorizado</div>
+                            </div>
+                            <div class="milestone-item">
+                                <div class="milestone-year">2023</div>
+                                <div class="milestone-content">Expansión a nuestra segunda sucursal en Providencia</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nuestros Valores -->
+            <div class="row values-section mt-5">
+                <div class="col-12">
+                    <h2 class="section-title text-center mb-5">Nuestros Valores</h2>
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="value-card h-100">
+                                <div class="value-icon color5">
+                                    <i class="fas fa-handshake"></i>
+                                </div>
+                                <h4>Compromiso</h4>
+                                <p>Nos dedicamos con pasión y responsabilidad a cada reparación, asegurando los mejores resultados.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="value-card h-100">
+                                <div class="value-icon color5">
+                                    <i class="fas fa-award"></i>
+                                </div>
+                                <h4>Calidad</h4>
+                                <p>Empleamos repuestos originales y técnicas de reparación avanzadas para garantizar el mejor desempeño.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="value-card h-100">
+                                <div class="value-icon color5">
+                                    <i class="fas fa-search-dollar"></i>
+                                </div>
+                                <h4>Transparencia</h4>
+                                <p>Proporcionamos diagnósticos claros y soluciones honestas sin costos ocultos.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="value-card h-100">
+                                <div class="value-icon color5">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <h4>Innovación</h4>
+                                <p>Nos mantenemos actualizados con las últimas tecnologías para ofrecer un servicio de vanguardia.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="value-card h-100">
+                                <div class="value-icon color5">
+                                    <i class="fas fa-leaf"></i>
+                                </div>
+                                <h4>Sostenibilidad</h4>
+                                <p>Fomentamos el reacondicionamiento de dispositivos para reducir el impacto ambiental.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="value-card h-100">
+                                <div class="value-icon color5">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <h4>Pasión</h4>
+                                <p>Amamos lo que hacemos y eso se refleja en cada reparación que realizamos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Por qué Elegirnos -->
+            <div class="row why-choose-us mt-5">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <img src="img/technician-working.jpg" alt="Técnico de FixPro trabajando" class="img-fluid rounded shadow">
+                </div>
+                <div class="col-lg-6">
+                    <h2 class="section-title mb-4">¿Por qué Elegirnos?</h2>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle color5"></i>
+                            <span>Técnicos certificados con años de experiencia</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle color5"></i>
+                            <span>Repuestos originales con garantía</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle color5"></i>
+                            <span>Diagnóstico gratuito sin compromiso</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle color5"></i>
+                            <span>Reparaciones rápidas en el mismo día</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle color5"></i>
+                            <span>Precios competitivos y transparentes</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle color5"></i>
+                            <span>Atención personalizada y seguimiento</span>
+                        </div>
+                    </div>
+                    <a href="#contacto" class="btn btn-primary mt-4">Contáctanos</a>
+                </div>
+            </div>
+        </div>
     </section>
-    <footer class="text-center mt-5 color4">
-        <p>&copy; 2024 FixPro. Todos los derechos reservados.</p>
+
+    <!-- Footer Mejorado -->
+    <footer class="footer color4 text-white py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <div class="footer-brand d-flex align-items-center">
+                        <img src="img/logofixpro.png" alt="FixPro Logo" class="footer-logo me-2">
+                        <span class="brand-name">FixPro</span>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-social">
+                        <a href="#" class="text-white mx-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white mx-2"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="mb-0">&copy; 2024 FixPro. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </div>
     </footer>
+
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/56912345678" class="whatsapp-float" target="_blank" aria-label="Contactar por WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Scripts -->
+    <script src="js/scripts.js"></script>
 </body>
 </html>
