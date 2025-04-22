@@ -12,10 +12,10 @@
 </head>
 <body>
     <!-- Navbar Premium -->
-    <nav class="navbar navbar-expand-lg navbar-dark color4 fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
             <a class="navbar-brand" href="index.html">
-                <img src="img/logofixpro.png" alt="FixPro Logo" class="d-inline-block align-text-top logo-brand">
+                <img src="img/logofixpro.png" alt="FixPro Logo" class="d-inline-block align-text-top">
                 <span class="brand-name">FixPro</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,147 +54,170 @@
                 <p class="section-subtitle">Control completo de nuestros repuestos en stock</p>
             </div>
 
-            <div class="row g-4">
-                <!-- Tarjeta de Registro -->
-                <div class="col-lg-4">
-                    <div class="management-card h-100">
-                        <div class="card-header color3">
-                            <i class="fas fa-plus-circle me-2"></i>
-                            <h3 class="d-inline-block mb-0">Registrar Nuevo Repuesto</h3>
-                        </div>
-                        <div class="card-body">
-                            <form id="agregar-repuesto" action="/agregar-repuesto" method="POST">
-                                <div class="mb-3">
-                                    <label for="codigo_repuesto" class="form-label">Código Repuesto</label>
-                                    <input type="text" id="codigo_repuesto" name="codigo_repuesto" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="nombre" class="form-label">Nombre</label>
-                                    <input type="text" id="nombre" name="nombre" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="descripcion" class="form-label">Descripción</label>
-                                    <textarea id="descripcion" name="descripcion" class="form-control" rows="2" required></textarea>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="cantidad" class="form-label">Cantidad</label>
-                                        <input type="number" id="cantidad" name="cantidad" class="form-control" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="costo" class="form-label">Costo (USD)</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">$</span>
-                                            <input type="number" id="costo" name="costo" class="form-control" step="0.01" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fas fa-save me-2"></i>Guardar Repuesto
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+            <!-- Pestañas de navegación -->
+            <ul class="nav nav-tabs justify-content-center mb-4" id="inventoryTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button" role="tab" aria-controls="register" aria-selected="true">
+                        <i class="fas fa-plus-circle me-2"></i>Registrar Nuevo
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="consult-tab" data-bs-toggle="tab" data-bs-target="#consult" type="button" role="tab" aria-controls="consult" aria-selected="false">
+                        <i class="fas fa-search me-2"></i>Consultar
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="update-tab" data-bs-toggle="tab" data-bs-target="#update" type="button" role="tab" aria-controls="update" aria-selected="false">
+                        <i class="fas fa-sync-alt me-2"></i>Actualizar
+                    </button>
+                </li>
+            </ul>
 
-                <!-- Tarjeta de Consulta -->
-                <div class="col-lg-4">
-                    <div class="management-card h-100">
-                        <div class="card-header color3">
-                            <i class="fas fa-search me-2"></i>
-                            <h3 class="d-inline-block mb-0">Consultar Existencia</h3>
-                        </div>
-                        <div class="card-body">
-                            <form id="consultar-repuesto" action="/consultar-repuesto" method="GET">
-                                <div class="mb-3">
-                                    <label for="codigo_repuesto_consulta" class="form-label">Código Repuesto</label>
-                                    <input type="text" id="codigo_repuesto_consulta" name="codigo_repuesto" class="form-control" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fas fa-search me-2"></i>Buscar Repuesto
-                                </button>
-                            </form>
-                            
-                            <!-- Resultados de la consulta -->
-                            <div class="consult-results mt-4 d-none">
-                                <h4 class="mb-3">Información del Repuesto</h4>
-                                <div class="result-item">
-                                    <span class="result-label">Nombre:</span>
-                                    <span class="result-value" id="result-nombre">Pantalla iPhone 14 Pro</span>
-                                </div>
-                                <div class="result-item">
-                                    <span class="result-label">Descripción:</span>
-                                    <span class="result-value" id="result-descripcion">Pantalla OLED original para iPhone 14 Pro</span>
-                                </div>
-                                <div class="result-item">
-                                    <span class="result-label">Stock:</span>
-                                    <span class="result-value" id="result-cantidad">15 unidades</span>
-                                </div>
-                                <div class="result-item">
-                                    <span class="result-label">Costo:</span>
-                                    <span class="result-value" id="result-costo">$89.99</span>
-                                </div>
-                                <div class="result-item">
-                                    <span class="result-label">Estado:</span>
-                                    <span class="badge bg-success" id="result-estado">Disponible</span>
+            <!-- Contenido de las pestañas -->
+            <div class="tab-content" id="inventoryTabsContent">
+                <!-- Pestaña de Registro -->
+                <div class="tab-pane fade show active" id="register" role="tabpanel" aria-labelledby="register-tab">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="text-center mb-4"><i class="fas fa-plus-circle me-2"></i>Registrar Nuevo Repuesto</h3>
+                                    <form id="agregar-repuesto">
+                                        <div class="mb-3">
+                                            <label for="codigo_repuesto" class="form-label">Código Repuesto</label>
+                                            <input type="text" class="form-control" id="codigo_repuesto" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="nombre" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" id="nombre" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="descripcion" class="form-label">Descripción</label>
+                                            <textarea class="form-control" id="descripcion" rows="2" required></textarea>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="cantidad" class="form-label">Cantidad</label>
+                                                <input type="number" class="form-control" id="cantidad" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="costo" class="form-label">Costo (USD)</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">$</span>
+                                                    <input type="number" class="form-control" id="costo" step="0.01" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fas fa-save me-2"></i>Guardar Repuesto
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tarjeta de Actualización -->
-                <div class="col-lg-4">
-                    <div class="management-card h-100">
-                        <div class="card-header color3">
-                            <i class="fas fa-sync-alt me-2"></i>
-                            <h3 class="d-inline-block mb-0">Actualizar Inventario</h3>
+                <!-- Pestaña de Consulta -->
+                <div class="tab-pane fade" id="consult" role="tabpanel" aria-labelledby="consult-tab">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="text-center mb-4"><i class="fas fa-search me-2"></i>Consultar Existencia</h3>
+                                    <form id="consultar-repuesto">
+                                        <div class="mb-3">
+                                            <label for="codigo_consulta" class="form-label">Código Repuesto</label>
+                                            <input type="text" class="form-control" id="codigo_consulta" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fas fa-search me-2"></i>Buscar Repuesto
+                                        </button>
+                                    </form>
+                                    
+                                    <!-- Resultados de la consulta -->
+                                    <div class="consult-results mt-4 d-none">
+                                        <h4 class="mb-3">Información del Repuesto</h4>
+                                        <div class="result-item">
+                                            <span class="result-label">Nombre:</span>
+                                            <span class="result-value" id="result-nombre">Pantalla iPhone 14 Pro</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">Descripción:</span>
+                                            <span class="result-value" id="result-descripcion">Pantalla OLED original para iPhone 14 Pro</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">Stock:</span>
+                                            <span class="result-value" id="result-cantidad">15 unidades</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">Costo:</span>
+                                            <span class="result-value" id="result-costo">$89.99</span>
+                                        </div>
+                                        <div class="result-item">
+                                            <span class="result-label">Estado:</span>
+                                            <span class="badge bg-success" id="result-estado">Disponible</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <form id="actualizar-inventario" action="/actualizar-inventario" method="POST">
-                                <div class="mb-3">
-                                    <label for="codigo_repuesto_actualizar" class="form-label">Código Repuesto</label>
-                                    <input type="text" id="codigo_repuesto_actualizar" name="codigo_repuesto" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="cantidad_actualizar" class="form-label">Cantidad</label>
-                                    <input type="number" id="cantidad_actualizar" name="cantidad" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="accion" class="form-label">Acción</label>
-                                    <select id="accion" name="accion" class="form-select" required>
-                                        <option value="ingresar">Ingresar al Inventario</option>
-                                        <option value="retirar">Retirar del Inventario</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fas fa-sync-alt me-2"></i>Actualizar Stock
-                                </button>
-                            </form>
-                            
-                            <!-- Historial de movimientos -->
-                            <div class="movement-history mt-4">
-                                <h4 class="mb-3">Últimos Movimientos</h4>
-                                <div class="timeline">
-                                    <div class="timeline-item">
-                                        <div class="timeline-badge bg-success"></div>
-                                        <div class="timeline-content">
-                                            <span class="timeline-date">Hoy, 10:45 AM</span>
-                                            <p>Ingresaron 5 pantallas iPhone 14 Pro</p>
+                    </div>
+                </div>
+
+                <!-- Pestaña de Actualización -->
+                <div class="tab-pane fade" id="update" role="tabpanel" aria-labelledby="update-tab">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h3 class="text-center mb-4"><i class="fas fa-sync-alt me-2"></i>Actualizar Inventario</h3>
+                                    <form id="actualizar-inventario">
+                                        <div class="mb-3">
+                                            <label for="codigo_actualizar" class="form-label">Código Repuesto</label>
+                                            <input type="text" class="form-control" id="codigo_actualizar" required>
                                         </div>
-                                    </div>
-                                    <div class="timeline-item">
-                                        <div class="timeline-badge bg-danger"></div>
-                                        <div class="timeline-content">
-                                            <span class="timeline-date">Ayer, 3:20 PM</span>
-                                            <p>Retiraron 2 baterías Samsung S23</p>
+                                        <div class="mb-3">
+                                            <label for="cantidad_actualizar" class="form-label">Cantidad</label>
+                                            <input type="number" class="form-control" id="cantidad_actualizar" required>
                                         </div>
-                                    </div>
-                                    <div class="timeline-item">
-                                        <div class="timeline-badge bg-success"></div>
-                                        <div class="timeline-content">
-                                            <span class="timeline-date">Ayer, 11:15 AM</span>
-                                            <p>Ingresaron 10 módulos de cámara Xiaomi</p>
+                                        <div class="mb-3">
+                                            <label for="accion" class="form-label">Acción</label>
+                                            <select id="accion" class="form-select" required>
+                                                <option value="ingresar">Ingresar al Inventario</option>
+                                                <option value="retirar">Retirar del Inventario</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fas fa-sync-alt me-2"></i>Actualizar Stock
+                                        </button>
+                                    </form>
+                                    
+                                    <!-- Historial de movimientos -->
+                                    <div class="movement-history mt-4">
+                                        <h4 class="mb-3">Últimos Movimientos</h4>
+                                        <div class="timeline">
+                                            <div class="timeline-item">
+                                                <div class="timeline-badge bg-success"></div>
+                                                <div class="timeline-content">
+                                                    <span class="timeline-date">Hoy, 10:45 AM</span>
+                                                    <p>Ingresaron 5 pantallas iPhone 14 Pro</p>
+                                                </div>
+                                            </div>
+                                            <div class="timeline-item">
+                                                <div class="timeline-badge bg-danger"></div>
+                                                <div class="timeline-content">
+                                                    <span class="timeline-date">Ayer, 3:20 PM</span>
+                                                    <p>Retiraron 2 baterías Samsung S23</p>
+                                                </div>
+                                            </div>
+                                            <div class="timeline-item">
+                                                <div class="timeline-badge bg-success"></div>
+                                                <div class="timeline-content">
+                                                    <span class="timeline-date">Ayer, 11:15 AM</span>
+                                                    <p>Ingresaron 10 módulos de cámara Xiaomi</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -238,7 +261,7 @@
 
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
-                    <thead class="color4 text-white">
+                    <thead class="text-white" style="background-color: var(--color4);">
                         <tr>
                             <th>Código</th>
                             <th>Repuesto</th>
@@ -282,28 +305,6 @@
                                 <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
                             </td>
                         </tr>
-                        <tr>
-                            <td>OP11-SPK</td>
-                            <td>Altavoz OnePlus 11</td>
-                            <td>Altavoz estéreo original</td>
-                            <td class="text-center"><span class="badge bg-danger">2</span></td>
-                            <td class="text-center">$32.75</td>
-                            <td class="text-center">
-                                <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>GP7-SCR</td>
-                            <td>Pantalla Google Pixel 7</td>
-                            <td>Pantalla AMOLED 6.3" 90Hz</td>
-                            <td class="text-center"><span class="badge bg-success">7</span></td>
-                            <td class="text-center">$78.25</td>
-                            <td class="text-center">
-                                <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -325,7 +326,7 @@
     </section>
 
     <!-- Footer Premium -->
-    <footer class="footer color4 text-white py-5">
+    <footer class="py-5 text-white" style="background-color: var(--color4);">
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 mb-4 mb-lg-0">
@@ -371,5 +372,24 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // Script para manejar el navbar scrolled
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Script para mostrar/ocultar resultados de búsqueda
+        document.getElementById('consultar-repuesto').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const results = document.querySelector('.consult-results');
+            results.classList.remove('d-none');
+        });
+    </script>
 </body>
 </html>

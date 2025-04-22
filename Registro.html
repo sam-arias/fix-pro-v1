@@ -55,8 +55,8 @@
                     <div class="registration-card shadow-lg">
                         <ul class="nav nav-tabs" id="registrationTabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="equipo-tab" data-bs-toggle="tab" data-bs-target="#equipo" type="button" role="tab">
-                                    <i class="fas fa-mobile-alt me-2"></i>Equipo
+                                <button class="nav-link active" id="orden-tab" data-bs-toggle="tab" data-bs-target="#orden" type="button" role="tab">
+                                    <i class="fas fa-clipboard-list me-2"></i>Orden
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -70,13 +70,13 @@
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="dano-tab" data-bs-toggle="tab" data-bs-target="#dano" type="button" role="tab">
-                                    <i class="fas fa-exclamation-triangle me-2"></i>Daño
+                                <button class="nav-link" id="equipo-tab" data-bs-toggle="tab" data-bs-target="#equipo" type="button" role="tab">
+                                    <i class="fas fa-mobile-alt me-2"></i>Equipo
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="orden-tab" data-bs-toggle="tab" data-bs-target="#orden" type="button" role="tab">
-                                    <i class="fas fa-clipboard-list me-2"></i>Orden
+                                <button class="nav-link" id="dano-tab" data-bs-toggle="tab" data-bs-target="#dano" type="button" role="tab">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>Daño
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -87,8 +87,52 @@
                         </ul>
 
                         <div class="tab-content p-4" id="registrationTabsContent">
+
+                            <!-- Orden Tab -->
+                            <div class="tab-pane fade show active" id="orden" role="tabpanel">
+                                <form id="orden-form" action="/registrar-orden" method="POST">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">ID Orden</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
+                                                <input type="text" name="id_orden" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Fecha de Ingreso</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                                <input type="date" name="fecha_ingreso" class="form-control" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Costo</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">$</span>
+                                                <input type="number" step="0.01" name="costo" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Fecha de Entrega</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                                                <input type="date" name="fecha_entrada" class="form-control" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-2"></i>Generar Orden
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
                             <!-- Equipo Tab -->
-                            <div class="tab-pane fade show active" id="equipo" role="tabpanel">
+                            <div class="tab-pane fade" id="equipo" role="tabpanel">
                                 <form id="equipo-form" action="/registrar-equipo" method="POST">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
@@ -260,49 +304,6 @@
                                     <div class="text-end">
                                         <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-save me-2"></i>Registrar Daño
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <!-- Orden Tab -->
-                            <div class="tab-pane fade" id="orden" role="tabpanel">
-                                <form id="orden-form" action="/registrar-orden" method="POST">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">ID Orden</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text"><i class="fas fa-file-invoice"></i></span>
-                                                <input type="text" name="id_orden" class="form-control" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Fecha de Ingreso</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                                                <input type="date" name="fecha_ingreso" class="form-control" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Costo</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">$</span>
-                                                <input type="number" step="0.01" name="costo" class="form-control" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Fecha de Entrega</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
-                                                <input type="date" name="fecha_entrada" class="form-control" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="text-end">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-save me-2"></i>Generar Orden
                                         </button>
                                     </div>
                                 </form>
