@@ -1,7 +1,6 @@
-package com.localMantenimiento.fixpro.BreakTables;
+package com.localMantenimiento.fixpro.sparepart.model;
 
-import com.localMantenimiento.fixpro.Entity.RepairDetail;
-import com.localMantenimiento.fixpro.Entity.SparePart;
+import com.localMantenimiento.fixpro.repair_order.model.RepairDetail;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "UsedSparePartRepository")
+@Table(name = "used_spare_part")
 public class UsedSparePart {
 
   @Id
@@ -22,9 +21,6 @@ public class UsedSparePart {
   @Column(name = "Quantity")
   private int quantity;
 
-  @Column(name = "UsedSparePartStatus", nullable = false)
-  private boolean usedSparePartStatus = true;
-
   @ManyToOne
   @JoinColumn(name = "RepairDetailId")
   private RepairDetail repairDetail;
@@ -32,8 +28,4 @@ public class UsedSparePart {
   @ManyToOne
   @JoinColumn(name = "SparePartId")
   private SparePart sparePart;
-
-  public void disableUsedSparePart(){
-    this.usedSparePartStatus = false;
-  }
 }

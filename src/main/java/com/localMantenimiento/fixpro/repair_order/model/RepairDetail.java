@@ -1,4 +1,4 @@
-package com.localMantenimiento.fixpro.Entity;
+package com.localMantenimiento.fixpro.repair_order.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "RepairDetail")
+@Table(name = "repair_detail")
 public class RepairDetail {
   @Id
   @Column(name = "id", nullable = false)
@@ -25,15 +25,7 @@ public class RepairDetail {
   @Column(name = "TotalCost")
   private Double totalCost;
 
-  @Column(name = "RepairDetailStatus")
-  private boolean repairDetailStatus = true;
-
   @ManyToOne
   @JoinColumn(name = "RepairOrderId", nullable = false)
   private RepairOrder repairOrder;
-
-  public void disableStatus() {
-    this.repairDetailStatus = false;
-  }
-
 }
