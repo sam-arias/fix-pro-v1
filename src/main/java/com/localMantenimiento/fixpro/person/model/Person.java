@@ -1,6 +1,6 @@
 package com.localMantenimiento.fixpro.person.model;
 
-import com.localMantenimiento.fixpro.repair_order.model.RepairOrder;
+import com.localMantenimiento.fixpro.interventions.model.InterventionOrder;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,6 +39,9 @@ public class Person {
   @Column(name = "address", length = 20)
   private String address;
 
+  @Column(name = "availability", nullable = false)
+  private boolean availability;
+
   @ManyToOne
   @JoinColumn(name = "role_id", nullable = false)
   private Role role;
@@ -52,5 +55,5 @@ public class Person {
   private Set<Specialty> specialties = new HashSet<>();
 
   @ManyToMany(mappedBy = "people")
-  private Set<RepairOrder> repairOrders = new HashSet<>();
+  private Set<InterventionOrder> interventionOrders = new HashSet<>();
 }

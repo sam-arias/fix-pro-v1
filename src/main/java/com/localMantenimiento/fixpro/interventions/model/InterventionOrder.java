@@ -1,4 +1,4 @@
-package com.localMantenimiento.fixpro.repair_order.model;
+package com.localMantenimiento.fixpro.interventions.model;
 
 import com.localMantenimiento.fixpro.device.model.Device;
 import com.localMantenimiento.fixpro.person.model.Person;
@@ -16,16 +16,16 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "repair_order")
-public class RepairOrder {
+@Table(name = "intervention_order")
+public class InterventionOrder {
 
   @Id
   @Column(name = "id", nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "reapir_status", nullable = false)
-  private boolean repairStatus;
+  @Column(name = "intervention_status", nullable = false, length = 15)
+  private String interventionStatus;
 
   @Column(name = "entry_date", nullable = false, updatable = false)
   private LocalDateTime entryDate;
@@ -39,13 +39,13 @@ public class RepairOrder {
   }
 
   @ManyToOne
-  @JoinColumn(name = "DeviceId", nullable = false)
+  @JoinColumn(name = "FK_device_id", nullable = false)
   private Device device;
 
   @ManyToMany
   @JoinTable(
-      name = "repair_order_person",
-      joinColumns = @JoinColumn(name = "FK_repair_order_id"),
+      name = "intervention_order_person",
+      joinColumns = @JoinColumn(name = "FK_intervention_order_id"),
       inverseJoinColumns = @JoinColumn(name = "FK_person_id")
   )
   private Set<Person> people = new HashSet<>();

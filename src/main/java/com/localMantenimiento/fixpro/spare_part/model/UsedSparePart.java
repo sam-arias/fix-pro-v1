@@ -1,6 +1,6 @@
-package com.localMantenimiento.fixpro.sparepart.model;
+package com.localMantenimiento.fixpro.spare_part.model;
 
-import com.localMantenimiento.fixpro.repair_order.model.RepairDetail;
+import com.localMantenimiento.fixpro.interventions.model.InterventionDetails;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,14 +18,14 @@ public class UsedSparePart {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "Quantity")
+  @Column(name = "quantity")
   private int quantity;
 
   @ManyToOne
-  @JoinColumn(name = "RepairDetailId")
-  private RepairDetail repairDetail;
+  @JoinColumn(name = "FK_intervention_detail_id")
+  private InterventionDetails interventionDetails;
 
   @ManyToOne
-  @JoinColumn(name = "SparePartId")
+  @JoinColumn(name = "FK_spare_part_id")
   private SparePart sparePart;
 }

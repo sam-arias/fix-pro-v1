@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RestController("/person")
+@RestController("/api/people")
 public class PersonController {
   @Autowired
   PersonService personService;
@@ -21,9 +21,9 @@ public class PersonController {
     return personService.registerPerson(person);
   }
 
-  @PutMapping("/up/{id}")
-  public boolean updatePerson(@PathVariable Long id, @RequestBody Person updatedPerson) {
-    return personService.updatePerson(id, updatedPerson);
+  @PutMapping("{personId}")
+  public boolean updatePerson(@PathVariable Long personId, @RequestBody Person updatedPerson) {
+    return personService.updatePerson(personId, updatedPerson);
   }
 
   @DeleteMapping("/dl/{id}")
@@ -31,9 +31,9 @@ public class PersonController {
     return personService.deletePerson(id);
   }
 
-  @GetMapping("/{id}")
-  public Optional<Person> GetPersonById(@PathVariable Long id) {
-    return personService.GetPersonById(id);
+  @GetMapping("/{personId}")
+  public Optional<Person> GetPersonById(@PathVariable Long personId) {
+    return personService.GetPersonById(personId);
   }
 
   @GetMapping("/{email}")

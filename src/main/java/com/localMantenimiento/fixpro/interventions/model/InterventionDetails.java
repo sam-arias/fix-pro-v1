@@ -1,4 +1,4 @@
-package com.localMantenimiento.fixpro.repair_order.model;
+package com.localMantenimiento.fixpro.interventions.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,23 +9,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "repair_detail")
-public class RepairDetail {
+@Table(name = "intervention_details")
+public class InterventionDetails {
   @Id
   @Column(name = "id", nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "ProblemDescription", nullable = false, length = 255)
+  @Column(name = "problem_description", nullable = false, length = 255)
   private String problemDescription;
 
-  @Column(name = "SolutionDescription", length = 255)
+  @Column(name = "solution_description", length = 255)
   private String solutionDescription;
 
-  @Column(name = "TotalCost")
+  @Column(name = "total_cost")
   private Double totalCost;
 
   @ManyToOne
-  @JoinColumn(name = "RepairOrderId", nullable = false)
-  private RepairOrder repairOrder;
+  @JoinColumn(name = "FK_intervention_order_id")
+  private InterventionOrder interventionOrderOrder;
 }

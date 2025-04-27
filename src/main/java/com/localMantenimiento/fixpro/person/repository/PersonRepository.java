@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
@@ -24,11 +23,6 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
   Optional<List<Person>> findByRole(@Param("roleName") String roleName);
   @Query("SELECT p FROM Person p JOIN p.specialties s WHERE s.specialtyName = :specialtyName")
   Optional<List<Person>> findBySpecialty(@Param("specialtyName") String specialty);
-
-
-  @Query("SELECT p.role FROM Person p WHERE p.id = :id")
-  Optional<Role> findRoleByPersonId(@Param("id") Long id);
-
-  @Query("SELECT p.specialties FROM Person p WHERE p.id = :id")
-  Optional<Set<Specialty>> findSpecialtyByPersonId(@Param("id") Long id);
+  @Query("SELECT p FROM Person p JOIN p.role r JOIN p.specialties s WHERE r.roleName = :roleName AND s.specialtyName = :specialtyName")
+  Optional<List<Person>> findByRoleAndSpecialty(@Param("roleName") String role, @Param("specialtyName") String specialty);
 }
