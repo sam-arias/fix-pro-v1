@@ -1,15 +1,12 @@
 package com.localMantenimiento.fixpro.person.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "specialties")
@@ -23,5 +20,5 @@ public class Specialty {
   private String specialtyName;
 
   @ManyToMany(mappedBy = "specialties")
-  private Set<Person> people = new HashSet<>();
+  private List<Person> persons;
 }

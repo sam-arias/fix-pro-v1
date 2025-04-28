@@ -1,55 +1,62 @@
 package com.localMantenimiento.fixpro.device.service;
 
 import com.localMantenimiento.fixpro.device.model.Device;
+import com.localMantenimiento.fixpro.device.repository.DeviceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class DeviceServiceImpl implements DeviceService{
 
-  @Override
-  public boolean registerDevice(Device device) {
+  @Autowired
+  private DeviceRepository deviceRepository;
 
-    return false;
+  @Override
+  public boolean registerDevice(Device newDevice) {
+    deviceRepository.save(newDevice);
+    return true;
   }
 
   @Override
-  public boolean updateDevice(Long id, Device device) {
-    return false;
-  }
-
-  @Override
-  public boolean deleteDevice(Long id) {
+  public boolean updateDevice(Long id, Device updatedDevice) {
+    if (deviceRepository.existsById(id)) {
+      updatedDevice.setId(id);
+      deviceRepository.save(updatedDevice);
+      return true;
+    }
     return false;
   }
 
   @Override
   public Optional<Device> getDeviceById(Long id) {
-    return Optional.empty();
+    return deviceRepository.findById(id);
   }
 
   @Override
   public Optional<Device> getDeviceBySerial(String serial) {
-    return Optional.empty();
+    return deviceRepository.findDeviceBySerial(serial);
   }
 
   @Override
-  public List<Device> getAllDevices() {
-    return List.of();
+  public Optional<List<Device>> getAllDevices() {
+    return Optional.of(deviceRepository.findAll());
   }
 
   @Override
-  public Optional<List<Device>> getAllDevicesByBrand(String brand) {
-    return Optional.empty();
+  public Optional<List<Device>> getDevicesByBrand(String brand) {
+    return deviceRepository.findByBrand(brand);
   }
 
   @Override
-  public Optional<List<Device>> getAllDevicesByType(String type) {
-    return Optional.empty();
+  public Optional<List<Device>> getDevicesByType(String type) {
+    return deviceRepository.findByType(type);
   }
 
   @Override
-  public Optional<List<Device>> getAllDevicesByModel(String model) {
-    return Optional.empty();
+  public Optional<List<Device>> getDevicesByModel(String model) {
+    return deviceRepository.findByModel(model);
   }
 }

@@ -1,110 +1,92 @@
 package com.localMantenimiento.fixpro.person.controller;
-
 import com.localMantenimiento.fixpro.person.model.Person;
-import com.localMantenimiento.fixpro.person.model.Role;
 import com.localMantenimiento.fixpro.person.model.Specialty;
 import com.localMantenimiento.fixpro.person.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import com.localMantenimiento.fixpro.person.model.Role;
+
 import java.util.Optional;
 
-@RestController("/api/people")
+@RestController
+@RequestMapping("/api/people")
 public class PersonController {
+
   @Autowired
   PersonService personService;
 
-  //Person
-  @PostMapping("/cr")
-  public boolean registerPerson(@RequestBody Person person) {
-    return personService.registerPerson(person);
+  @PostMapping
+  public boolean registerPerson(@RequestBody Person newPerson) {
+    return personService.registerPerson(newPerson);
   }
 
-  @PutMapping("{personId}")
-  public boolean updatePerson(@PathVariable Long personId, @RequestBody Person updatedPerson) {
-    return personService.updatePerson(personId, updatedPerson);
+  @PutMapping("/{id}")
+  public boolean updatePerson(@PathVariable Long id, @RequestBody Person updatedPerson) {
+    return personService.updatePerson(id, updatedPerson);
   }
 
-  @DeleteMapping("/dl/{id}")
-  public boolean deletePerson(@PathVariable Long id) {
-    return personService.deletePerson(id);
+  @GetMapping("/{id}")
+  public Optional<Person> getPersonById(@PathVariable Long id) {
+    return personService.getPersonById(id);
   }
 
-  @GetMapping("/{personId}")
-  public Optional<Person> GetPersonById(@PathVariable Long personId) {
-    return personService.GetPersonById(personId);
+  @GetMapping("/by-email/{email}")
+  public Optional<Person> getPersonByEmail(@PathVariable String email) {
+    return personService.getPersonByEmail(email);
   }
 
-  @GetMapping("/{email}")
-  public Optional<Person> GetPersonByEmail(@PathVariable String email) {
-    return personService.GetPersonByEmail(email);
+  @GetMapping("/by-role/{roleName}")
+  public Optional<List<Person>> getPeopleByRole(@PathVariable String roleName) {
+    return personService.getPeopleByRole(roleName);
   }
 
-  @GetMapping("/{roleName}")
-  public Optional<List<Person>> GetPeopleByRole(@PathVariable String roleName) {
-    return personService.GetPeopleByRole(roleName);
+  @GetMapping("/by-role-and-specialty")
+  public Optional<List<Person>> getPeopleByRoleAndSpecialty(
+      @RequestParam Long roleId,
+      @RequestParam Long specialtyId) {
+    return personService.getPeopleByRoleAndSpecialty(roleId, specialtyId);
   }
 
-  @GetMapping("/{specialtyName}")
-  public Optional<List<Person>> GetPeopleBySpecialty(@PathVariable String specialtyName) {
-    return personService.GetPeopleBySpecialty(specialtyName);
+  // Role endpoints
+  @PostMapping("/roles")
+  public boolean addRole(@RequestBody Role newRole) {
+    return personService.addRole(newRole);
   }
 
-  /*
-  /public boolean login(String email, String password) {
-    return personService.login(email, password);
-  }*/
-
-  //Role
-  @PostMapping("/role/cr")
-  public boolean createRole(Role role) {
-    return personService.createRole(role);
+  @PutMapping("/roles/{id}")
+  public boolean updateRole(@PathVariable Long id, @RequestBody Role updatedRole) {
+    return personService.updateRole(id, updatedRole);
   }
 
-  @PutMapping("/role/up/{id}/{newRoleName}")
-  public boolean updateRole(@PathVariable Long id, @PathVariable String newRoleName) {
-    return personService.updateRole(id, newRoleName);
+  @GetMapping("/roles/{id}")
+  public Optional<Role> getRoleById(@PathVariable Long id) {
+    return personService.getRoleById(id);
   }
 
-  @DeleteMapping("/role/dl/{id}")
-  public boolean deleteRole(@PathVariable Long id) {
-    return personService.deleteRole(id);
+  @GetMapping("/roles")
+  public Optional<List<Role>> getAllRoles() {
+    return personService.getAllRoles();
   }
 
-  @GetMapping("/role/{id}")
-  public Optional<Role> GetRoleById(Long id) {
-    return personService.GetRoleById(id);
+  // Specialty endpoints
+  @PostMapping("/specialties")
+  public boolean addSpecialty(@RequestBody Specialty newSpecialty) {
+    return personService.addSpecialty(newSpecialty);
   }
 
-  @GetMapping("/role")
-  public List<Role> GetRoles() {
-    return personService.GetRoles();
+  @PutMapping("/specialties/{id}")
+  public boolean updateSpecialty(@PathVariable Long id, @RequestBody Specialty updatedSpecialty) {
+    return personService.updateSpecialty(id, updatedSpecialty);
   }
 
-  //Specialty
-  @PostMapping("/specialty/cr")
-  public boolean createSpecialty(Specialty specialty){
-    return personService.createSpecialty(specialty);
+  @GetMapping("/specialties/{id}")
+  public Optional<Specialty> getSpecialtyById(@PathVariable Long id) {
+    return personService.getSpecialtyById(id);
   }
 
-  @PutMapping("/specialty/up/{id}")
-  public boolean updateSpecialty(@PathVariable Long id, @RequestBody String newSpecialtyName) {
-    return personService.updateSpecialty(id, newSpecialtyName);
-  }
-
-  @DeleteMapping("/specialty/dl/{id}")
-  public boolean deleteSpecialty(@PathVariable Long id) {
-    return personService.deleteSpecialty(id);
-  }
-
-  @GetMapping("/specialty/{id}")
-  public Optional<Specialty> GetSpecialtyById(@PathVariable Long id) {
-    return personService.GetSpecialtyById(id);
-  }
-
-  @GetMapping("/specialty")
-  public List<Specialty> GetSpecialties() {
-    return personService.GetSpecialties();
+  @GetMapping("/specialties")
+  public Optional<List<Specialty>> getAllSpecialties() {
+    return personService.getAllSpecialties();
   }
 }

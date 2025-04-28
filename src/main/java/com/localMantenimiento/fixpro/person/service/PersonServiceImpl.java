@@ -15,57 +15,22 @@ import java.util.Optional;
 @Service
 public class PersonServiceImpl implements PersonService {
   @Autowired
-  PersonRepository personRepository;
+  private PersonRepository personRepository;
   @Autowired
-  SpecialtyRepository specialtyRepository;
+  private RoleRepository roleRepository;
   @Autowired
-  RoleRepository roleRepository;
-
+  private SpecialtyRepository specialtyRepository;
 
   @Override
-  public boolean registerPerson(Person person) {
-    if(!personRepository.existsByEmail(person.getEmail())) {
-      personRepository.save(person);
-      return true;
-    }
-    return false;
+  public boolean registerPerson(Person newPerson) {
+    personRepository.save(newPerson);
+    return true;
   }
 
   @Override
   public boolean updatePerson(Long id, Person updatedPerson) {
     if(personRepository.existsById(id)) {
-      Person existingPerson = personRepository.findById(id).get();
-      if (updatedPerson.getName() != null) {
-        existingPerson.setName(updatedPerson.getName());
-      }
-
-      if (updatedPerson.getLastName() != null) {
-        existingPerson.setLastName(updatedPerson.getLastName());
-      }
-
-      if (updatedPerson.getEmail() != null) {
-        existingPerson.setEmail(updatedPerson.getEmail());
-      }
-
-      if (updatedPerson.getPassword() != null) {
-        existingPerson.setPassword(updatedPerson.getPassword());
-      }
-
-      if (updatedPerson.getRole() != null) {
-        existingPerson.setRole(updatedPerson.getRole());
-      }
-
-      if (updatedPerson.getSpecialties() != null) {
-        existingPerson.setSpecialties(updatedPerson.getSpecialties());
-      }
-
-      if (updatedPerson.getAddress() != null) {
-        existingPerson.setAddress(updatedPerson.getAddress());
-      }
-
-      if (updatedPerson.getPhone() != null) {
-        existingPerson.setPhone(updatedPerson.getPhone());
-      }
+      updatedPerson.setId(id);
       personRepository.save(updatedPerson);
       return true;
     }
@@ -73,111 +38,89 @@ public class PersonServiceImpl implements PersonService {
   }
 
   @Override
-  public boolean deletePerson(Long id) {
-    if(personRepository.existsById(id)) {
-      personRepository.deleteById(id);
-      return true;
-    }
-    return false;
-  }
-
-  @Override
-  public Optional<Person> GetPersonById(Long id) {
+  public Optional<Person> getPersonById(Long id) {
     return personRepository.findById(id);
   }
 
   @Override
-  public Optional<Person> GetPersonByEmail(String email) {
+  public Optional<Person> getPersonByEmail(String email) {
     return personRepository.findByEmail(email);
   }
 
   @Override
-  public Optional<List<Person>> GetPeopleByRole(String roleName) {
-    return personRepository.findByRole(roleName);
+  public Optional<List<Person>> getPeopleByRole(String roleName) {
+    if(roleRepository.existsByRoleName(roleName)) {
+      return personRepository.findPersonByRole(roleRepository.findByRoleName(roleName));
+    }
+    return Optional.empty();
   }
 
   @Override
-  public Optional<List<Person>> GetPeopleBySpecialty(String specialtyName) {
-    return personRepository.findBySpecialty(specialtyName);
-  }
-
-
-  @Override
-  public boolean login(String email, String password) {
-    return false;
+  public Optional<List<Person>> getPeopleByRoleAndSpecialty(Long roleId, Long specialtyId) {
+    if (roleRepository.existsById(roleId) && specialtyRepository.existsById(specialtyId)) {
+      return personRepository.findPeopleByRoleAndSpecialty(roleId, specialtyId);
+    }
+    return Optional.empty();
   }
 
   @Override
-  public boolean createRole(Role role) {
-    if(!roleRepository.existsByRoleName(role.getRoleName())) {
-      roleRepository.save(role);
+  public boolean addRole(Role newRole) {
+    if(!roleRepository.existsByRoleName(newRole.getRoleName())) {
+      roleRepository.save(newRole);
       return true;
     }
     return false;
   }
 
   @Override
-  public boolean updateRole(Long id, String newRoleName) {
-    if (roleRepository.existsById(id)) {
-      Role role = roleRepository.findById(id).get();
-      role.setRoleName(newRoleName);
-      roleRepository.save(role);
+  public boolean updateRole(Long id, Role updatedRole) {
+    if(roleRepository.existsById(id)) {
+      updatedRole.setId(id);
+      roleRepository.save(updatedRole);
       return true;
     }
     return false;
   }
 
   @Override
-  public boolean deleteRole(Long id) {
-    return false;
+  public Optional<Role> getRoleById(Long id) {
+    if(roleRepository.existsById(id)) {
+      return roleRepository.findById(id);
+    }
+    return Optional.empty();
   }
 
   @Override
-  public Optional<Role> GetRoleById(Long id) {
-    return roleRepository.findById(id);
+  public Optional<List<Role>> getAllRoles() {
+    return Optional.of(roleRepository.findAll());
   }
 
   @Override
-  public List<Role> GetRoles() {
-    return roleRepository.findAll();
-  }
-
-  @Override
-  public boolean createSpecialty(Specialty specialty) {
-    if(!specialtyRepository.existsBySpecialtyName(specialty.getSpecialtyName())) {
-      specialtyRepository.save(specialty);
+  public boolean addSpecialty(Specialty newSpecialty) {
+    if (!specialtyRepository.existsBySpecialtyName(newSpecialty.getSpecialtyName())) {
+      specialtyRepository.save(newSpecialty);
       return true;
     }
     return false;
   }
 
   @Override
-  public boolean updateSpecialty(Long id, String newSpecialtyName) {
-    if (specialtyRepository.existsById(id)) {
-      Specialty specialty = specialtyRepository.findById(id).get();
-      specialty.setSpecialtyName(newSpecialtyName);
-      specialtyRepository.save(specialty);
-      return true;
-    }
-    return false;
-  }
-
-  @Override
-  public boolean deleteSpecialty(Long id) {
+  public boolean updateSpecialty(Long id, Specialty updatedSpecialty) {
     if(specialtyRepository.existsById(id)) {
-      specialtyRepository.deleteById(id);
+      updatedSpecialty.setId(id);
+      specialtyRepository.save(updatedSpecialty);
       return true;
     }
     return false;
   }
 
   @Override
-  public Optional<Specialty> GetSpecialtyById(Long id) {
+  public Optional<Specialty> getSpecialtyById(Long id) {
     return specialtyRepository.findById(id);
   }
 
   @Override
-  public List<Specialty> GetSpecialties() {
-    return specialtyRepository.findAll();
+  public Optional<List<Specialty>> getAllSpecialties() {
+    return Optional.of(specialtyRepository.findAll());
   }
 }

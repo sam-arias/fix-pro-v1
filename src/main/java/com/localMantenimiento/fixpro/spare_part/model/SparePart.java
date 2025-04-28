@@ -30,5 +30,5 @@ public class SparePart {
   private Double price;
 
   @Column(name = "stock", nullable = false)
-  private int stock;
+  private Integer stock;
 }

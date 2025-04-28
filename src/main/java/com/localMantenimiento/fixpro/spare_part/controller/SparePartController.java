@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
-@RestController("/api/spare-parts")
+@RestController
+@RequestMapping("/api/spare-parts")
 public class SparePartController {
 
   @Autowired
   private SparePartService sparePartService;
 
-  @PostMapping("/rg")
+  @PostMapping
   public boolean registerSparePart(@RequestBody SparePart sparePart) {
     return sparePartService.registerSparePart(sparePart);
   }
@@ -27,7 +28,7 @@ public class SparePartController {
   }
 
   @GetMapping("/{sparePartId}")
-  public SparePart GetSparePart(@PathVariable Long sparePartId) {
+  public Optional<SparePart> GetSparePart(@PathVariable Long sparePartId) {
     return sparePartService.GetSparePartById(sparePartId);
   }
 
@@ -46,7 +47,7 @@ public class SparePartController {
     return sparePartService.getSparePartByType(type);
   }
 
-  @GetMapping("/")
+  @GetMapping
   public Optional<SparePart> getSparePartByBrandTypeAndModel(@RequestParam String brand, @RequestParam String type, @RequestParam String model) {
     return sparePartService.getSparePartByBrandAndTypeAndModel(brand, type, model);
   }

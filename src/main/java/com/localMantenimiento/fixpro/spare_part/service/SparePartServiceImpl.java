@@ -26,21 +26,16 @@ public class SparePartServiceImpl implements SparePartService {
   @Override
   public boolean updateSparePart(Long id, SparePart updatedSparePart) {
     if (sparePartRepository.existsById(id)) {
-      SparePart existingSparePart = sparePartRepository.findById(id).get();
-      existingSparePart.setBrand(updatedSparePart.getBrand());
-      existingSparePart.setType(updatedSparePart.getType());
-      existingSparePart.setModel(updatedSparePart.getModel());
-      existingSparePart.setPrice(updatedSparePart.getPrice());
-      existingSparePart.setStock(updatedSparePart.getStock());
-      sparePartRepository.save(existingSparePart);
+      updatedSparePart.setId(id);
+      sparePartRepository.save(updatedSparePart);
       return true;
     }
     return false;
   }
 
   @Override
-  public SparePart GetSparePartById(Long id) {
-    return sparePartRepository.findById(id).get();
+  public Optional<SparePart> GetSparePartById(Long id) {
+    return sparePartRepository.findById(id);
   }
 
   @Override

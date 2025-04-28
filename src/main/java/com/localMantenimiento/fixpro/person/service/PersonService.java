@@ -8,31 +8,24 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PersonService {
-  //Person methods
-  public boolean registerPerson(Person person);
-  public boolean updatePerson(Long id, Person updatedPerson);
-  public boolean deletePerson(Long id);
+  public boolean registerPerson(Person newPerson);
+  public boolean updatePerson(Long id,Person updatedPerson);
 
-  public Optional<Person> GetPersonById(Long id);
-  public Optional<Person> GetPersonByEmail(String email);
-  public Optional<List<Person>> GetPeopleByRole(String roleName);
-  public Optional<List<Person>> GetPeopleBySpecialty(String specialtyName);
+  public Optional<Person> getPersonById(Long id);
+  public Optional<Person> getPersonByEmail(String email);
 
-  public boolean login(String email, String password);
+  public Optional<List<Person>> getPeopleByRole(String roleName);
+  public Optional<List<Person>> getPeopleByRoleAndSpecialty(Long roleId, Long specialtyId);
 
-  //Role methods
-  public boolean createRole(Role role);
-  public boolean updateRole(Long id, String newRoleName);
-  public boolean deleteRole(Long id);
+  public boolean addRole(Role newRole);
+  public boolean updateRole(Long id, Role updatedRole);
 
-  public Optional<Role> GetRoleById(Long id);
-  public List<Role> GetRoles();
+  public Optional<Role> getRoleById(Long id);
+  public Optional<List<Role>> getAllRoles();
 
-  //Specialty methods
-  public boolean createSpecialty(Specialty specialty);
-  public boolean updateSpecialty(Long id, String newSpecialtyName);
-  public boolean deleteSpecialty(Long id);
+  public boolean addSpecialty(Specialty newSpecialty);
+  public boolean updateSpecialty(Long id, Specialty updatedSpecialty);
 
-  public Optional<Specialty> GetSpecialtyById(Long id);
-  public List<Specialty> GetSpecialties();
+  public Optional<Specialty> getSpecialtyById(Long id);
+  public Optional<List<Specialty>> getAllSpecialties();
 }

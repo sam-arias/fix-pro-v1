@@ -9,7 +9,7 @@ public interface SparePartService {
   public boolean registerSparePart(SparePart sparePart);
   public boolean updateSparePart(Long id, SparePart updatedSparePart);
 
-  public SparePart GetSparePartById(Long id);
+  public Optional<SparePart> GetSparePartById(Long id);
   public Optional<List<SparePart>> getSparePartByModel(String model);
   public Optional<List<SparePart>> getSparePartByBrand(String brand);
   public Optional<List<SparePart>> getSparePartByType(String type);

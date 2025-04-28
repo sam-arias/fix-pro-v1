@@ -16,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "intervention_order")
+@Table(name = "intervention_orders")
 public class InterventionOrder {
 
   @Id
@@ -41,12 +41,4 @@ public class InterventionOrder {
   @ManyToOne
   @JoinColumn(name = "FK_device_id", nullable = false)
   private Device device;
-
-  @ManyToMany
-  @JoinTable(
-      name = "intervention_order_person",
-      joinColumns = @JoinColumn(name = "FK_intervention_order_id"),
-      inverseJoinColumns = @JoinColumn(name = "FK_person_id")
-  )
-  private Set<Person> people = new HashSet<>();
 }
