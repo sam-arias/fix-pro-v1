@@ -1,0 +1,34 @@
+/* Estilos específicos para el dashboard de gerente */
+
+/* Colores de roles */
+.badge-manager {
+    background-color: #1cc88a;
+    color: white;
+  }
+  
+  /* Tarjetas especiales */
+  .card-manager {
+    border-left: 4px solid #1cc88a;
+  }
+  
+  /* Botones */
+  .btn-manager {
+    background-color: #1cc88a;
+    color: white;
+  }
+  
+  .btn-manager:hover {
+    background-color: #17a673;
+    color: white;
+  }
+  
+  /* Tablas */
+  .table-manager thead {
+    background-color: #1cc88a;
+    color: white;
+  }
+  
+  /* Gráficos */
+  .chart-manager .chart-legend li span {
+    background-color: #1cc88a;
+  }
