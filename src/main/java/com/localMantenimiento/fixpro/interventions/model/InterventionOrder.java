@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -31,7 +32,7 @@ public class InterventionOrder {
   private LocalDateTime entryDate;
 
   @Column(name = "delivery_date", nullable = false)
-  private LocalDate deliveryDate;
+  private LocalDateTime deliveryDate;
 
   @PrePersist
   protected void assignEntrydate() {
@@ -41,4 +42,10 @@ public class InterventionOrder {
   @ManyToOne
   @JoinColumn(name = "FK_device_id", nullable = false)
   private Device device;
+
+  @ManyToMany
+  @JoinTable(name = "intervention_order_person", joinColumns = @JoinColumn(name = "intervention_order_id"),
+  inverseJoinColumns = @JoinColumn(name = "person_id"))
+  private List<Person> people;
+
 }

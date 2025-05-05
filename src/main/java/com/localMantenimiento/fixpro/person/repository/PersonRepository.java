@@ -16,8 +16,7 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
   boolean existsByEmail(String email);
   Optional<Person> findByEmail(String email);
 
-  Optional<List<Person>> findPersonByRole(Role role);
+  Optional<List<Person>> findPersonByRoleId(Long roleId);
 
-  @Query("SELECT p FROM Person p JOIN p.role r JOIN p.specialties s WHERE r.id = :roleId AND :specialtyId MEMBER OF p.specialties")
-  Optional<List<Person>> findPeopleByRoleAndSpecialty(@Param("roleId") Long roleId, @Param("specialtyId") Long specialtyId);
+  List<Person> findByRoleIdAndSpecialtiesId(Long roleId, Long specialtyId);
 }

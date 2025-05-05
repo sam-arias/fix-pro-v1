@@ -21,6 +21,7 @@ public class PersonServiceImpl implements PersonService {
   @Autowired
   private SpecialtyRepository specialtyRepository;
 
+
   @Override
   public boolean registerPerson(Person newPerson) {
     personRepository.save(newPerson);
@@ -48,9 +49,9 @@ public class PersonServiceImpl implements PersonService {
   }
 
   @Override
-  public Optional<List<Person>> getPeopleByRole(String roleName) {
-    if(roleRepository.existsByRoleName(roleName)) {
-      return personRepository.findPersonByRole(roleRepository.findByRoleName(roleName));
+  public Optional<List<Person>> getPeopleByRole(Long roleId) {
+    if(roleRepository.existsById(roleId)) {
+      return personRepository.findPersonByRoleId(roleId);
     }
     return Optional.empty();
   }
@@ -58,7 +59,8 @@ public class PersonServiceImpl implements PersonService {
   @Override
   public Optional<List<Person>> getPeopleByRoleAndSpecialty(Long roleId, Long specialtyId) {
     if (roleRepository.existsById(roleId) && specialtyRepository.existsById(specialtyId)) {
-      return personRepository.findPeopleByRoleAndSpecialty(roleId, specialtyId);
+
+      return Optional.of(personRepository.findByRoleIdAndSpecialtiesId(roleId, specialtyId));
     }
     return Optional.empty();
   }

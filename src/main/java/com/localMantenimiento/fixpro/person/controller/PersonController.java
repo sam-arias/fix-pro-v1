@@ -36,9 +36,9 @@ public class PersonController {
     return personService.getPersonByEmail(email);
   }
 
-  @GetMapping("/by-role/{roleName}")
-  public Optional<List<Person>> getPeopleByRole(@PathVariable String roleName) {
-    return personService.getPeopleByRole(roleName);
+  @GetMapping("/by-role/{roleId}")
+  public Optional<List<Person>> getPeopleByRole(@PathVariable Long roleId) {
+    return personService.getPeopleByRole(roleId);
   }
 
   @GetMapping("/by-role-and-specialty")

@@ -12,6 +12,4 @@ import java.util.OptionalInt;
 public interface RoleRepository extends JpaRepository<Role, Long> {
   boolean existsById(Long id);
   boolean existsByRoleName(String roleName);
-
-  Role findByRoleName(String roleName);
 }

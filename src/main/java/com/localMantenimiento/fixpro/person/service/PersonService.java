@@ -14,7 +14,7 @@ public interface PersonService {
   public Optional<Person> getPersonById(Long id);
   public Optional<Person> getPersonByEmail(String email);
 
-  public Optional<List<Person>> getPeopleByRole(String roleName);
+  public Optional<List<Person>> getPeopleByRole(Long roleId);
   public Optional<List<Person>> getPeopleByRoleAndSpecialty(Long roleId, Long specialtyId);
 
   public boolean addRole(Role newRole);

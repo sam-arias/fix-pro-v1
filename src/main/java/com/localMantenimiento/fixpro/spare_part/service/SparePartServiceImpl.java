@@ -1,7 +1,9 @@
 package com.localMantenimiento.fixpro.spare_part.service;
 
 import com.localMantenimiento.fixpro.spare_part.model.SparePart;
+import com.localMantenimiento.fixpro.spare_part.model.UsedSparePart;
 import com.localMantenimiento.fixpro.spare_part.repository.SparePartRepository;
+import com.localMantenimiento.fixpro.spare_part.repository.UsedSparePartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ public class SparePartServiceImpl implements SparePartService {
 
   @Autowired
   private SparePartRepository sparePartRepository;
+  @Autowired
+  private UsedSparePartRepository usedSparePartRepository;
 
   @Override
   public boolean registerSparePart(SparePart sparePart) {
@@ -56,5 +60,27 @@ public class SparePartServiceImpl implements SparePartService {
   @Override
   public Optional<SparePart> getSparePartByBrandAndTypeAndModel(String brand, String type, String model) {
     return sparePartRepository.findSByBrandAndTypeAndModel(brand, type, model);
+  }
+
+
+  @Override
+  public boolean useSparePart(UsedSparePart newUsedSparePart) {
+    usedSparePartRepository.save(newUsedSparePart);
+    return true;
+  }
+
+  @Override
+  public boolean updateUsedSparePart(Long id, UsedSparePart updatedUsedSparePart) {
+    if (usedSparePartRepository.existsById(id)) {
+      updatedUsedSparePart.setId(id);
+      usedSparePartRepository.save(updatedUsedSparePart);
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public Optional<UsedSparePart> getUsedSparePartById(Long id) {
+    return usedSparePartRepository.findById(id);
   }
 }

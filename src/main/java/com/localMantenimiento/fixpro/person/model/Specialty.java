@@ -1,5 +1,6 @@
 package com.localMantenimiento.fixpro.person.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,5 +21,6 @@ public class Specialty {
   private String specialtyName;
 
   @ManyToMany(mappedBy = "specialties")
-  private List<Person> persons;
+  @JsonIgnore
+  private List<Person> people;
 }

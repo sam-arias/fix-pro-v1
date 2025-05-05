@@ -1,5 +1,7 @@
 package com.localMantenimiento.fixpro.person.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.localMantenimiento.fixpro.interventions.model.InterventionOrder;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,13 +26,14 @@ public class Person {
   @Column(name = "email", length = 100)
   private String email;
 
+  @JsonIgnore
   @Column(name = "password", length = 16)
   private String password;
 
   @Column(name = "phone", nullable = false, length = 10)
   private String phone;
 
-  @Column(name = "address", length = 20)
+  @Column(name = "address", length = 50)
   private String address;
 
   @Column(name = "availability")
@@ -44,4 +47,8 @@ public class Person {
   @JoinTable(name = "person_specialty", joinColumns = @JoinColumn(name = "person_id"),
   inverseJoinColumns = @JoinColumn(name = "specialty_id"))
   private List<Specialty> specialties;
+
+  @JsonIgnore
+  @ManyToMany(mappedBy = "people")
+  private List<InterventionOrder> interventionOrders;
 }

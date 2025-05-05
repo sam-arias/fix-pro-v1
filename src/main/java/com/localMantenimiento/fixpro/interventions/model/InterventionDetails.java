@@ -16,10 +16,10 @@ public class InterventionDetails {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "problem_description", nullable = false, length = 255)
+  @Column(name = "problem_description", nullable = false)
   private String problemDescription;
 
-  @Column(name = "solution_description", length = 255)
+  @Column(name = "solution_description")
   private String solutionDescription;
 
   @Column(name = "total_cost")
