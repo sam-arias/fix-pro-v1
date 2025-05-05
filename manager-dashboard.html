@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FixPro - Panel Gerencial</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Estilos -->
+  <link href="assets/css/styles.css" rel="stylesheet">
+  <link href="assets/css/manager.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Header dinámico -->
+  <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" id="common-header"></header>
+  
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar dinámico -->
+      <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" id="main-sidebar"></nav>
+      
+      <!-- Contenido principal -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4" id="main-content">
+        <!-- El contenido se carga dinámicamente desde manager.js -->
+      </main>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Scripts de la aplicación -->
+  <script src="assets/js/auth.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/manager.js"></script>
+</body>
+</html>
