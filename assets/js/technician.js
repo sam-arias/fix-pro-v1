@@ -1,559 +1,660 @@
-// Módulo de técnico para la aplicación FixPro
-// Configuración inicial
-const technicianConfig = {
-    apiBaseUrl: 'https://api.fixpro.com/v1',
-    technicianId: null,
-    currentView: null
-};
+// ==============================================
+// TÉCNICO - FUNCIONES ESPECÍFICAS
+// ==============================================
 
-// Elementos del DOM
-const domElements = {
-    dashboard: null,
-    assignedOrdersTable: null,
-    specialtiesList: null,
-    notificationsList: null,
-    statsCounters: {
-        assigned: null,
-        completed: null,
-        priority: null
+// Variables globales para el técnico
+let technicianData = {
+    id: 1001,
+    name: "Juan Pérez",
+    email: "juan.perez@fixpro.com",
+    specialties: ["Pantallas", "Baterías"],
+    status: "Disponible",
+    assignedOrders: [
+      { 
+        id: 1245, 
+        client: "María González", 
+        device: "iPhone 12", 
+        problem: "Pantalla rota", 
+        status: "En progreso", 
+        assignedDate: "2023-05-15",
+        priority: "Alta",
+        estimatedCompletion: "2023-05-20"
+      },
+      { 
+        id: 1243, 
+        client: "Laura Jiménez", 
+        device: "Samsung S21", 
+        problem: "Batería defectuosa", 
+        status: "Pendiente", 
+        assignedDate: "2023-05-14",
+        priority: "Normal",
+        estimatedCompletion: "2023-05-18"
+      }
+    ],
+    stats: {
+      assigned: 5,
+      completed: 3,
+      priority: 2,
+      completionRate: 85
     }
-};
-
-// Estado de la aplicación
-const appState = {
-    orders: [],
-    specialties: [],
-    notifications: [],
-    profile: null
-};
-
-/**
- * Inicialización del módulo de técnico
- */
-function initTechnicianModule() {
-    // Verificar autenticación y obtener ID del técnico
-    checkAuth().then(() => {
-        setupDOMReferences();
-        setupEventListeners();
-        loadInitialData();
-    }).catch(error => {
-        console.error('Error de autenticación:', error);
-        redirectToLogin();
-    });
-}
-
-/**
- * Verificar autenticación y rol
- */
-async function checkAuth() {
-    const token = localStorage.getItem('fixpro_token');
-    if (!token) {
-        throw new Error('No autenticado');
-    }
-
-    try {
-        const response = await fetch(`${technicianConfig.apiBaseUrl}/auth/verify`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Token inválido');
-        }
-
-        const data = await response.json();
-        if (data.role !== 'technician') {
-            throw new Error('Acceso no autorizado para este rol');
-        }
-
-        technicianConfig.technicianId = data.userId;
-        return true;
-    } catch (error) {
-        throw error;
-    }
-}
-
-/**
- * Configurar referencias a elementos DOM
- */
-function setupDOMReferences() {
-    domElements.dashboard = document.getElementById('technician-dashboard');
-    domElements.assignedOrdersTable = document.getElementById('assigned-orders-table');
-    domElements.specialtiesList = document.getElementById('specialties-list');
-    domElements.notificationsList = document.getElementById('notifications-list');
+  };
+  
+  // ======================
+  // FUNCIONES DEL DASHBOARD
+  // ======================
+  
+  function loadTechnicianDashboard() {
+    const mainContent = document.getElementById('mainContent');
     
-    if (domElements.dashboard) {
-        domElements.statsCounters.assigned = document.getElementById('assigned-count');
-        domElements.statsCounters.completed = document.getElementById('completed-count');
-        domElements.statsCounters.priority = document.getElementById('priority-count');
-    }
-}
-
-/**
- * Configurar event listeners
- */
-function setupEventListeners() {
-    // Navegación
-    document.getElementById('profile-link')?.addEventListener('click', showProfile);
-    document.getElementById('specialties-link')?.addEventListener('click', showSpecialties);
-    document.getElementById('assigned-orders-link')?.addEventListener('click', showAssignedOrders);
-    document.getElementById('notifications-link')?.addEventListener('click', showNotifications);
-    
-    // Botón de logout
-    document.getElementById('logout-btn')?.addEventListener('click', logout);
-    
-    // Eventos delegados para órdenes
-    if (domElements.assignedOrdersTable) {
-        domElements.assignedOrdersTable.addEventListener('click', handleOrderActions);
-    }
-    
-    // Formulario de especialidades
-    document.getElementById('add-specialty-form')?.addEventListener('submit', addSpecialty);
-}
-
-/**
- * Cargar datos iniciales según la vista actual
- */
-function loadInitialData() {
-    const path = window.location.pathname;
-    
-    if (path.includes('dashboard')) {
-        technicianConfig.currentView = 'dashboard';
-        loadDashboardData();
-    } else if (path.includes('specialties')) {
-        technicianConfig.currentView = 'specialties';
-        loadSpecialties();
-    } else if (path.includes('orders')) {
-        technicianConfig.currentView = 'orders';
-        loadAssignedOrders();
-    } else if (path.includes('notifications')) {
-        technicianConfig.currentView = 'notifications';
-        loadNotifications();
-    } else {
-        // Vista por defecto
-        window.location.href = 'technician-dashboard.html';
-    }
-}
-
-/**
- * Cargar datos del dashboard
- */
-async function loadDashboardData() {
-    try {
-        const [ordersData, specialtiesData, notificationsData] = await Promise.all([
-            fetchAssignedOrders(),
-            fetchSpecialties(),
-            fetchNotifications()
-        ]);
-
-        appState.orders = ordersData.orders;
-        appState.specialties = specialtiesData.specialties;
-        appState.notifications = notificationsData.notifications;
-
-        updateDashboardStats();
-        renderAssignedOrders(appState.orders);
-    } catch (error) {
-        console.error('Error loading dashboard data:', error);
-        showError('Error al cargar los datos del dashboard');
-    }
-}
-
-/**
- * Actualizar estadísticas del dashboard
- */
-function updateDashboardStats() {
-    if (!domElements.dashboard) return;
-
-    const assigned = appState.orders.length;
-    const completed = appState.orders.filter(o => o.status === 'Completada').length;
-    const priority = appState.orders.filter(o => o.priority === 'Alta').length;
-
-    domElements.statsCounters.assigned.textContent = assigned;
-    domElements.statsCounters.completed.textContent = completed;
-    domElements.statsCounters.priority.textContent = priority;
-}
-
-/**
- * Cargar órdenes asignadas
- */
-async function loadAssignedOrders() {
-    try {
-        const data = await fetchAssignedOrders();
-        appState.orders = data.orders;
-        renderAssignedOrders(appState.orders);
-    } catch (error) {
-        console.error('Error loading assigned orders:', error);
-        showError('Error al cargar las órdenes asignadas');
-    }
-}
-
-/**
- * Renderizar órdenes asignadas en la tabla
- */
-function renderAssignedOrders(orders) {
-    if (!domElements.assignedOrdersTable) return;
-
-    const tbody = domElements.assignedOrdersTable.querySelector('tbody');
-    tbody.innerHTML = '';
-
-    if (orders.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="6" class="text-center text-muted py-4">
-                    No tienes órdenes asignadas actualmente
-                </td>
-            </tr>
-        `;
-        return;
-    }
-
-    orders.forEach(order => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${order.id}</td>
-            <td>${order.device}</td>
-            <td>${truncateText(order.problem, 30)}</td>
-            <td>${formatDate(order.assignedDate)}</td>
-            <td><span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1 view-order-btn" data-id="${order.id}">
-                    <i class="fas fa-eye"></i>
-                </button>
-                ${order.status === 'Pendiente' || order.status === 'En progreso' ? `
-                <button class="btn btn-sm btn-success complete-order-btn" data-id="${order.id}">
-                    <i class="fas fa-check"></i>
-                </button>
-                ` : ''}
-            </td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-/**
- * Manejar acciones sobre órdenes
- */
-function handleOrderActions(event) {
-    const target = event.target.closest('button');
-    if (!target) return;
-
-    const orderId = target.getAttribute('data-id');
-    
-    if (target.classList.contains('view-order-btn')) {
-        viewOrderDetails(orderId);
-    } else if (target.classList.contains('complete-order-btn')) {
-        completeOrder(orderId);
-    }
-}
-
-/**
- * Ver detalles de una orden
- */
-function viewOrderDetails(orderId) {
-    window.location.href = `order-details.html?id=${orderId}&source=technician`;
-}
-
-/**
- * Marcar orden como completada
- */
-async function completeOrder(orderId) {
-    if (!confirm('¿Marcar esta orden como completada?')) return;
-
-    try {
-        const response = await fetch(`${technicianConfig.apiBaseUrl}/orders/${orderId}/complete`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('fixpro_token')}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Error al completar la orden');
-        }
-
-        // Actualizar la lista de órdenes
-        await loadAssignedOrders();
-        
-        // Si estamos en el dashboard, actualizar estadísticas
-        if (technicianConfig.currentView === 'dashboard') {
-            await loadDashboardData();
-        }
-
-        showSuccess('Orden marcada como completada');
-    } catch (error) {
-        console.error('Error completing order:', error);
-        showError('Error al completar la orden');
-    }
-}
-
-/**
- * Cargar especialidades del técnico
- */
-async function loadSpecialties() {
-    try {
-        const data = await fetchSpecialties();
-        appState.specialties = data.specialties;
-        renderSpecialties(appState.specialties);
-    } catch (error) {
-        console.error('Error loading specialties:', error);
-        showError('Error al cargar las especialidades');
-    }
-}
-
-/**
- * Renderizar lista de especialidades
- */
-function renderSpecialties(specialties) {
-    if (!domElements.specialtiesList) return;
-
-    domElements.specialtiesList.innerHTML = '';
-
-    if (specialties.length === 0) {
-        domElements.specialtiesList.innerHTML = `
-            <li class="list-group-item text-center text-muted py-4">
-                No tienes especialidades registradas
-            </li>
-        `;
-        return;
-    }
-
-    specialties.forEach(specialty => {
-        const item = document.createElement('li');
-        item.className = 'list-group-item d-flex justify-content-between align-items-center';
-        item.innerHTML = `
-            <div>
-                <h6 class="mb-1">${specialty.name}</h6>
-                <small class="text-muted">${specialty.description || 'Sin descripción'}</small>
+    mainContent.innerHTML = `
+      <div class="row mb-4">
+        <div class="col-md-4">
+          <div class="card stats-card primary">
+            <div class="card-body">
+              <h5 class="card-title">Órdenes asignadas</h5>
+              <h2 class="card-text">${technicianData.stats.assigned}</h2>
+              <p class="small text-muted">+1 desde ayer</p>
             </div>
-            <span class="badge ${getLevelBadgeClass(specialty.level)}">${specialty.level}</span>
-        `;
-        domElements.specialtiesList.appendChild(item);
-    });
-}
-
-/**
- * Agregar nueva especialidad
- */
-async function addSpecialty(event) {
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card stats-card success">
+            <div class="card-body">
+              <h5 class="card-title">Completadas</h5>
+              <h2 class="card-text">${technicianData.stats.completed}</h2>
+              <p class="small text-muted">Esta semana</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card stats-card warning">
+            <div class="card-body">
+              <h5 class="card-title">Prioritarias</h5>
+              <h2 class="card-text">${technicianData.stats.priority}</h2>
+              <p class="small text-muted">Urgentes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"><i class="fas fa-tasks me-2"></i>Mis órdenes asignadas</h5>
+              <div class="table-responsive">
+                <table class="table table-hover" id="assignedOrdersTable">
+                  <thead>
+                    <tr>
+                      <th>Orden #</th>
+                      <th>Cliente</th>
+                      <th>Dispositivo</th>
+                      <th>Problema</th>
+                      <th>Fecha asignación</th>
+                      <th>Prioridad</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${technicianData.assignedOrders.map(order => `
+                      <tr>
+                        <td>${order.id}</td>
+                        <td>${order.client}</td>
+                        <td>${order.device}</td>
+                        <td>${order.problem}</td>
+                        <td>${formatDate(order.assignedDate)}</td>
+                        <td>
+                          ${order.priority === 'Alta' ? 
+                            '<span class="badge bg-danger">Alta</span>' : 
+                            '<span class="badge bg-primary">Normal</span>'}
+                        </td>
+                        <td><span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></td>
+                        <td>
+                          <button class="btn btn-sm btn-primary me-1" onclick="viewOrderDetails(${order.id})">
+                            <i class="fas fa-eye"></i>
+                          </button>
+                          ${order.status !== 'Completada' ? `
+                          <button class="btn btn-sm btn-success" onclick="completeOrder(${order.id})">
+                            <i class="fas fa-check"></i>
+                          </button>
+                          ` : ''}
+                        </td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  
+  // =============================
+  // GESTIÓN DE ESPECIALIDADES
+  // =============================
+  
+  function showSpecialties() {
+    const mainContent = document.getElementById('mainContent');
+    
+    mainContent.innerHTML = `
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Mis Especialidades</h1>
+        <button class="btn btn-primary" onclick="showAddSpecialtyForm()">
+          <i class="fas fa-plus me-2"></i>Agregar especialidad
+        </button>
+      </div>
+      
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Especialidad</th>
+                  <th>Nivel</th>
+                  <th>Certificación</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${technicianData.specialties.map((specialty, index) => `
+                  <tr>
+                    <td>${specialty}</td>
+                    <td>
+                      <select class="form-select form-select-sm specialty-level" 
+                              data-index="${index}" 
+                              onchange="updateSpecialtyLevel(${index}, this.value)">
+                        <option value="Básico">Básico</option>
+                        <option value="Intermedio" selected>Intermedio</option>
+                        <option value="Avanzado">Avanzado</option>
+                      </select>
+                    </td>
+                    <td>
+                      <span class="badge bg-success">
+                        <i class="fas fa-certificate me-1"></i>Certificado
+                      </span>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-danger" onclick="removeSpecialty(${index})">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  
+  function showAddSpecialtyForm() {
+    const mainContent = document.getElementById('mainContent');
+    
+    mainContent.innerHTML = `
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Agregar Especialidad</h1>
+      </div>
+      
+      <div class="card">
+        <div class="card-body">
+          <form id="addSpecialtyForm" onsubmit="addSpecialty(event)">
+            <div class="mb-3">
+              <label for="specialtyName" class="form-label">Nombre de la especialidad</label>
+              <input type="text" class="form-control" id="specialtyName" required>
+            </div>
+            
+            <div class="mb-3">
+              <label for="specialtyLevel" class="form-label">Nivel de competencia</label>
+              <select class="form-select" id="specialtyLevel" required>
+                <option value="Básico">Básico</option>
+                <option value="Intermedio" selected>Intermedio</option>
+                <option value="Avanzado">Avanzado</option>
+              </select>
+            </div>
+            
+            <div class="mb-3">
+              <label for="certificationFile" class="form-label">Certificación (opcional)</label>
+              <input class="form-control" type="file" id="certificationFile">
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <button type="button" class="btn btn-secondary me-md-2" onclick="showSpecialties()">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+  }
+  
+  function addSpecialty(event) {
     event.preventDefault();
+    const specialtyName = document.getElementById('specialtyName').value;
     
-    const form = event.target;
-    const formData = new FormData(form);
-    const name = formData.get('name');
-    const level = formData.get('level');
-    const description = formData.get('description') || '';
+    if (technicianData.specialties.includes(specialtyName)) {
+      alert('Ya tienes esta especialidad registrada');
+      return;
+    }
     
-    try {
-        const response = await fetch(`${technicianConfig.apiBaseUrl}/technicians/${technicianConfig.technicianId}/specialties`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('fixpro_token')}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name, level, description })
-        });
-
-        if (!response.ok) {
-            throw new Error('Error al agregar especialidad');
-        }
-
-        // Recargar la lista de especialidades
-        await loadSpecialties();
-        form.reset();
-        showSuccess('Especialidad agregada correctamente');
-    } catch (error) {
-        console.error('Error adding specialty:', error);
-        showError('Error al agregar especialidad');
+    technicianData.specialties.push(specialtyName);
+    showSpecialties();
+  }
+  
+  function updateSpecialtyLevel(index, level) {
+    // Aquí iría la lógica para actualizar el nivel en la base de datos
+    console.log(`Actualizando especialidad ${technicianData.specialties[index]} a nivel ${level}`);
+  }
+  
+  function removeSpecialty(index) {
+    if (confirm(`¿Eliminar la especialidad ${technicianData.specialties[index]}?`)) {
+      technicianData.specialties.splice(index, 1);
+      showSpecialties();
     }
-}
-
-/**
- * Cargar notificaciones
- */
-async function loadNotifications() {
-    try {
-        const data = await fetchNotifications();
-        appState.notifications = data.notifications;
-        renderNotifications(appState.notifications);
-    } catch (error) {
-        console.error('Error loading notifications:', error);
-        showError('Error al cargar las notificaciones');
+  }
+  
+  // =============================
+  // GESTIÓN DE ÓRDENES
+  // =============================
+  
+  function showAssignedOrders() {
+    const mainContent = document.getElementById('mainContent');
+    
+    mainContent.innerHTML = `
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Órdenes Asignadas</h1>
+        <div class="btn-group">
+          <button class="btn btn-outline-secondary" onclick="filterOrders('all')">Todas</button>
+          <button class="btn btn-outline-primary" onclick="filterOrders('pending')">Pendientes</button>
+          <button class="btn btn-outline-warning" onclick="filterOrders('in-progress')">En progreso</button>
+          <button class="btn btn-outline-success" onclick="filterOrders('completed')">Completadas</button>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Orden #</th>
+                  <th>Cliente</th>
+                  <th>Dispositivo</th>
+                  <th>Problema</th>
+                  <th>Fecha asignación</th>
+                  <th>Prioridad</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody">
+                ${technicianData.assignedOrders.map(order => `
+                  <tr>
+                    <td>${order.id}</td>
+                    <td>${order.client}</td>
+                    <td>${order.device}</td>
+                    <td>${order.problem}</td>
+                    <td>${formatDate(order.assignedDate)}</td>
+                    <td>
+                      ${order.priority === 'Alta' ? 
+                        '<span class="badge bg-danger">Alta</span>' : 
+                        '<span class="badge bg-primary">Normal</span>'}
+                    </td>
+                    <td><span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-primary me-1" onclick="viewOrderDetails(${order.id})">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                      ${order.status !== 'Completada' ? `
+                      <button class="btn btn-sm btn-success me-1" onclick="updateOrderStatus(${order.id}, 'En progreso')">
+                        <i class="fas fa-play"></i>
+                      </button>
+                      <button class="btn btn-sm btn-success" onclick="completeOrder(${order.id})">
+                        <i class="fas fa-check"></i>
+                      </button>
+                      ` : ''}
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  
+  function filterOrders(status) {
+    const tbody = document.getElementById('ordersTableBody');
+    let filteredOrders = technicianData.assignedOrders;
+    
+    switch(status) {
+      case 'pending':
+        filteredOrders = technicianData.assignedOrders.filter(o => o.status === 'Pendiente');
+        break;
+      case 'in-progress':
+        filteredOrders = technicianData.assignedOrders.filter(o => o.status === 'En progreso');
+        break;
+      case 'completed':
+        filteredOrders = technicianData.assignedOrders.filter(o => o.status === 'Completada');
+        break;
     }
-}
-
-/**
- * Renderizar notificaciones
- */
-function renderNotifications(notifications) {
-    if (!domElements.notificationsList) return;
-
-    domElements.notificationsList.innerHTML = '';
-
-    if (notifications.length === 0) {
-        domElements.notificationsList.innerHTML = `
-            <li class="list-group-item text-center text-muted py-4">
-                No tienes notificaciones nuevas
-            </li>
-        `;
-        return;
-    }
-
-    notifications.forEach(notification => {
-        const item = document.createElement('li');
-        item.className = 'list-group-item notification-item';
-        if (!notification.read) {
-            item.classList.add('unread');
-        }
-        
-        item.innerHTML = `
-            <div class="d-flex w-100 justify-content-between">
-                <h6 class="mb-1">${notification.title}</h6>
-                <small>${formatTimeAgo(notification.date)}</small>
+    
+    tbody.innerHTML = filteredOrders.map(order => `
+      <tr>
+        <td>${order.id}</td>
+        <td>${order.client}</td>
+        <td>${order.device}</td>
+        <td>${order.problem}</td>
+        <td>${formatDate(order.assignedDate)}</td>
+        <td>
+          ${order.priority === 'Alta' ? 
+            '<span class="badge bg-danger">Alta</span>' : 
+            '<span class="badge bg-primary">Normal</span>'}
+        </td>
+        <td><span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></td>
+        <td>
+          <button class="btn btn-sm btn-primary me-1" onclick="viewOrderDetails(${order.id})">
+            <i class="fas fa-eye"></i>
+          </button>
+          ${order.status !== 'Completada' ? `
+          <button class="btn btn-sm btn-success me-1" onclick="updateOrderStatus(${order.id}, 'En progreso')">
+            <i class="fas fa-play"></i>
+          </button>
+          <button class="btn btn-sm btn-success" onclick="completeOrder(${order.id})">
+            <i class="fas fa-check"></i>
+          </button>
+          ` : ''}
+        </td>
+      </tr>
+    `).join('');
+  }
+  
+  function viewOrderDetails(orderId) {
+    const order = technicianData.assignedOrders.find(o => o.id === orderId);
+    if (!order) return;
+    
+    const mainContent = document.getElementById('mainContent');
+    
+    mainContent.innerHTML = `
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Detalles de Orden #${order.id}</h1>
+        <button class="btn btn-outline-secondary" onclick="showAssignedOrders()">
+          <i class="fas fa-arrow-left me-1"></i> Volver
+        </button>
+      </div>
+      
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h5><i class="fas fa-user me-2"></i>Información del Cliente</h5>
+              <p><strong>Nombre:</strong> ${order.client}</p>
+              <p><strong>Teléfono:</strong> 555-1234</p>
+              <p><strong>Email:</strong> cliente@example.com</p>
             </div>
-            <p class="mb-1">${notification.message}</p>
-            ${notification.link ? `
-            <small><a href="${notification.link}" class="text-primary">Ver detalles</a></small>
-            ` : ''}
-        `;
-        
-        item.addEventListener('click', () => markNotificationAsRead(notification.id));
-        domElements.notificationsList.appendChild(item);
-    });
-}
-
-/**
- * Marcar notificación como leída
- */
-async function markNotificationAsRead(notificationId) {
-    try {
-        await fetch(`${technicianConfig.apiBaseUrl}/notifications/${notificationId}/read`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('fixpro_token')}`
-            }
-        });
-        
-        // Recargar notificaciones
-        await loadNotifications();
-    } catch (error) {
-        console.error('Error marking notification as read:', error);
+            <div class="col-md-6">
+              <h5><i class="fas fa-laptop me-2"></i>Información del Dispositivo</h5>
+              <p><strong>Dispositivo:</strong> ${order.device}</p>
+              <p><strong>Problema:</strong> ${order.problem}</p>
+              <p><strong>Prioridad:</strong> 
+                <span class="badge ${order.priority === 'Alta' ? 'bg-danger' : 'bg-primary'}">
+                  ${order.priority}
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-tasks me-2"></i>Progreso de la Reparación</h5>
+          
+          <div class="mb-3">
+            <label class="form-label">Estado actual</label>
+            <select class="form-select" id="orderStatus" onchange="updateOrderStatus(${order.id}, this.value)">
+              <option value="Pendiente" ${order.status === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+              <option value="En progreso" ${order.status === 'En progreso' ? 'selected' : ''}>En progreso</option>
+              <option value="Completada" ${order.status === 'Completada' ? 'selected' : ''}>Completada</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="orderNotes" class="form-label">Notas de la reparación</label>
+            <textarea class="form-control" id="orderNotes" rows="3" placeholder="Agregar notas sobre el proceso de reparación..."></textarea>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">Partes utilizadas</label>
+            <div class="list-group mb-2">
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                Pantalla iPhone 12
+                <span class="badge bg-primary">1</span>
+              </div>
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                Adhesivo para pantalla
+                <span class="badge bg-primary">1</span>
+              </div>
+            </div>
+            <button class="btn btn-sm btn-outline-primary" onclick="addPartToOrder(${order.id})">
+              <i class="fas fa-plus me-1"></i> Agregar parte
+            </button>
+          </div>
+          
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-primary" onclick="saveOrderDetails(${order.id})">
+              <i class="fas fa-save me-1"></i> Guardar cambios
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  
+  function updateOrderStatus(orderId, newStatus) {
+    const order = technicianData.assignedOrders.find(o => o.id === orderId);
+    if (order) {
+      order.status = newStatus;
+      
+      if (newStatus === 'Completada') {
+        completeOrder(orderId);
+        return;
+      }
+      
+      showSuccess(`Estado de la orden #${orderId} actualizado a "${newStatus}"`);
+      
+      // Actualizar la vista actual
+      if (document.getElementById('orderStatus')) {
+        document.getElementById('orderStatus').value = newStatus;
+      }
     }
-}
-
-/**
- * Funciones de ayuda para API
- */
-async function fetchAssignedOrders() {
-    const response = await fetch(`${technicianConfig.apiBaseUrl}/technicians/${technicianConfig.technicianId}/orders`, {
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('fixpro_token')}`
-        }
-    });
-    return await response.json();
-}
-
-async function fetchSpecialties() {
-    const response = await fetch(`${technicianConfig.apiBaseUrl}/technicians/${technicianConfig.technicianId}/specialties`, {
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('fixpro_token')}`
-        }
-    });
-    return await response.json();
-}
-
-async function fetchNotifications() {
-    const response = await fetch(`${technicianConfig.apiBaseUrl}/notifications`, {
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('fixpro_token')}`
-        }
-    });
-    return await response.json();
-}
-
-/**
- * Funciones de navegación
- */
-function showProfile() {
-    window.location.href = 'profile.html?role=technician';
-}
-
-function showSpecialties() {
-    window.location.href = 'technician-specialties.html';
-}
-
-function showAssignedOrders() {
-    window.location.href = 'technician-orders.html';
-}
-
-function showNotifications() {
-    window.location.href = 'notifications.html?role=technician';
-}
-
-function logout() {
-    localStorage.removeItem('fixpro_token');
-    redirectToLogin();
-}
-
-function redirectToLogin() {
-    window.location.href = 'login.html';
-}
-
-/**
- * Funciones de utilidad
- */
-function getStatusBadgeClass(status) {
-    const statusClasses = {
-        'Pendiente': 'bg-info',
-        'En progreso': 'bg-warning',
-        'Completada': 'bg-success',
-        'Cancelada': 'bg-danger',
-        'Rechazada': 'bg-secondary'
-    };
-    return statusClasses[status] || 'bg-light text-dark';
-}
-
-function getLevelBadgeClass(level) {
-    const levelClasses = {
-        'Básico': 'bg-secondary',
-        'Intermedio': 'bg-primary',
-        'Avanzado': 'bg-success',
-        'Experto': 'bg-dark'
-    };
-    return levelClasses[level] || 'bg-light text-dark';
-}
-
-function formatDate(dateString) {
+  }
+  
+  function completeOrder(orderId) {
+    if (!confirm('¿Marcar esta orden como completada?')) return;
+    
+    const order = technicianData.assignedOrders.find(o => o.id === orderId);
+    if (order) {
+      order.status = 'Completada';
+      order.completionDate = new Date().toISOString().split('T')[0];
+      technicianData.stats.completed++;
+      
+      showSuccess(`Orden #${orderId} marcada como completada`);
+      showAssignedOrders();
+    }
+  }
+  
+  function saveOrderDetails(orderId) {
+    const notes = document.getElementById('orderNotes').value;
+    // Aquí iría la lógica para guardar las notas en la base de datos
+    showSuccess('Cambios guardados correctamente');
+  }
+  
+  function addPartToOrder(orderId) {
+    // Implementar lógica para agregar partes a la orden
+    alert(`Agregar parte a la orden #${orderId}`);
+  }
+  
+  // =============================
+  // NOTIFICACIONES
+  // =============================
+  
+  let notifications = [
+    {
+      id: 1,
+      title: "Nueva orden asignada",
+      message: "Se te ha asignado la orden #1245 para reparar un iPhone 12",
+      date: "2023-05-15T09:30:00",
+      read: false,
+      type: "assignment"
+    },
+    {
+      id: 2,
+      title: "Repuesto disponible",
+      message: "El repuesto SCR-001 (Pantalla iPhone 12) ya está disponible",
+      date: "2023-05-14T14:15:00",
+      read: true,
+      type: "inventory"
+    },
+    {
+      id: 3,
+      title: "Recordatorio de entrega",
+      message: "La orden #1243 debe ser completada hoy",
+      date: "2023-05-18T08:00:00",
+      read: false,
+      type: "reminder"
+    }
+  ];
+  
+  function showNotifications() {
+    const mainContent = document.getElementById('mainContent');
+    
+    mainContent.innerHTML = `
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Notificaciones</h1>
+        <button class="btn btn-outline-danger" onclick="clearAllNotifications()">
+          <i class="fas fa-trash me-1"></i> Limpiar todo
+        </button>
+      </div>
+      
+      <div class="card">
+        <div class="card-body">
+          <div class="list-group">
+            ${notifications.map(notification => `
+              <a href="#" class="list-group-item list-group-item-action ${!notification.read ? 'active' : ''}" 
+                 onclick="viewNotification(${notification.id})">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">${notification.title}</h5>
+                  <small>${formatTimeAgo(notification.date)}</small>
+                </div>
+                <p class="mb-1">${notification.message}</p>
+                <small class="text-muted">${formatNotificationType(notification.type)}</small>
+              </a>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  
+  function viewNotification(notificationId) {
+    const notification = notifications.find(n => n.id === notificationId);
+    if (!notification) return;
+    
+    // Marcar como leída
+    notification.read = true;
+    
+    // Mostrar detalles según el tipo de notificación
+    switch(notification.type) {
+      case 'assignment':
+        // Redirigir a la orden asignada
+        const orderId = parseInt(notification.message.match(/#(\d+)/)[1]);
+        viewOrderDetails(orderId);
+        break;
+      default:
+        alert(notification.message);
+        showNotifications(); // Recargar notificaciones
+    }
+  }
+  
+  function clearAllNotifications() {
+    if (confirm('¿Eliminar todas las notificaciones?')) {
+      notifications = notifications.filter(n => !n.read);
+      showNotifications();
+    }
+  }
+  
+  // =============================
+  // FUNCIONES DE UTILIDAD
+  // =============================
+  
+  function formatDate(dateString) {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('es-ES', options);
-}
-
-function formatTimeAgo(dateString) {
+  }
+  
+  function formatTimeAgo(dateString) {
     const now = new Date();
     const date = new Date(dateString);
-    const diffInSeconds = Math.floor((now - date) / 1000);
+    const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
     
-    if (diffInSeconds < 60) return 'Hace unos segundos';
-    if (diffInSeconds < 3600) return `Hace ${Math.floor(diffInSeconds / 60)} minutos`;
-    if (diffInSeconds < 86400) return `Hace ${Math.floor(diffInSeconds / 3600)} horas`;
-    return `Hace ${Math.floor(diffInSeconds / 86400)} días`;
-}
-
-function truncateText(text, maxLength) {
-    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
-}
-
-function showSuccess(message) {
-    // Implementar toast o alerta de éxito
-    alert(message); // Reemplazar con implementación real
-}
-
-function showError(message) {
-    // Implementar toast o alerta de error
-    alert(message); // Reemplazar con implementación real
-}
-
-/**
- * Inicializar módulo cuando el DOM esté listo
- */
-document.addEventListener('DOMContentLoaded', initTechnicianModule);
+    if (diffInHours < 1) return 'Hace menos de una hora';
+    if (diffInHours < 24) return `Hace ${diffInHours} horas`;
+    
+    const diffInDays = Math.floor(diffInHours / 24);
+    return `Hace ${diffInDays} días`;
+  }
+  
+  function formatNotificationType(type) {
+    const types = {
+      'assignment': 'Asignación',
+      'inventory': 'Inventario',
+      'reminder': 'Recordatorio',
+      'system': 'Sistema'
+    };
+    return types[type] || type;
+  }
+  
+  function getStatusBadgeClass(status) {
+    const statusClasses = {
+      'Pendiente': 'bg-secondary',
+      'En progreso': 'bg-warning',
+      'Completada': 'bg-success',
+      'Cancelada': 'bg-danger'
+    };
+    return statusClasses[status] || 'bg-light text-dark';
+  }
+  
+  function showSuccess(message) {
+    // Implementar toast de éxito
+    alert(message); // Temporal, reemplazar con implementación real
+  }
+  
+  // =============================
+  // INICIALIZACIÓN
+  // =============================
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    // Verificar rol de usuario (en una app real esto vendría del sistema de autenticación)
+    const userRole = localStorage.getItem('userRole') || 'technician';
+    
+    if (userRole === 'technician') {
+      // Cargar dashboard por defecto
+      loadTechnicianDashboard();
+      
+      // Configurar menú activo
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+          document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    } else {
+      window.location.href = 'unauthorized.html';
+    }
+  });

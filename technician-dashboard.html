@@ -7,16 +7,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/technician.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/technician.css">
 </head>
 <body class="technician-dashboard">
     <!-- Header -->
-    <header class="navbar navbar-expand-md navbar-dark fixed-top shadow-sm">        
+    <header class="navbar navbar-expand-md navbar-dark fixed-top shadow-sm bg-primary">        
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Tecnico</span>
+            <a class="navbar-brand fw-bold" href="technician-dashboard.html">
+                <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Técnico</span>
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
@@ -26,43 +25,71 @@
             <!-- Menú usuario -->
             <div class="dropdown ms-auto">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown">
-                    <img src="assets/img/profile-placeholder.png" alt="Admin" width="36" height="36" class="rounded-circle me-2 border border-2 border-light">
-                    <span class="d-none d-md-inline">Tecnico</span>
+                    <img src="../assets/img/profile-placeholder.png" alt="Técnico" width="36" height="36" class="rounded-circle me-2 border border-2 border-light">
+                    <span class="d-none d-md-inline" id="username-display">Técnico</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow">
-                    <li><a class="dropdown-item" href="#" onclick="showProfile()"><i class="fas fa-user-cog me-2" style="color: var(--color4)"></i> Perfil</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="showSystemSettings()"><i class="fas fa-sliders-h me-2" style="color: var(--color4)"></i> Configuración</a></li>
+                    <li><a class="dropdown-item" href="#" id="profile-link"><i class="fas fa-user-cog me-2"></i> Perfil</a></li>
+                    <li><a class="dropdown-item" href="#" id="settings-link"><i class="fas fa-sliders-h me-2"></i> Configuración</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
+                    <li><a class="dropdown-item text-danger" href="#" id="logout-link"><i class="fas fa-sign-out-alt me-4"></i> Cerrar sesión</a></li>
                 </ul>
             </div>
         </div>
     </header>
-    <div class="wrapper">
-        <!-- Sidebar -->
-        <div id="sidebar-container"></div>
-        
-        <!-- Main Content -->
-        <div id="content">
-            <!-- Top Navigation -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
-                    <button type="button" id="sidebarCollapse" class="btn btn-info">
-                        <i class="fas fa-align-left"></i>
-                    </button>
-                    <h2 class="ms-3">Dashboard Técnico</h2>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse bg-light">
+                <div class="position-sticky pt-3 vh-100">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="technician-dashboard.html">
+                                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="technician-specialties.html">
+                                <i class="fas fa-certificate me-2"></i> Mis especialidades
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="technician-orders.html">
+                                <i class="fas fa-list-check me-2"></i> Órdenes asignadas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="technician-notifications.html">
+                                <i class="fas fa-bell me-2"></i> Notificaciones
+                                <span class="badge bg-danger rounded-pill float-end" id="notification-count">0</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </nav>
             
-            <!-- Dashboard Content -->
-            <div class="container-fluid mt-4">
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-3">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Dashboard</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="refresh-btn">
+                                <i class="fas fa-sync-alt me-1"></i> Actualizar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <div class="card stats-card primary">
                             <div class="card-body">
                                 <h5 class="card-title">Asignadas</h5>
-                                <h2 class="card-text" id="assigned-count">5</h2>
-                                <p class="small text-muted">+1 desde ayer</p>
+                                <h2 class="card-text" id="assigned-count">0</h2>
+                                <p class="small text-muted">Cargando...</p>
                             </div>
                         </div>
                     </div>
@@ -70,8 +97,8 @@
                         <div class="card stats-card success">
                             <div class="card-body">
                                 <h5 class="card-title">Completadas</h5>
-                                <h2 class="card-text" id="completed-count">3</h2>
-                                <p class="small text-muted">Esta semana</p>
+                                <h2 class="card-text" id="completed-count">0</h2>
+                                <p class="small text-muted">Cargando...</p>
                             </div>
                         </div>
                     </div>
@@ -79,42 +106,52 @@
                         <div class="card stats-card warning">
                             <div class="card-body">
                                 <h5 class="card-title">Prioritarias</h5>
-                                <h2 class="card-text" id="priority-count">2</h2>
-                                <p class="small text-muted">Urgentes</p>
+                                <h2 class="card-text" id="priority-count">0</h2>
+                                <p class="small text-muted">Cargando...</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="fas fa-tasks me-2"></i>Mis órdenes asignadas
-                                </h5>
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-assigned-orders" id="assigned-orders-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Orden #</th>
-                                                <th>Dispositivo</th>
-                                                <th>Problema</th>
-                                                <th>Fecha asignación</th>
-                                                <th>Estado</th>
-                                                <th>Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- Se llena dinámicamente con JavaScript -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                <!-- Assigned Orders Table -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-tasks me-2"></i>Mis órdenes asignadas
+                            </h5>
+                            <a href="technician-orders.html" class="btn btn-sm btn-outline-primary">
+                                Ver todas <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-assigned-orders" id="assigned-orders-table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Orden #</th>
+                                        <th>Dispositivo</th>
+                                        <th>Problema</th>
+                                        <th>Fecha asignación</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Cargando...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     </div>
     
@@ -124,14 +161,107 @@
     <script src="assets/js/main.js"></script>
     <script src="assets/js/technician.js"></script>
     <script>
-        // Cargar sidebar
-        fetch('templates/sidebar-tech.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('sidebar-container').innerHTML = data;
-                // Verificar autenticación y rol
-                checkAuthAndRole('technician');
+        // Función para verificar autenticación y rol
+        async function checkAuthAndRole(requiredRole) {
+            return new Promise((resolve, reject) => {
+                // Verificar si el usuario está autenticado
+                const currentUser = auth.getCurrentUser();
+                
+                if (!currentUser) {
+                    // Redirigir al login si no está autenticado
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                // Mostrar nombre de usuario en el navbar
+                document.getElementById('username-display').textContent = currentUser.nombre || currentUser.username;
+                
+                // Verificar si el usuario tiene el rol requerido
+                if (!auth.hasRole(requiredRole)) {
+                    // Redirigir a página no autorizada
+                    window.location.href = 'unauthorized.html';
+                    return;
+                }
+                
+                // Si todo está bien, resolver la promesa
+                resolve();
             });
+        }
+        
+        // Función para cerrar sesión
+        function logout() {
+            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                auth.logout();
+            }
+        }
+        
+        // Función para mostrar perfil
+        function showProfile() {
+            // Implementación para mostrar perfil del usuario
+            alert('Mostrando perfil del técnico');
+        }
+        
+        // Función para mostrar configuración
+        function showSettings() {
+            // Implementación para mostrar configuración
+            alert('Mostrando configuración del técnico');
+        }
+        
+        // Función para cargar datos del dashboard
+        function loadDashboardData() {
+            // Implementación para cargar datos del dashboard
+            console.log('Cargando datos del dashboard...');
+            
+            // Simulación de carga de datos
+            setTimeout(() => {
+                document.getElementById('assigned-count').textContent = '5';
+                document.getElementById('completed-count').textContent = '12';
+                document.getElementById('priority-count').textContent = '2';
+                document.getElementById('notification-count').textContent = '3';
+                
+                // Actualizar tabla de órdenes
+                const tableBody = document.querySelector('#assigned-orders-table tbody');
+                tableBody.innerHTML = `
+                    <tr>
+                        <td>#ORD-2023-001</td>
+                        <td>iPhone 12</td>
+                        <td>Pantalla rota</td>
+                        <td>15/10/2023</td>
+                        <td><span class="badge bg-warning">En progreso</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary">Detalles</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#ORD-2023-002</td>
+                        <td>MacBook Pro</td>
+                        <td>Problema de batería</td>
+                        <td>16/10/2023</td>
+                        <td><span class="badge bg-primary">Asignada</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary">Detalles</button>
+                        </td>
+                    </tr>
+                `;
+            }, 1000);
+        }
+        
+        // Inicializar el dashboard cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación y rol antes de cargar el dashboard
+            checkAuthAndRole('tecnico').then(() => {
+                // Cargar datos del dashboard
+                loadDashboardData();
+                
+                // Configurar event listeners
+                document.getElementById('refresh-btn').addEventListener('click', loadDashboardData);
+                document.getElementById('profile-link').addEventListener('click', showProfile);
+                document.getElementById('settings-link').addEventListener('click', showSettings);
+                document.getElementById('logout-link').addEventListener('click', logout);
+            }).catch(error => {
+                console.error('Error en la verificación:', error);
+            });
+        });
     </script>
 </body>
 </html>
