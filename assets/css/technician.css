@@ -1,43 +1,41 @@
-/* Estilos específicos para el dashboard de técnico */
+/* Estilos específicos para el perfil de técnico */
 
-/* Colores de roles */
-.badge-technician {
-    background-color: #4e73df;
-    color: white;
-  }
-  
-  /* Tarjetas especiales */
-  .card-technician {
-    border-left: 4px solid #4e73df;
-  }
-  
-  /* Botones */
-  .btn-technician {
-    background-color: #4e73df;
-    color: white;
-  }
-  
-  .btn-technician:hover {
-    background-color: #2e59d9;
-    color: white;
-  }
-  
-  /* Tablas */
-  .table-technician thead {
-    background-color: #4e73df;
-    color: white;
-  }
-  
-  /* Prioridades */
-  .badge-priority-high {
-    background-color: #e74a3b;
-  }
-  
-  .badge-priority-medium {
-    background-color: #f6c23e;
-    color: #212529;
-  }
-  
-  .badge-priority-low {
-    background-color: #1cc88a;
-  }
+/* Dashboard */
+.stats-card.primary {
+  background-color: #e3f2fd;
+  border-left: 4px solid #2196f3;
+}
+
+.stats-card.success {
+  background-color: #e8f5e9;
+  border-left: 4px solid #4caf50;
+}
+
+.stats-card.warning {
+  background-color: #fff8e1;
+  border-left: 4px solid #ffc107;
+}
+
+/* Tabla de órdenes asignadas */
+.table-assigned-orders {
+  font-size: 0.9rem;
+}
+
+.table-assigned-orders .badge {
+  font-size: 0.8em;
+}
+
+/* Especialidades */
+.specialty-card {
+  border-radius: 8px;
+  transition: transform 0.3s;
+}
+
+.specialty-card:hover {
+  transform: translateY(-5px);
+}
+
+.specialty-badge {
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+}
