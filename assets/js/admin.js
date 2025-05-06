@@ -1286,7 +1286,7 @@ let currentUser = {
   lastName: "Sistema",
   email: "admin@fixpro.com",
   phone: "555-1234",
-  avatar: "../assets/img/profile-placeholder.png",
+  avatar: "assets/img/profile-placeholder.png",
   role: "Administrador",
   lastLogin: new Date().toLocaleString(),
   notifications: true,

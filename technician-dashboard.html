@@ -12,7 +12,7 @@
 </head>
 <body class="technician-dashboard">
     <!-- Header -->
-    <header class="navbar navbar-expand-md navbar-dark fixed-top shadow-sm">        
+    <header class="navbar navbar-expand-md navbar-dark shadow-sm">        
         <div class="container-fluid">
             <a class="navbar-brand fw-bold" href="technician-dashboard.html">
                 <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Técnico</span>
@@ -29,8 +29,7 @@
                     <span class="d-none d-md-inline" id="username-display">Técnico</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow">
-                    <li><a class="dropdown-item" href="#" onclick="showProfile()"><i class="fas fa-user-cog me-2" style="color: var(--color4)"></i> Perfil</a></li>                    <li><a class="dropdown-item" href="#" id="settings-link"><i class="fas fa-sliders-h me-2"></i> Configuración</a></li>
-                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#" onclick="showProfile()"><i class="fas fa-user-cog me-2" style="color: var(--color4)"></i> Perfil</a></li>                    
                     <li><a class="dropdown-item" href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
                 </ul>
             </div>
@@ -194,17 +193,6 @@
             }
         }
         
-        // Función para mostrar perfil
-        function showProfile() {
-        // Verificar si el script del técnico está cargado
-        if (typeof showProfile === 'function' && typeof currentUser !== 'undefined') {
-            // Llamar a la función del perfil técnico
-            showProfile();
-        } else {
-            // Recargar la página para asegurar que los scripts estén cargados
-            window.location.href = 'technician-profile.html';
-        }
-        }
         
         // Función para mostrar configuración
         function showSettings() {
@@ -250,23 +238,7 @@
                 `;
             }, 1000);
         }
-        
-        // Inicializar el dashboard cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', function() {
-            // Verificar autenticación y rol antes de cargar el dashboard
-            checkAuthAndRole('tecnico').then(() => {
-                // Cargar datos del dashboard
-                loadDashboardData();
-                
-                // Configurar event listeners
-                document.getElementById('refresh-btn').addEventListener('click', loadDashboardData);
-                document.getElementById('profile-link').addEventListener('click', showProfile);
-                document.getElementById('settings-link').addEventListener('click', showSettings);
-                document.getElementById('logout-link').addEventListener('click', logout);
-            }).catch(error => {
-                console.error('Error en la verificación:', error);
-            });
-        });
+
     </script>
 </body>
 </html>

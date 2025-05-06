@@ -600,16 +600,13 @@ let currentUser = {
   lastName: "Mendoza",
   email: "tecnico.cmendoza@fixpro.com",
   phone: "555-9876",
-  avatar: "../assets/img/tech-avatar.png",
+  avatar: "assets/img/tech-avatar.png",
   role: "Técnico Especialista",
   specialty: "Electrodomésticos",
   experience: "5 años",
   lastLogin: new Date().toLocaleString(),
   notifications: true,
-  darkMode: false,
-  activeJobs: 3,
-  completedJobs: 127,
-  rating: 4.8
+  darkMode: false
 };
 
 // Función para mostrar el perfil
@@ -618,8 +615,7 @@ function showProfile() {
 
   mainContent.innerHTML = `
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2">Mi Perfil Técnico</h1>
-          <span class="badge bg-primary">${currentUser.specialty}</span>
+          <h1 class="h2">Mi Perfil</h1>
       </div>
 
       <div class="row">
@@ -636,11 +632,6 @@ function showProfile() {
                       <h4>${currentUser.name} ${currentUser.lastName}</h4>
                       <p class="text-muted mb-0">${currentUser.role}</p>
                       <p class="text-muted">${currentUser.email}</p>
-                      
-                      <div class="rating mb-2">
-                          ${renderStars(currentUser.rating)}
-                          <span class="ms-1">${currentUser.rating}/5.0</span>
-                      </div>
                       
                       <button class="btn btn-sm btn-outline-primary mb-2" onclick="document.getElementById('avatarUpload').click()">
                           <i class="fas fa-camera me-1"></i> Cambiar foto
