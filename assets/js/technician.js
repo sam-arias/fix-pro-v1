@@ -588,6 +588,353 @@ let technicianData = {
       showNotifications();
     }
   }
+
+  // =============================
+// PERFIL DE USUARIO - TÉCNICO
+// =============================
+
+// Datos del técnico (simulados)
+let currentUser = {
+  id: 105,
+  name: "Carlos",
+  lastName: "Mendoza",
+  email: "tecnico.cmendoza@fixpro.com",
+  phone: "555-9876",
+  avatar: "../assets/img/tech-avatar.png",
+  role: "Técnico Especialista",
+  specialty: "Electrodomésticos",
+  experience: "5 años",
+  lastLogin: new Date().toLocaleString(),
+  notifications: true,
+  darkMode: false,
+  activeJobs: 3,
+  completedJobs: 127,
+  rating: 4.8
+};
+
+// Función para mostrar el perfil
+function showProfile() {
+  const mainContent = document.getElementById('mainContent');
+
+  mainContent.innerHTML = `
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Mi Perfil Técnico</h1>
+          <span class="badge bg-primary">${currentUser.specialty}</span>
+      </div>
+
+      <div class="row">
+          <!-- Sección de Avatar -->
+          <div class="col-md-4 mb-4">
+              <div class="card">
+                  <div class="card-body text-center">
+                      <img src="${currentUser.avatar}" 
+                          alt="Avatar" 
+                          class="rounded-circle mb-3 profile-avatar" 
+                          width="150" 
+                          height="150"
+                          id="profileAvatarImg">
+                      <h4>${currentUser.name} ${currentUser.lastName}</h4>
+                      <p class="text-muted mb-0">${currentUser.role}</p>
+                      <p class="text-muted">${currentUser.email}</p>
+                      
+                      <div class="rating mb-2">
+                          ${renderStars(currentUser.rating)}
+                          <span class="ms-1">${currentUser.rating}/5.0</span>
+                      </div>
+                      
+                      <button class="btn btn-sm btn-outline-primary mb-2" onclick="document.getElementById('avatarUpload').click()">
+                          <i class="fas fa-camera me-1"></i> Cambiar foto
+                      </button>
+                      <input type="file" id="avatarUpload" style="display: none;" accept="image/*" onchange="updateAvatar(event)">
+                      
+                      <div class="mt-3">
+                          <button class="btn btn-sm btn-outline-danger" onclick="showPasswordModal()">
+                              <i class="fas fa-key me-1"></i> Cambiar contraseña
+                          </button>
+                      </div>
+                  </div>
+              </div>
+              
+              <div class="card mt-3">
+                  <div class="card-body">
+                      <h5 class="card-title"><i class="fas fa-chart-line me-1"></i>Estadísticas</h5>
+                      <ul class="list-group list-group-flush small">
+                          <li class="list-group-item d-flex justify-content-between">
+                              <span>Trabajos activos:</span>
+                              <span class="badge bg-primary">${currentUser.activeJobs}</span>
+                          </li>
+                          <li class="list-group-item d-flex justify-content-between">
+                              <span>Trabajos completados:</span>
+                              <span class="text-muted">${currentUser.completedJobs}</span>
+                          </li>
+                          <li class="list-group-item d-flex justify-content-between">
+                              <span>Experiencia:</span>
+                              <span class="text-muted">${currentUser.experience}</span>
+                          </li>
+                          <li class="list-group-item d-flex justify-content-between">
+                              <span>Notificaciones:</span>
+                              <div class="form-check form-switch">
+                                  <input class="form-check-input" type="checkbox" 
+                                        id="notificationToggle" 
+                                        ${currentUser.notifications ? 'checked' : ''}
+                                        onchange="toggleNotifications()">
+                              </div>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Formulario de Edición -->
+          <div class="col-md-8">
+              <div class="card">
+                  <div class="card-body">
+                      <h5 class="card-title"><i class="fas fa-user-edit me-2"></i>Editar Información</h5>
+                      <form id="profileForm">
+                          <div class="row mb-3">
+                              <div class="col-md-6">
+                                  <label for="inputFirstName" class="form-label">Nombre</label>
+                                  <input type="text" class="form-control" id="inputFirstName" value="${currentUser.name}" required>
+                              </div>
+                              <div class="col-md-6">
+                                  <label for="inputLastName" class="form-label">Apellidos</label>
+                                  <input type="text" class="form-control" id="inputLastName" value="${currentUser.lastName}" required>
+                              </div>
+                          </div>
+                          
+                          <div class="row mb-3">
+                              <div class="col-md-6">
+                                  <label for="inputEmail" class="form-label">Correo electrónico</label>
+                                  <input type="email" class="form-control" id="inputEmail" value="${currentUser.email}" required>
+                              </div>
+                              <div class="col-md-6">
+                                  <label for="inputPhone" class="form-label">Teléfono</label>
+                                  <input type="tel" class="form-control" id="inputPhone" value="${currentUser.phone}" required>
+                              </div>
+                          </div>
+                          
+                          <div class="row mb-3">
+                              <div class="col-md-6">
+                                  <label for="inputSpecialty" class="form-label">Especialidad</label>
+                                  <select class="form-select" id="inputSpecialty">
+                                      <option ${currentUser.specialty === 'Electrodomésticos' ? 'selected' : ''}>Electrodomésticos</option>
+                                      <option ${currentUser.specialty === 'Electrónica' ? 'selected' : ''}>Electrónica</option>
+                                      <option ${currentUser.specialty === 'Climatización' ? 'selected' : ''}>Climatización</option>
+                                      <option ${currentUser.specialty === 'Informática' ? 'selected' : ''}>Informática</option>
+                                      <option ${currentUser.specialty === 'Mecánica' ? 'selected' : ''}>Mecánica</option>
+                                  </select>
+                              </div>
+                              <div class="col-md-6">
+                                  <label for="inputExperience" class="form-label">Años de experiencia</label>
+                                  <input type="text" class="form-control" id="inputExperience" value="${currentUser.experience.split(' ')[0]}" required>
+                              </div>
+                          </div>
+                          
+                          <div class="mb-3">
+                              <label for="inputBio" class="form-label">Biografía/Skills</label>
+                              <textarea class="form-control" id="inputBio" rows="3" placeholder="Describe tus habilidades y especialidades">${currentUser.bio || 'Técnico especializado en reparación de electrodomésticos mayores. Certificado por las principales marcas.'}</textarea>
+                          </div>
+                          
+                          <div class="d-flex justify-content-end">
+                              <button type="button" class="btn btn-secondary me-2" onclick="loadTechDashboard()">
+                                  Cancelar
+                              </button>
+                              <button type="button" class="btn btn-primary" onclick="updateProfile()">
+                                  Guardar Cambios
+                              </button>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+              
+              <div class="card mt-3">
+                  <div class="card-body">
+                      <h5 class="card-title"><i class="fas fa-tools me-2"></i>Herramientas y Certificaciones</h5>
+                      <div class="mb-3">
+                          <label class="form-label">Certificaciones</label>
+                          <div id="certificationsContainer">
+                              ${renderCertifications()}
+                          </div>
+                          <button class="btn btn-sm btn-outline-primary mt-2" onclick="addCertification()">
+                              <i class="fas fa-plus me-1"></i> Añadir certificación
+                          </button>
+                      </div>
+                      
+                      <div class="mb-3">
+                          <label class="form-label">Herramientas propias</label>
+                          <textarea class="form-control" rows="2" placeholder="Lista de herramientas que posees">${currentUser.tools || 'Multímetro digital, juego de destornilladores especializados, soldador, kit de reparación'}</textarea>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      
+      <!-- Modal para Cambio de Contraseña -->
+      <div class="modal fade" id="passwordModal" tabindex="-1">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header bg-primary text-white">
+                      <h5 class="modal-title"><i class="fas fa-key me-2"></i>Cambiar Contraseña</h5>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <form id="passwordForm">
+                          <div class="mb-3">
+                              <label for="currentPassword" class="form-label">Contraseña Actual</label>
+                              <input type="password" class="form-control" id="currentPassword" required>
+                          </div>
+                          <div class="mb-3">
+                              <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                              <input type="password" class="form-control" id="newPassword" required>
+                              <div class="form-text">Mínimo 8 caracteres, incluir números y letras</div>
+                          </div>
+                          <div class="mb-3">
+                              <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                              <input type="password" class="form-control" id="confirmPassword" required>
+                          </div>
+                      </form>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="button" class="btn btn-primary" onclick="changePassword()">Cambiar Contraseña</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  `;
+}
+
+// Función para renderizar estrellas de valoración
+function renderStars(rating) {
+  let stars = '';
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 >= 0.5;
+  
+  for (let i = 0; i < fullStars; i++) {
+    stars += '<i class="fas fa-star text-warning"></i>';
+  }
+  
+  if (hasHalfStar) {
+    stars += '<i class="fas fa-star-half-alt text-warning"></i>';
+  }
+  
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+  for (let i = 0; i < emptyStars; i++) {
+    stars += '<i class="far fa-star text-warning"></i>';
+  }
+  
+  return stars;
+}
+
+// Función para renderizar certificaciones
+function renderCertifications() {
+  const certs = currentUser.certifications || [
+    "Certificación en reparación de lavadoras - MarcaX (2022)",
+    "Técnico certificado en refrigeración (2021)"
+  ];
+  
+  return certs.map(cert => `
+    <div class="d-flex align-items-center mb-2">
+      <input type="text" class="form-control form-control-sm" value="${cert}">
+      <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeCertification(this)">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  `).join('');
+}
+
+// Función para añadir certificación
+function addCertification() {
+  const container = document.getElementById('certificationsContainer');
+  const newCert = document.createElement('div');
+  newCert.className = 'd-flex align-items-center mb-2';
+  newCert.innerHTML = `
+    <input type="text" class="form-control form-control-sm" placeholder="Nueva certificación">
+    <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeCertification(this)">
+      <i class="fas fa-times"></i>
+    </button>
+  `;
+  container.appendChild(newCert);
+}
+
+// Función para eliminar certificación
+function removeCertification(button) {
+  button.parentElement.remove();
+}
+
+// Función para actualizar el avatar
+function updateAvatar(event) {
+  const file = event.target.files[0];
+  if (file && file.type.match('image.*')) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+          document.getElementById('profileAvatarImg').src = e.target.result;
+          currentUser.avatar = e.target.result;
+          // Aquí normalmente enviarías la imagen al servidor
+      };
+      reader.readAsDataURL(file);
+  } else {
+      alert('Por favor selecciona un archivo de imagen válido');
+  }
+}
+
+// Función para mostrar el modal de contraseña
+function showPasswordModal() {
+  const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
+  passwordModal.show();
+}
+
+// Función para cambiar contraseña
+function changePassword() {
+  const currentPass = document.getElementById('currentPassword').value;
+  const newPass = document.getElementById('newPassword').value;
+  const confirmPass = document.getElementById('confirmPassword').value;
+  
+  // Validaciones básicas
+  if (newPass !== confirmPass) {
+      alert('Las contraseñas no coinciden');
+      return;
+  }
+  
+  if (newPass.length < 8) {
+      alert('La contraseña debe tener al menos 8 caracteres');
+      return;
+  }
+  
+  // Aquí iría la lógica para enviar al servidor
+  alert('Contraseña cambiada exitosamente');
+  const passwordModal = bootstrap.Modal.getInstance(document.getElementById('passwordModal'));
+  passwordModal.hide();
+}
+
+// Función para actualizar el perfil
+function updateProfile() {
+  // Obtener certificaciones actualizadas
+  const certInputs = document.querySelectorAll('#certificationsContainer input');
+  const updatedCerts = Array.from(certInputs).map(input => input.value);
+  
+  currentUser = {
+      ...currentUser,
+      name: document.getElementById('inputFirstName').value,
+      lastName: document.getElementById('inputLastName').value,
+      email: document.getElementById('inputEmail').value,
+      phone: document.getElementById('inputPhone').value,
+      specialty: document.getElementById('inputSpecialty').value,
+      experience: document.getElementById('inputExperience').value + ' años',
+      bio: document.getElementById('inputBio').value,
+      certifications: updatedCerts,
+      tools: document.querySelector('.card:nth-child(2) textarea').value
+  };
+  
+  alert('Perfil técnico actualizado correctamente');
+  showProfile(); // Recargar la vista
+}
+
+// Función para toggle de notificaciones
+function toggleNotifications() {
+  currentUser.notifications = document.getElementById('notificationToggle').checked;
+  // Aquí podrías guardar este cambio en el servidor
+}
   
   // =============================
   // FUNCIONES DE UTILIDAD
