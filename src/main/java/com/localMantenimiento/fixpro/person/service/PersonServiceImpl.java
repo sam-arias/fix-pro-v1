@@ -7,6 +7,7 @@ import com.localMantenimiento.fixpro.person.repository.PersonRepository;
 import com.localMantenimiento.fixpro.person.repository.RoleRepository;
 import com.localMantenimiento.fixpro.person.repository.SpecialtyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,18 +21,25 @@ public class PersonServiceImpl implements PersonService {
   private RoleRepository roleRepository;
   @Autowired
   private SpecialtyRepository specialtyRepository;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
 
   @Override
   public boolean registerPerson(Person newPerson) {
-    personRepository.save(newPerson);
-    return true;
+    if(!personRepository.existsByEmail(newPerson.getEmail())) {
+      newPerson.encryptPassword(passwordEncoder);
+      personRepository.save(newPerson);
+      return true;
+    }
+    return false;
   }
 
   @Override
   public boolean updatePerson(Long id, Person updatedPerson) {
     if(personRepository.existsById(id)) {
       updatedPerson.setId(id);
+      updatedPerson.encryptPassword(passwordEncoder);
       personRepository.save(updatedPerson);
       return true;
     }

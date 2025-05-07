@@ -3,6 +3,7 @@ import com.localMantenimiento.fixpro.person.model.Person;
 import com.localMantenimiento.fixpro.person.model.Specialty;
 import com.localMantenimiento.fixpro.person.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import com.localMantenimiento.fixpro.person.model.Role;
@@ -90,5 +91,9 @@ public class PersonController {
     return personService.getAllSpecialties();
   }
 
+  @PostMapping("/login")
+  public boolean login(@RequestParam String email, @RequestParam String password) {
+    return personService.login(email, password);
 
+  }
 }
