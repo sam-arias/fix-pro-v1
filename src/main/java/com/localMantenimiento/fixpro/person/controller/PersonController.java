@@ -89,4 +89,6 @@ public class PersonController {
   public Optional<List<Specialty>> getAllSpecialties() {
     return personService.getAllSpecialties();
   }
+
+
 }

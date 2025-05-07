@@ -125,4 +125,10 @@ public class PersonServiceImpl implements PersonService {
   public Optional<List<Specialty>> getAllSpecialties() {
     return Optional.of(specialtyRepository.findAll());
   }
+
+  @Override
+  public boolean login(String email, String password) {
+    Optional<Person> person = personRepository.findByEmail(email);
+    return person.isPresent() && person.get().getPassword().equals(password);
+  }
 }

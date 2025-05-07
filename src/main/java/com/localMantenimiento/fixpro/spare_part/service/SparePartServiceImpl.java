@@ -62,11 +62,17 @@ public class SparePartServiceImpl implements SparePartService {
     return sparePartRepository.findSByBrandAndTypeAndModel(brand, type, model);
   }
 
-
   @Override
   public boolean useSparePart(UsedSparePart newUsedSparePart) {
-    usedSparePartRepository.save(newUsedSparePart);
-    return true;
+    Optional<SparePart> sparePart = sparePartRepository.findById(newUsedSparePart.getId());
+    if (sparePart.isPresent() && sparePart.get().getStock() != 0 && sparePart.get().getStock() >= newUsedSparePart.getQuantity()) {
+      int newStock = sparePart.get().getStock() - newUsedSparePart.getQuantity();
+      sparePart.get().setStock(newStock);
+      sparePartRepository.save(sparePart.get());
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @Override

@@ -28,4 +28,7 @@ public interface PersonService {
 
   public Optional<Specialty> getSpecialtyById(Long id);
   public Optional<List<Specialty>> getAllSpecialties();
+
+
+  public boolean login(String email, String password);
 }
