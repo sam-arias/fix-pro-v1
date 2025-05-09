@@ -291,7 +291,7 @@ function deletePart(code) {
 }
 
 // =============================
-// GESTIÓN DE TÉCNICOS
+// GESTIÓN DE Personal
 // =============================
 
 function showTechniciansManagement() {
@@ -299,7 +299,7 @@ function showTechniciansManagement() {
   
   mainContent.innerHTML = `
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Gestión de Técnicos</h1>
+      <h1 class="h2">Gestión de Tecnico</h1>
       <button class="btn btn-success" onclick="showAddTechnicianForm()">
         <i class="fas fa-plus me-2"></i>Agregar técnico
       </button>
@@ -342,6 +342,96 @@ function showTechniciansManagement() {
         </tbody>
       </table>
     </div>
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Gestión de Asesor</h1>
+      <button class="btn btn-success" onclick="showAddManagerForm()">
+        <i class="fas fa-plus me-2"></i>Agregar asesor
+      </button>
+    </div>
+    
+    <div class="table-responsive">
+      <table class="table table-hover admin-table">
+        <thead class="table-dark">
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Especialidades</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${adminData.technicians.map(tech => `
+            <tr>
+              <td>${tech.name}</td>
+              <td>${tech.email}</td>
+              <td>${tech.phone || 'N/A'}</td>
+              <td>${tech.specialties.join(', ')}</td>
+              <td>
+                <span class="badge ${tech.status === 'Disponible' ? 'bg-success' : 'bg-secondary'}">
+                  ${tech.status}
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-warning me-1" onclick="editTechnician(${tech.id})">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-info" onclick="manageSpecialties(${tech.id})">
+                  <i class="fas fa-certificate"></i>
+                </button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>        
+
+
+    </div>
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Gestión de administradores</h1>
+      <button class="btn btn-success" onclick="showAddManagerForm()">
+        <i class="fas fa-plus me-2"></i>Agregar Admin
+      </button>
+    </div>
+
+    
+    <div class="table-responsive">
+      <table class="table table-hover admin-table">
+        <thead class="table-dark">
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Especialidades</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${adminData.technicians.map(tech => `
+            <tr>
+              <td>${tech.name}</td>
+              <td>${tech.email}</td>
+              <td>${tech.phone || 'N/A'}</td>
+              <td>${tech.specialties.join(', ')}</td>
+              <td>
+                <span class="badge ${tech.status === 'Disponible' ? 'bg-success' : 'bg-secondary'}">
+                  ${tech.status}
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-warning me-1" onclick="editTechnician(${tech.id})">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-info" onclick="manageSpecialties(${tech.id})">
+                  <i class="fas fa-certificate"></i>
+                </button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
   `;
 }
 
@@ -387,6 +477,15 @@ function showAddTechnicianForm(techData = null) {
           </div>
         </div>
         
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="techDirección" class="form-label">Dirección</label>
+              <input type="Dirección" class="form-control" id="techDirección" value="${techData?.Addres || ''}" required>
+            </div>
+          </div>
+        </div>
+
         <h5 class="mb-3 mt-4"><i class="fas fa-key me-2"></i>Datos de acceso</h5>
         <div class="row">
           <div class="col-md-6">
