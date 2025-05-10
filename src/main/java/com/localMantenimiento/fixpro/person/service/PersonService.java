@@ -30,5 +30,5 @@ public interface PersonService {
   public Optional<List<Specialty>> getAllSpecialties();
 
 
-  public boolean login(String email, String password);
+  public Role login(String email, String password);
 }

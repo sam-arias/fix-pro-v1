@@ -135,8 +135,11 @@ public class PersonServiceImpl implements PersonService {
   }
 
   @Override
-  public boolean login(String email, String password) {
+  public Role login(String email, String password) {
     Optional<Person> person = personRepository.findByEmail(email);
-    return person.isPresent() && passwordEncoder.matches(password, person.get().getPassword());
+    if (person.isPresent() && passwordEncoder.matches(password, person.get().getPassword())) {
+      return person.get().getRole();
+    }
+    return null;
   }
 }
