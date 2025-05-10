@@ -166,8 +166,6 @@ function initSalesChart() {
   });
 }
 
-
-
 // =============================
 // GESTIÓN DE ÓRDENES (Asesor)
 // =============================
@@ -1454,9 +1452,6 @@ function showProfile() {
             <p class="text-muted mb-0">${currentUser.role}</p>
             <p class="text-muted">${currentUser.email}</p>
             
-            <button class="btn btn-sm btn-outline-primary mb-2" onclick="document.getElementById('avatarUpload').click()">
-              <i class="fas fa-camera me-1"></i> Cambiar foto
-            </button>
             <input type="file" id="avatarUpload" style="display: none;" accept="image/*" onchange="updateAvatar(event)">
             
             <div class="mt-3">
