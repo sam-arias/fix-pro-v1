@@ -137,6 +137,6 @@ public class PersonServiceImpl implements PersonService {
   @Override
   public boolean login(String email, String password) {
     Optional<Person> person = personRepository.findByEmail(email);
-    return person.isPresent() && person.get().getPassword().equals(password);
+    return person.isPresent() && passwordEncoder.matches(password, person.get().getPassword());
   }
 }

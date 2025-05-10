@@ -94,6 +94,5 @@ public class PersonController {
   @PostMapping("/login")
   public boolean login(@RequestParam String email, @RequestParam String password) {
     return personService.login(email, password);
-
   }
 }
