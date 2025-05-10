@@ -600,7 +600,7 @@ let currentUser = {
   lastName: "Mendoza",
   email: "tecnico.cmendoza@fixpro.com",
   phone: "555-9876",
-  avatar: "assets/img/tech-avatar.png",
+  avatar: "assets/img/perfile-placeholder.png",
   role: "Técnico Especialista",
   specialty: "Electrodomésticos",
   experience: "5 años",
