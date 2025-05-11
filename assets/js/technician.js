@@ -633,9 +633,6 @@ function showProfile() {
                       <p class="text-muted mb-0">${currentUser.role}</p>
                       <p class="text-muted">${currentUser.email}</p>
                       
-                      <button class="btn btn-sm btn-outline-primary mb-2" onclick="document.getElementById('avatarUpload').click()">
-                          <i class="fas fa-camera me-1"></i> Cambiar foto
-                      </button>
                       <input type="file" id="avatarUpload" style="display: none;" accept="image/*" onchange="updateAvatar(event)">
                       
                       <div class="mt-3">
@@ -644,36 +641,7 @@ function showProfile() {
                           </button>
                       </div>
                   </div>
-              </div>
-              
-              <div class="card mt-3">
-                  <div class="card-body">
-                      <h5 class="card-title"><i class="fas fa-chart-line me-1"></i>Estadísticas</h5>
-                      <ul class="list-group list-group-flush small">
-                          <li class="list-group-item d-flex justify-content-between">
-                              <span>Trabajos activos:</span>
-                              <span class="badge bg-primary">${currentUser.activeJobs}</span>
-                          </li>
-                          <li class="list-group-item d-flex justify-content-between">
-                              <span>Trabajos completados:</span>
-                              <span class="text-muted">${currentUser.completedJobs}</span>
-                          </li>
-                          <li class="list-group-item d-flex justify-content-between">
-                              <span>Experiencia:</span>
-                              <span class="text-muted">${currentUser.experience}</span>
-                          </li>
-                          <li class="list-group-item d-flex justify-content-between">
-                              <span>Notificaciones:</span>
-                              <div class="form-check form-switch">
-                                  <input class="form-check-input" type="checkbox" 
-                                        id="notificationToggle" 
-                                        ${currentUser.notifications ? 'checked' : ''}
-                                        onchange="toggleNotifications()">
-                              </div>
-                          </li>
-                      </ul>
-                  </div>
-              </div>
+              </div> 
           </div>
           
           <!-- Formulario de Edición -->
@@ -703,29 +671,32 @@ function showProfile() {
                                   <input type="tel" class="form-control" id="inputPhone" value="${currentUser.phone}" required>
                               </div>
                           </div>
+
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="mb-3">
+                                <label for="techDirección" class="form-label">Dirección</label>
+                                <input type="Dirección" class="form-control" id="techDirección" value="${currentUser?.Addres || ''}" required>
+                              </div>
+                            </div>
+                          </div>
                           
                           <div class="row mb-3">
                               <div class="col-md-6">
                                   <label for="inputSpecialty" class="form-label">Especialidad</label>
                                   <select class="form-select" id="inputSpecialty">
-                                      <option ${currentUser.specialty === 'Electrodomésticos' ? 'selected' : ''}>Electrodomésticos</option>
-                                      <option ${currentUser.specialty === 'Electrónica' ? 'selected' : ''}>Electrónica</option>
-                                      <option ${currentUser.specialty === 'Climatización' ? 'selected' : ''}>Climatización</option>
-                                      <option ${currentUser.specialty === 'Informática' ? 'selected' : ''}>Informática</option>
-                                      <option ${currentUser.specialty === 'Mecánica' ? 'selected' : ''}>Mecánica</option>
+                                      <option ${currentUser.specialty === 'Reparación de pantallas OLED/LCD' ? 'selected' : ''}>Reparación de pantallas OLED/LCD</option>
+                                      <option ${currentUser.specialty === 'Reballing y soldadura BGA en placas base' ? 'selected' : ''}>Reballing y soldadura BGA en placas base</option>
+                                      <option ${currentUser.specialty === 'Reemplazo y calibración de baterías Li-Ion' ? 'selected' : ''}>Reemplazo y calibración de baterías Li-Ion</option>
+                                      <option ${currentUser.specialty === 'Micro soldadura de componentes SMD' ? 'selected' : ''}>Micro soldadura de componentes SMD</option>
+                                      <option ${currentUser.specialty === 'Reparación de puertos USB-C y Lightning' ? 'selected' : ''}>Reparación de puertos USB-C y Lightning</option>
+                                      <option ${currentUser.specialty === 'Desbloqueo y reinstalación de firmware (iOS/Android)' ? 'selected' : ''}>Desbloqueo y reinstalación de firmware (iOS/Android)</option>
+                                      <option ${currentUser.specialty === 'Diagnóstico y reparación de problemas de señal (WiFi, Bluetooth, red móvil)' ? 'selected' : ''}>Diagnóstico y reparación de problemas de señal (WiFi, Bluetooth, red móvil)</option>
+                                      <option ${currentUser.specialty === 'Reparación de cámaras frontales/traseras y sensores' ? 'selected' : ''}>Reparación de cámaras frontales/traseras y sensores</option>
                                   </select>
                               </div>
-                              <div class="col-md-6">
-                                  <label for="inputExperience" class="form-label">Años de experiencia</label>
-                                  <input type="text" class="form-control" id="inputExperience" value="${currentUser.experience.split(' ')[0]}" required>
-                              </div>
                           </div>
-                          
-                          <div class="mb-3">
-                              <label for="inputBio" class="form-label">Biografía/Skills</label>
-                              <textarea class="form-control" id="inputBio" rows="3" placeholder="Describe tus habilidades y especialidades">${currentUser.bio || 'Técnico especializado en reparación de electrodomésticos mayores. Certificado por las principales marcas.'}</textarea>
-                          </div>
-                          
+
                           <div class="d-flex justify-content-end">
                               <button type="button" class="btn btn-secondary me-2" onclick="loadTechDashboard()">
                                   Cancelar

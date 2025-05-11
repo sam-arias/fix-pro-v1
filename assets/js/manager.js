@@ -1853,6 +1853,15 @@ function showProfile() {
                   <input type="tel" class="form-control" id="inputPhone" value="${currentUser.phone}">
                 </div>
               </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="techDirección" class="form-label">Dirección</label>
+                    <input type="Dirección" class="form-control" id="inputDirección" value="${currentUser?.Addres || ''}" required>
+                  </div>
+                </div>
+              </div>              
               
               <div class="d-flex justify-content-end">
                 <button type="button" class="btn btn-secondary me-2" onclick="showDashboard()">
