@@ -56,8 +56,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" onclick="showTechniciansManagement()">
-                                <i class="fas fa-users-cog me-2"></i> Técnicos
+                            <a class="nav-link" href="#" onclick="showPersonalManagement()">
+                                <i class="fas fa-users-cog me-2"></i> Personal
                             </a>
                         </li>
                         <li class="nav-item">
@@ -95,25 +95,6 @@
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-4 bg-white">
                 <!-- Encabezado dinámico -->
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
-                    <h1 class="h2 fw-bold text-primary" id="pageTitle">Dashboard</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group me-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">
-                                <i class="fas fa-calendar me-1"></i> Hoy
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                                <i class="fas fa-filter me-1"></i> Filtros
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Esta semana</a></li>
-                                <li><a class="dropdown-item" href="#">Este mes</a></li>
-                                <li><a class="dropdown-item" href="#">Personalizado</a></li>
-                            </ul>
-                        </div>
-                        <button type="button" class="btn btn-sm btn-primary" id="refreshBtn">
-                            <i class="fas fa-sync-alt me-1"></i> Actualizar
-                        </button>
-                    </div>
                 </div>
 
                 <!-- Contenido dinámico -->
@@ -158,7 +139,7 @@
                 } else if (pageTitle === 'Gestión de Repuestos') {
                     showPartsManagement();
                 } else if (pageTitle === 'Gestión de Técnicos') {
-                    showTechniciansManagement();
+                    showPersonalManagement();
                 } else if (pageTitle === 'Reportes y Estadísticas') {
                     showReports();
                 }

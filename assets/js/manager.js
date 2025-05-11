@@ -184,21 +184,18 @@ let ordersData = [
     id: 1245,
     client: "María González",
     device: "iPhone 12",
-    problem: "Pantalla rota",
     status: "En progreso",
     date: "15/05/2023",
     technician: "Juan Pérez",
-    priority: "Alta"
   },
   {
     id: 1244,
     client: "Carlos Mendoza",
     device: "Samsung S21",
-    problem: "Batería defectuosa",
     status: "Completada",
     date: "14/05/2023",
     technician: "María García",
-    priority: "Normal"
+
   }
 ];
 
@@ -232,7 +229,6 @@ function showInterventionOrders(filter = 'all') {
             <th>Orden #</th>
             <th>Cliente</th>
             <th>Dispositivo</th>
-            <th>Problema</th>
             <th>Técnico</th>
             <th>Fecha</th>
             <th>Estado</th>
@@ -245,14 +241,12 @@ function showInterventionOrders(filter = 'all') {
               <td>${order.id}</td>
               <td>${order.client}</td>
               <td>${order.device}</td>
-              <td>${order.problem}</td>
               <td>${order.technician || 'Sin asignar'}</td>
               <td>${order.date}</td>
               <td>
                 <span class="badge ${getStatusBadgeClass(order.status)}">
                   ${order.status}
                 </span>
-                ${order.priority === 'Alta' ? '<span class="badge bg-danger ms-1">Urgente</span>' : ''}
               </td>
               <td>
                 <button class="btn btn-sm btn-primary me-1" onclick="showOrderDetails(${order.id})">
@@ -260,9 +254,6 @@ function showInterventionOrders(filter = 'all') {
                 </button>
                 <button class="btn btn-sm btn-warning me-1" onclick="editOrder(${order.id})">
                   <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-sm btn-success" onclick="completeOrder(${order.id})">
-                  <i class="fas fa-check"></i>
                 </button>
               </td>
             </tr>
@@ -300,13 +291,22 @@ function showOrderForm(order = null) {
             <div class="col-md-6">
               <h5 class="mb-3"><i class="fas fa-user me-2"></i>Datos del Cliente</h5>
               <div class="mb-3">
-                <label for="clientName" class="form-label">Nombre completo</label>
+                <label for="clientName" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="clientName" value="${isEdit ? order.client : ''}" required>
+              </div>
+              <div class="mb-3">
+                <label for="clientName" class="form-label">Apellido</label>
                 <input type="text" class="form-control" id="clientName" value="${isEdit ? order.client : ''}" required>
               </div>
               <div class="mb-3">
                 <label for="clientPhone" class="form-label">Teléfono</label>
                 <input type="tel" class="form-control" id="clientPhone" value="${isEdit ? order.phone || '' : ''}" required>
               </div>
+              <div class="mb-3">
+                <label for="clientAddress" class="form-label">Dirección</label>
+                <input type="tel" class="form-control" id="clientaddress" value="${isEdit ? order.Addres || '' : ''}" required>
+              </div>
+               
             </div>
             <div class="col-md-6">
               <h5 class="mb-3"><i class="fas fa-laptop me-2"></i>Datos del Dispositivo</h5>
@@ -323,16 +323,31 @@ function showOrderForm(order = null) {
                 <label for="deviceModel" class="form-label">Modelo</label>
                 <input type="text" class="form-control" id="deviceModel" value="${isEdit ? order.device : ''}" required>
               </div>
+              <div class="mb-3">
+                <label for="deviceMarca" class="form-label">Marca</label>
+                <input type="text" class="form-control" id="deviceMarca" value="${isEdit ? order.device : ''}" required>
+              </div>
+              <div class="mb-3">
+                <label for="deviceSerial" class="form-label">Serial</label>
+                <input type="text" class="form-control" id="deviceSerial" value="${isEdit ? order.device : ''}" required>
+              </div>
             </div>
           </div>
           
           <div class="mb-3">
             <label for="problemDescription" class="form-label">Descripción del problema</label>
-            <textarea class="form-control" id="problemDescription" rows="3" required>${isEdit ? order.problem : ''}</textarea>
+            <textarea 
+              class="form-control auto-expand" 
+              id="problemDescription" 
+              rows="1" 
+              required
+              style="min-height: 100px; overflow-y: hidden;"
+              oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px'"
+            >${isEdit ? order.problem : ''}</textarea>
           </div>
           
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
               <div class="mb-3">
                 <label for="technician" class="form-label">Técnico asignado</label>
                 <select class="form-select" id="technician">
@@ -345,17 +360,7 @@ function showOrderForm(order = null) {
                 </select>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label for="priority" class="form-label">Prioridad</label>
-                <select class="form-select" id="priority">
-                  <option value="Normal" ${isEdit && order.priority === 'Normal' ? 'selected' : ''}>Normal</option>
-                  <option value="Alta" ${isEdit && order.priority === 'Alta' ? 'selected' : ''}>Alta</option>
-                  <option value="Urgente" ${isEdit && order.priority === 'Urgente' ? 'selected' : ''}>Urgente</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
               <div class="mb-3">
                 <label for="estimatedDate" class="form-label">Fecha estimada</label>
                 <input type="date" class="form-control" id="estimatedDate" value="${isEdit ? order.estimatedDate || '' : ''}">
@@ -861,12 +866,8 @@ function showInventory() {
 
   content.innerHTML = `
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Gestión de Inventario</h1>
+      <h1 class="h2">Gestión de Repuestos</h1>
       <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group me-2">
-          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="exportInventoryToExcel()">
-            <i class="fas fa-file-excel me-1"></i> Exportar
-          </button>
         </div>
         <button type="button" class="btn btn-sm btn-primary" onclick="showAddItemModal()">
           <i class="fas fa-plus me-1"></i> Nuevo Producto
@@ -914,7 +915,6 @@ function showInventory() {
             <th>Stock</th>
             <th>Precio</th>
             <th>Estado</th>
-            <th>Ubicación</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -973,10 +973,6 @@ function showInventory() {
                 </div>
               </div>
               <div class="row mb-3">
-                <div class="col-md-6">
-                  <label for="itemLocation" class="form-label">Ubicación en Almacén</label>
-                  <input type="text" class="form-control" id="itemLocation" placeholder="Ej: A1-02">
-                </div>
                 <div class="col-md-6">
                   <label for="itemSupplier" class="form-label">Proveedor</label>
                   <input type="text" class="form-control" id="itemSupplier">
@@ -1044,7 +1040,6 @@ function loadInventoryTable(data) {
       <td>${item.stock}</td>
       <td>$${item.price.toFixed(2)}</td>
       <td><span class="badge bg-${statusClass}">${status}</span></td>
-      <td>${item.location || '-'}</td>
       <td>
         <button class="btn btn-sm btn-outline-primary me-1" onclick="editInventoryItem(${item.id})">
           <i class="fas fa-edit"></i>

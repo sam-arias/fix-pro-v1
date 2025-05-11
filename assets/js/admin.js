@@ -294,7 +294,7 @@ function deletePart(code) {
 // GESTIÓN DE Personal
 // =============================
 
-function showTechniciansManagement() {
+function showPersonalManagement() {
   const mainContent = document.getElementById('mainContent');
   
   mainContent.innerHTML = `
@@ -362,23 +362,15 @@ function showTechniciansManagement() {
           </tr>
         </thead>
         <tbody>
-          ${adminData.technicians.map(tech => `
+          ${adminData.Asesor.map(tech => `
             <tr>
-              <td>${tech.name}</td>
-              <td>${tech.email}</td>
-              <td>${tech.phone || 'N/A'}</td>
-              <td>${tech.specialties.join(', ')}</td>
+              <td>${Asesor.name}</td>
+              <td>${Asesor.email}</td>
+              <td>${Asesor.phone || 'N/A'}</td>
+              <td>${Asesor.adress}</td>
               <td>
-                <span class="badge ${tech.status === 'Disponible' ? 'bg-success' : 'bg-secondary'}">
-                  ${tech.status}
-                </span>
-              </td>
-              <td>
-                <button class="btn btn-sm btn-warning me-1" onclick="editTechnician(${tech.id})">
+                <button class="btn btn-sm btn-warning me-1" onclick="editasesor(${Asesor.id})">
                   <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-sm btn-info" onclick="manageSpecialties(${tech.id})">
-                  <i class="fas fa-certificate"></i>
                 </button>
               </td>
             </tr>
@@ -411,10 +403,10 @@ function showTechniciansManagement() {
         <tbody>
           ${adminData.technicians.map(tech => `
             <tr>
-              <td>${tech.name}</td>
-              <td>${tech.email}</td>
-              <td>${tech.phone || 'N/A'}</td>
-              <td>${tech.specialties.join(', ')}</td>
+              <td>${admin.name}</td>
+              <td>${admin.email}</td>
+              <td>${admin.phone || 'N/A'}</td>
+              <td>${admin.specialties.join(', ')}</td>
               <td>
                 <span class="badge ${tech.status === 'Disponible' ? 'bg-success' : 'bg-secondary'}">
                   ${tech.status}
@@ -503,28 +495,38 @@ function showAddTechnicianForm(techData = null) {
         </div>
         
         <h5 class="mb-3 mt-4"><i class="fas fa-certificate me-2"></i>Especialidades</h5>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="spec1" ${techData?.specialties?.includes('Pantallas') ? 'checked' : ''}>
-              <label class="form-check-label" for="spec1">Pantallas</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="spec2" ${techData?.specialties?.includes('Baterías') ? 'checked' : ''}>
-              <label class="form-check-label" for="spec2">Baterías</label>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="spec3" ${techData?.specialties?.includes('Placas') ? 'checked' : ''}>
-              <label class="form-check-label" for="spec3">Placas</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="spec4" ${techData?.specialties?.includes('Software') ? 'checked' : ''}>
-              <label class="form-check-label" for="spec4">Software</label>
-            </div>
-          </div>
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Seleccionar especialidades
+          </button>
+          <ul class="dropdown-menu p-3" style="width: 300px;">
+            <li>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="spec1" ${techData?.specialties?.includes('Pantallas') ? 'checked' : ''}>
+                <label class="form-check-label" for="spec1">Pantallas</label>
+              </div>
+            </li>
+            <li>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="spec2" ${techData?.specialties?.includes('Baterías') ? 'checked' : ''}>
+                <label class="form-check-label" for="spec2">Baterías</label>
+              </div>
+            </li>
+            <li>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="spec3" ${techData?.specialties?.includes('Placas') ? 'checked' : ''}>
+                <label class="form-check-label" for="spec3">Placas</label>
+              </div>
+            </li>
+            <li>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="spec4" ${techData?.specialties?.includes('Software') ? 'checked' : ''}>
+                <label class="form-check-label" for="spec4">Software</label>
+              </div>
+            </li>
+          </ul>
         </div>
+
         
         <div class="mb-3 mt-4">
           <div class="form-check">
@@ -534,7 +536,7 @@ function showAddTechnicianForm(techData = null) {
         </div>
         
         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-          <button type="button" class="btn btn-secondary me-md-2" onclick="showTechniciansManagement()">Cancelar</button>
+          <button type="button" class="btn btn-secondary me-md-2" onclick="showPersonalManagement()">Cancelar</button>
           <button type="submit" class="btn btn-primary">${isEdit ? 'Actualizar' : 'Guardar'}</button>
         </div>
       </form>
@@ -577,7 +579,7 @@ function handleTechForm(event, techId = null) {
     adminData.technicians.push(techData);
   }
   
-  showTechniciansManagement();
+  showPersonalManagement();
 }
 
 function editTechnician(id) {
