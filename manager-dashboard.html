@@ -92,20 +92,17 @@
   <script src="assets/js/manager.js"></script>
   
   <script>
-    // Espera a que el DOM esté completamente cargado
     document.addEventListener('DOMContentLoaded', function() {
-      // Asigna los event listeners a los elementos del menú
-      document.getElementById('menu-showDashboard')?.addEventListener('click', showDashboard);
-      document.getElementById('menu-showSales')?.addEventListener('click', showSales);
-      document.getElementById('menu-showInventory')?.addEventListener('click', showInventory);
-      document.getElementById('menu-showAllOrders')?.addEventListener('click', function() {
-        showAlert('Órdenes', 'Módulo de órdenes en desarrollo', 'info');
+      // Asignación de eventos
+      document.getElementById('menu-showDashboard').addEventListener('click', showDashboard);
+      document.getElementById('menu-showAllOrders').addEventListener('click', function() {
+        showInterventionOrders('all');
       });
-      document.getElementById('menu-showTechnicians')?.addEventListener('click', function() {
-        showAlert('Técnicos', 'Módulo de técnicos en desarrollo', 'info');
-      });
+      document.getElementById('menu-showSales').addEventListener('click', showSales);
+      document.getElementById('menu-showInventory').addEventListener('click', showInventory);
+      document.getElementById('menu-showTechnicians').addEventListener('click', showTechnicians);
       
-      // Carga el dashboard por defecto
+      // Carga inicial
       showDashboard();
     });
   </script>

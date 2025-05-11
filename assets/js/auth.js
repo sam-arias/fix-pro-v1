@@ -54,7 +54,6 @@ const USERS = [
       name: 'Administrador Principal',
       email: 'admin@fixpro.com',
       role: 'ADMIN',
-      avatar: 'profile-placeholder.png'
   },
   {
       id: 2,
@@ -63,7 +62,6 @@ const USERS = [
       name: 'Gerente Regional',
       email: 'gerente@fixpro.com',
       role: 'MANAGER',
-      avatar: 'profile-placeholder.png'
   },
   {
       id: 3,
@@ -72,7 +70,6 @@ const USERS = [
       name: 'Técnico Especialista',
       email: 'tecnico@fixpro.com',
       role: 'TECHNICIAN',
-      avatar: 'profile-placeholder.png'
   },
   {
       id: 4,
@@ -81,7 +78,6 @@ const USERS = [
       name: 'Técnico Auxiliar',
       email: 'tecnico2@fixpro.com',
       role: 'TECHNICIAN',
-      avatar: 'profile-placeholder.png'
   }
 ];
 
