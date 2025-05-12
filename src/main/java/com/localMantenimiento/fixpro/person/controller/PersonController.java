@@ -4,10 +4,15 @@ import com.localMantenimiento.fixpro.person.model.Specialty;
 import com.localMantenimiento.fixpro.person.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.List;
 import com.localMantenimiento.fixpro.person.model.Role;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -92,7 +97,23 @@ public class PersonController {
   }
 
   @PostMapping("/login")
-  public Role login(@RequestParam String email, @RequestParam String password) {
-    return personService.login(email, password);
+  public ResponseEntity<Map<String, Object>> login(
+      @RequestParam String email,
+      @RequestParam String password) {
+
+    Role userRole = personService.login(email, password);
+
+    if (userRole == null) {
+      Map<String, Object> errorResponse = new HashMap<>();
+      errorResponse.put("success", false);
+      errorResponse.put("message", "Usuario o contraseña incorrectos");
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    Map<String, Object> response = new HashMap<>();
+    response.put("success", true);
+    response.put("role", userRole.getRoleName());
+
+    return ResponseEntity.ok(response);
   }
 }

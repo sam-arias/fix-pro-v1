@@ -7,8 +7,10 @@ import com.localMantenimiento.fixpro.person.repository.PersonRepository;
 import com.localMantenimiento.fixpro.person.repository.RoleRepository;
 import com.localMantenimiento.fixpro.person.repository.SpecialtyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -137,9 +139,12 @@ public class PersonServiceImpl implements PersonService {
   @Override
   public Role login(String email, String password) {
     Optional<Person> person = personRepository.findByEmail(email);
-    if (person.isPresent() && passwordEncoder.matches(password, person.get().getPassword())) {
-      return person.get().getRole();
+    if (!person.isPresent()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
     }
-    return null;
+    if (!passwordEncoder.matches(password, person.get().getPassword())) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Contraseña incorrecta");
+    }
+    return person.get().getRole();
   }
 }
