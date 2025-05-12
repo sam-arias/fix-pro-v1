@@ -281,3 +281,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // Verificar autenticación
   checkAuth();
 });
+
+
+
