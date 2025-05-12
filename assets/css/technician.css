@@ -1,0 +1,41 @@
+/* Estilos específicos para el perfil de técnico */
+
+/* Dashboard */
+.stats-card.primary {
+  background-color: #e3f2fd;
+  border-left: 4px solid #2196f3;
+}
+
+.stats-card.success {
+  background-color: #e8f5e9;
+  border-left: 4px solid #4caf50;
+}
+
+.stats-card.warning {
+  background-color: #fff8e1;
+  border-left: 4px solid #ffc107;
+}
+
+/* Tabla de órdenes asignadas */
+.table-assigned-orders {
+  font-size: 0.9rem;
+}
+
+.table-assigned-orders .badge {
+  font-size: 0.8em;
+}
+
+/* Especialidades */
+.specialty-card {
+  border-radius: 8px;
+  transition: transform 0.3s;
+}
+
+.specialty-card:hover {
+  transform: translateY(-5px);
+}
+
+.specialty-badge {
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+}

@@ -1,0 +1,34 @@
+/* Estilos específicos para el dashboard de administrador */
+
+/* Colores de roles */
+.badge-admin {
+    background-color: #e74a3b;
+    color: white;
+  }
+  
+  /* Tarjetas especiales */
+  .card-admin {
+    border-left: 4px solid #e74a3b;
+  }
+  
+  /* Botones */
+  .btn-admin {
+    background-color: #e74a3b;
+    color: white;
+  }
+  
+  .btn-admin:hover {
+    background-color: #c82333;
+    color: white;
+  }
+  
+  /* Tablas */
+  .table-admin thead {
+    background-color: #e74a3b;
+    color: white;
+  }
+  
+  /* Gráficos */
+  .chart-admin .chart-legend li span {
+    background-color: #e74a3b;
+  }
