@@ -33,7 +33,7 @@
                     <li><a class="dropdown-item" href="#" onclick="showProfile()"><i class="fas fa-user-cog me-2" style="color: var(--color4)"></i> Perfil</a></li>
                     <li><a class="dropdown-item" href="#" onclick="showSystemSettings()"><i class="fas fa-sliders-h me-2" style="color: var(--color4)"></i> Configuración</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="showLogoutConfirmation()"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
                 </ul>
             </div>
         </div>
@@ -103,6 +103,25 @@
                 </div>
             </main>
         </div>
+    </div>
+
+    <!-- Modal de confirmación para cerrar sesión -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="logoutModalLabel"><i class="fas fa-sign-out-alt me-2"></i>Confirmar Cierre de Sesión</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ¿Estás seguro de que deseas cerrar sesión?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" onclick="auth.logout()">Cerrar Sesión</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Bootstrap Bundle with Popper -->
@@ -182,6 +201,11 @@
             navbar.classList.toggle('scrolled', window.scrollY > 50);
         });
     });
-</script>
+
+    function showLogoutConfirmation() {
+        const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+        logoutModal.show();
+    }
+    </script>
 </body>
 </html>

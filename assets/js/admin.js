@@ -4,26 +4,12 @@
 
 // Variables globales para el admin
 let adminData = {
-  orders: 87,
-  income: 5420,
-  lowStock: 7,
-  lateOrders: 3,
-  technicians: [
-    { id: 1, name: "Juan Pérez", email: "juan.perez@example.com", specialties: ["Pantallas", "Baterías"], status: "Disponible" },
-    { id: 2, name: "María García", email: "maria.garcia@example.com", specialties: ["Placas", "Conectores"], status: "Disponible" }
-  ],
-  advisors: [
-    { id: 1, name: "Carlos López", email: "carlos.lopez@example.com", status: "Activo" },
-    { id: 2, name: "Ana Torres", email: "ana.torres@example.com", status: "Activo" }
-  ],
-  admins: [
-    { id: 1, name: "Admin Principal", email: "admin.principal@example.com", status: "Activo" },
-    { id: 2, name: "Sofía Martínez", email: "sofia.martinez@example.com", status: "Activo" }
-  ],
-  parts: [
-    { code: "SCR-001", description: "Pantalla iPhone 12", type: "Pantalla", stock: 5, price: 120 },
-    { code: "BAT-045", description: "Batería Samsung S21", type: "Batería", stock: 3, price: 65 }
-  ]
+  orders: 0,
+  income: 0,
+  lowStock: 0,
+  lateOrders: 0,
+  technicians: [],
+  parts: []
 };
 
 // ======================
@@ -128,8 +114,302 @@ function initAdminCharts() {
     }
   });
 }
+
 // =============================
 // MÓDULO DE REPUESTOS
+// =============================
+
+const inventoryData = [];
+
+/**
+ * Muestra la vista de inventario
+ */
+function showInventory() {
+  const content = document.getElementById('main-content');
+  if (!content) return;
+
+  content.innerHTML = `
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Gestión de Repuestos</h1>
+      <div class="btn-toolbar mb-2 mb-md-0">
+        <button type="button" class="btn btn-sm btn-primary" onclick="showAddItemModal()">
+          <i class="fas fa-plus me-1"></i> Nuevo Producto
+        </button>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <div class="input-group">
+          <input type="text" id="inventorySearch" class="form-control" placeholder="Buscar producto..." 
+                onkeyup="searchInventory()">
+          <button class="btn btn-outline-secondary" type="button">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <select class="form-select" id="inventoryCategoryFilter" onchange="filterInventory()">
+          <option value="">Todas las categorías</option>
+          <option value="Pantallas">Pantallas</option>
+          <option value="Baterías">Baterías</option>
+          <option value="Software">Software</option>
+          <option value="Herramientas">Herramientas</option>
+          <option value="Accesorios">Accesorios</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <select class="form-select" id="inventoryStatusFilter" onchange="filterInventory()">
+          <option value="">Todos los estados</option>
+          <option value="Disponible">Disponible</option>
+          <option value="Bajo stock">Bajo stock</option>
+          <option value="Agotado">Agotado</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped table-hover" id="inventoryTable">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Stock</th>
+            <th>Precio</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="inventoryTableBody">
+          <!-- Los datos se cargarán dinámicamente -->
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  // Cargar los datos del inventario
+  loadInventoryTable(inventoryData);
+}
+
+/**
+ * Carga los datos en la tabla de inventario
+ * @param {Array} data - Array de productos
+ */
+function loadInventoryTable(data) {
+  const tableBody = document.getElementById('inventoryTableBody');
+  if (!tableBody) return;
+
+  tableBody.innerHTML = '';
+
+  data.forEach(item => {
+    const status = getInventoryStatus(item.stock, item.minStock);
+    const statusClass = status === 'Disponible' ? 'success' : status === 'Bajo stock' ? 'warning' : 'danger';
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${item.id}</td>
+      <td>${item.name}</td>
+      <td>${item.category}</td>
+      <td>${item.stock}</td>
+      <td>$${item.price.toFixed(2)}</td>
+      <td><span class="badge bg-${statusClass}">${status}</span></td>
+      <td>
+        <button class="btn btn-sm btn-outline-primary me-1" onclick="editInventoryItem(${item.id})">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-danger" onclick="confirmDeleteItem(${item.id}, '${item.name}')">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </td>
+    `;
+    tableBody.appendChild(row);
+  });
+}
+
+/**
+ * Determina el estado del inventario basado en el stock
+ * @param {number} stock - Cantidad actual
+ * @param {number} minStock - Cantidad mínima requerida
+ * @returns {string} Estado del producto
+ */
+function getInventoryStatus(stock, minStock) {
+  if (stock === 0) return 'Agotado';
+  if (stock <= minStock) return 'Bajo stock';
+  return 'Disponible';
+}
+
+/**
+ * Filtra los productos del inventario
+ */
+function filterInventory() {
+  const categoryFilter = document.getElementById('inventoryCategoryFilter').value;
+  const statusFilter = document.getElementById('inventoryStatusFilter').value;
+  const searchTerm = document.getElementById('inventorySearch').value.toLowerCase();
+
+  let filteredData = inventoryData;
+
+  // Aplicar filtros
+  if (categoryFilter) {
+    filteredData = filteredData.filter(item => item.category === categoryFilter);
+  }
+
+  if (statusFilter) {
+    filteredData = filteredData.filter(item => {
+      const status = getInventoryStatus(item.stock, item.minStock);
+      return status === statusFilter;
+    });
+  }
+
+if (searchTerm) {
+    filteredData = filteredData.filter(item => {
+      return item.name.toLowerCase().includes(searchTerm) || 
+             item.id.toString().includes(searchTerm);
+    });
+}
+
+  loadInventoryTable(filteredData);
+}
+/**
+ * Busca productos en el inventario
+ */
+function searchInventory() {
+  filterInventory(); // Reutilizamos la función de filtrado
+}
+
+/**
+ * Muestra el modal para agregar un nuevo producto
+ */
+function showAddItemModal() {
+  const modal = new bootstrap.Modal(document.getElementById('inventoryItemModal'));
+  document.getElementById('inventoryModalTitle').textContent = 'Nuevo Producto';
+  document.getElementById('itemId').value = '';
+  document.getElementById('inventoryItemForm').reset();
+  document.getElementById('saveItemBtn').onclick = () => saveInventoryItem();
+  modal.show();
+}
+
+/**
+ * Muestra el modal para editar un producto existente
+ * @param {number} id - ID del producto a editar
+ */
+function editInventoryItem(id) {
+  const item = inventoryData.find(item => item.id === id);
+  if (!item) return;
+
+  const modal = new bootstrap.Modal(document.getElementById('inventoryItemModal'));
+  document.getElementById('inventoryModalTitle').textContent = 'Editar Producto';
+  document.getElementById('itemId').value = item.id;
+  document.getElementById('itemName').value = item.name;
+  document.getElementById('itemCategory').value = item.category;
+  document.getElementById('itemStock').value = item.stock;
+  document.getElementById('itemMinStock').value = item.minStock;
+  document.getElementById('itemPrice').value = item.price;
+  document.getElementById('itemLocation').value = item.location || '';
+  document.getElementById('itemSupplier').value = item.supplier || '';
+  document.getElementById('itemNotes').value = item.notes || '';
+  document.getElementById('saveItemBtn').onclick = () => saveInventoryItem();
+  modal.show();
+}
+
+/**
+ * Guarda un producto en el inventario (nuevo o existente)
+ */
+function saveInventoryItem() {
+  const form = document.getElementById('inventoryItemForm');
+  if (!form.checkValidity()) {
+    form.classList.add('was-validated');
+    return;
+  }
+
+  const itemId = document.getElementById('itemId').value;
+  const itemData = {
+    id: itemId ? parseInt(itemId) : generateItemId(),
+    name: document.getElementById('itemName').value,
+    category: document.getElementById('itemCategory').value,
+    stock: parseInt(document.getElementById('itemStock').value),
+    minStock: parseInt(document.getElementById('itemMinStock').value),
+    price: parseFloat(document.getElementById('itemPrice').value),
+    location: document.getElementById('itemLocation').value,
+    supplier: document.getElementById('itemSupplier').value,
+    notes: document.getElementById('itemNotes').value
+  };
+
+  if (itemId) {
+    // Editar producto existente
+    const index = inventoryData.findIndex(item => item.id === parseInt(itemId));
+    if (index !== -1) {
+      inventoryData[index] = itemData;
+    }
+  } else {
+    // Agregar nuevo producto
+    inventoryData.push(itemData);
+  }
+
+  // Cerrar modal y actualizar tabla
+  bootstrap.Modal.getInstance(document.getElementById('inventoryItemModal')).hide();
+  loadInventoryTable(inventoryData);
+  
+  // Mostrar notificación de éxito
+  showAlert('¡Éxito!', 'El producto se ha guardado correctamente.', 'success');
+}
+
+/**
+ * Genera un nuevo ID para productos
+ * @returns {number} Nuevo ID
+ */
+function generateItemId() {
+  const maxId = Math.max(...inventoryData.map(item => item.id));
+  return maxId + 1;
+}
+
+/**
+ * Muestra el modal de confirmación para eliminar un producto
+ * @param {number} id - ID del producto
+ * @param {string} name - Nombre del producto
+ */
+function confirmDeleteItem(id, name) {
+  const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+  document.getElementById('itemToDeleteName').textContent = name;
+  document.getElementById('confirmDeleteBtn').onclick = () => deleteInventoryItem(id);
+  modal.show();
+}
+
+/**
+ * Elimina un producto del inventario
+ * @param {number} id - ID del producto a eliminar
+ */
+function deleteInventoryItem(id) {
+  const index = inventoryData.findIndex(item => item.id === id);
+  if (index !== -1) {
+    inventoryData.splice(index, 1);
+    loadInventoryTable(inventoryData);
+    bootstrap.Modal.getInstance(document.getElementById('confirmDeleteModal')).hide();
+    showAlert('¡Éxito!', 'El producto ha sido eliminado.', 'success');
+  }
+}
+
+/**
+ * Exporta el inventario a Excel (simulado)
+ */
+function exportInventoryToExcel() {
+  // En una implementación real, aquí iría el código para generar un Excel
+  showAlert('Exportar a Excel', 'Esta función exportaría los datos a Excel en una implementación real.', 'info');
+}
+
+/**
+ * Muestra una alerta/notificación
+ * @param {string} title - Título de la alerta
+ * @param {string} message - Mensaje a mostrar
+ * @param {string} type - Tipo de alerta (success, error, info, warning)
+ */
+function showAlert(title, message, type) {
+  // Implementación básica - podrías usar Toast de Bootstrap o SweetAlert en producción
+  alert(`${title}\n${message}`);
+}
+
+// =============================
+// GESTIÓN DE REPUESTOS (PARTS)
 // =============================
 
 function showPartsManagement() {
@@ -143,36 +423,6 @@ function showPartsManagement() {
       </button>
     </div>
     
-    <div class="row mb-3">
-      <div class="col-md-4">
-        <div class="input-group">
-          <input type="text" id="partsSearch" class="form-control" placeholder="Buscar repuesto..." onkeyup="filterParts()">
-          <button class="btn btn-outline-secondary" type="button">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <select class="form-select" id="partsCategoryFilter" onchange="filterParts()">
-          <option value="">Todas las categorías</option>
-          <option value="Pantallas">Pantallas</option>
-          <option value="Baterías">Baterías</option>
-          <option value="Conectores">Conectores</option>
-          <option value="Herramientas">Herramientas</option>
-          <option value="Accesorios">Accesorios</option>
-          <option value="Software">Software</option>
-        </select>
-      </div>
-      <div class="col-md-4">
-        <select class="form-select" id="partsStatusFilter" onchange="filterParts()">
-          <option value="">Todos los estados</option>
-          <option value="Disponible">Disponible</option>
-          <option value="Bajo stock">Bajo stock</option>
-          <option value="Agotado">Agotado</option>
-        </select>
-      </div>
-    </div>
-    
     <div class="table-responsive">
       <table class="table table-hover admin-table">
         <thead class="table-dark">
@@ -183,90 +433,37 @@ function showPartsManagement() {
             <th>Marca/Modelo</th>
             <th>Stock</th>
             <th>Precio</th>
-            <th>Estado</th>
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody id="partsTableBody">
-          <!-- Los datos se cargarán dinámicamente -->
+        <tbody>
+          ${adminData.parts.map(part => `
+            <tr>
+              <td>${part.code}</td>
+              <td>${part.description}</td>
+              <td>${part.type}</td>
+              <td>${part.model || 'N/A'}</td>
+              <td>${part.stock}</td>
+              <td>$${part.price}</td>
+              <td>
+                <button class="btn btn-sm btn-warning me-1" onclick="editPart('${part.code}')">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="deletePart('${part.code}')">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          `).join('')}
         </tbody>
       </table>
     </div>
   `;
-
-  loadPartsTable(adminData.parts);
 }
-
-function loadPartsTable(data) {
-  const tableBody = document.getElementById('partsTableBody');
-  if (!tableBody) return;
-
-  tableBody.innerHTML = '';
-
-  data.forEach(part => {
-    const status = getPartStatus(part.stock);
-    const statusClass = status === 'Disponible' ? 'success' : status === 'Bajo stock' ? 'warning' : 'danger';
-
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${part.code}</td>
-      <td>${part.description}</td>
-      <td>${part.type}</td>
-      <td>${part.model || 'N/A'}</td>
-      <td>${part.stock}</td>
-      <td>$${part.price.toFixed(2)}</td>
-      <td><span class="badge bg-${statusClass}">${status}</span></td>
-      <td>
-        <button class="btn btn-sm btn-warning me-1" onclick="editPart('${part.code}')">
-          <i class="fas fa-edit"></i>
-        </button>
-        <button class="btn btn-sm btn-danger" onclick="deletePart('${part.code}')">
-          <i class="fas fa-trash"></i>
-        </button>
-      </td>
-    `;
-    tableBody.appendChild(row);
-  });
-}
-
-function getPartStatus(stock) {
-  if (stock === 0) return 'Agotado';
-  if (stock <= 5) return 'Bajo stock';
-  return 'Disponible';
-}
-
-function filterParts() {
-  const categoryFilter = document.getElementById('partsCategoryFilter').value;
-  const statusFilter = document.getElementById('partsStatusFilter').value;
-  const searchTerm = document.getElementById('partsSearch').value.toLowerCase();
-
-  let filteredParts = adminData.parts;
-
-  if (categoryFilter) {
-    filteredParts = filteredParts.filter(part => part.type === categoryFilter);
-  }
-
-  if (statusFilter) {
-    filteredParts = filteredParts.filter(part => {
-      const status = getPartStatus(part.stock);
-      return status === statusFilter;
-    });
-  }
-
-  if (searchTerm) {
-    filteredParts = filteredParts.filter(part => 
-      part.description.toLowerCase().includes(searchTerm) || 
-      part.code.toLowerCase().includes(searchTerm)
-    );
-  }
-
-  loadPartsTable(filteredParts);
-}
-
 function showAddPartForm(partData = null) {
   const mainContent = document.getElementById('mainContent');
   const isEdit = partData !== null;
-
+  
   mainContent.innerHTML = `
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
       <h1 class="h2">${isEdit ? 'Editar' : 'Agregar'} Repuesto</h1>
@@ -293,9 +490,6 @@ function showAddPartForm(partData = null) {
                 <option value="Pantalla" ${partData?.type === 'Pantalla' ? 'selected' : ''}>Pantalla</option>
                 <option value="Batería" ${partData?.type === 'Batería' ? 'selected' : ''}>Batería</option>
                 <option value="Conector" ${partData?.type === 'Conector' ? 'selected' : ''}>Conector</option>
-                <option value="Herramienta" ${partData?.type === 'Herramienta' ? 'selected' : ''}>Herramienta</option>
-                <option value="Accesorio" ${partData?.type === 'Accesorio' ? 'selected' : ''}>Accesorio</option>
-                <option value="Software" ${partData?.type === 'Software' ? 'selected' : ''}>Software</option>
               </select>
             </div>
             <div class="mb-3">
@@ -306,29 +500,18 @@ function showAddPartForm(partData = null) {
         </div>
         
         <div class="row">
-          <div class="col-md-4">
-            <div class="mb-3">
-              <label for="partModel" class="form-label">Modelo compatible</label>
-              <input type="text" class="form-control" id="partModel" value="${partData?.model || ''}">
-            </div>
-          </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="mb-3">
               <label for="partStock" class="form-label">Stock</label>
               <input type="number" class="form-control" id="partStock" min="0" value="${partData?.stock || 0}" required>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="mb-3">
               <label for="partPrice" class="form-label">Precio unitario</label>
               <input type="number" class="form-control" id="partPrice" min="0" step="0.01" value="${partData?.price || 0}" required>
             </div>
           </div>
-        </div>
-        
-        <div class="mb-3">
-          <label for="partNotes" class="form-label">Notas</label>
-          <textarea class="form-control" id="partNotes" rows="2">${partData?.notes || ''}</textarea>
         </div>
         
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -340,9 +523,10 @@ function showAddPartForm(partData = null) {
   `;
 }
 
+
 function handlePartForm(event, partCode = null) {
   event.preventDefault();
-
+  
   const partData = {
     code: document.getElementById('partCode').value,
     description: document.getElementById('partDescription').value,
@@ -353,16 +537,18 @@ function handlePartForm(event, partCode = null) {
     price: parseFloat(document.getElementById('partPrice').value),
     notes: document.getElementById('partNotes').value
   };
-
+  
   if (partCode) {
+    // Editar repuesto existente
     const index = adminData.parts.findIndex(p => p.code === partCode);
     if (index !== -1) {
       adminData.parts[index] = partData;
     }
   } else {
+    // Agregar nuevo repuesto
     adminData.parts.push(partData);
   }
-
+  
   showPartsManagement();
 }
 
@@ -380,9 +566,8 @@ function deletePart(code) {
   }
 }
 
-
 // =============================
-// GESTIÓN DE PERSONAL
+// GESTIÓN DE Personal
 // =============================
 
 function showPersonalManagement() {
@@ -391,252 +576,206 @@ function showPersonalManagement() {
   mainContent.innerHTML = `
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
       <h1 class="h2">Gestión de Personal</h1>
+      <button class="btn btn-success" onclick="showAddPersonalForm()">
+        <i class="fas fa-plus me-2"></i>Agregar Personal
+      </button>
     </div>
-
-    <ul class="nav nav-tabs mb-4" id="personalTabs" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="technicians-tab" data-bs-toggle="tab" data-bs-target="#technicians" type="button" role="tab">
-          <i class="fas fa-user-cog me-1"></i> Técnicos
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="advisors-tab" data-bs-toggle="tab" data-bs-target="#advisors" type="button" role="tab">
-          <i class="fas fa-headset me-1"></i> Asesores
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="admins-tab" data-bs-toggle="tab" data-bs-target="#admins" type="button" role="tab">
-          <i class="fas fa-user-shield me-1"></i> Administradores
-        </button>
-      </li>
-    </ul>
-
-    <div class="tab-content" id="personalTabsContent">
-      <div class="tab-pane fade show active" id="technicians" role="tabpanel">
-        ${renderTechniciansTable()}
-      </div>
-      <div class="tab-pane fade" id="advisors" role="tabpanel">
-        ${renderAdvisorsTable()}
-      </div>
-      <div class="tab-pane fade" id="admins" role="tabpanel">
-        ${renderAdminsTable()}
-      </div>
+    
+    <div class="table-responsive">
+      <table class="table table-hover admin-table">
+        <thead class="table-dark">
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Dirección</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${adminData.technicians.map(person => `
+            <tr>
+              <td>${person.name}</td>
+              <td>${person.email}</td>
+              <td>${person.phone || 'N/A'}</td>
+              <td>${person.address || 'N/A'}</td>
+              <td>${person.role}</td>
+              <td>
+                <span class="badge ${person.status === 'Disponible' ? 'bg-success' : 'bg-secondary'}">
+                  ${person.status}
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-primary me-1" onclick="viewPersonal(${person.id})">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-sm btn-warning me-1" onclick="editPersonal(${person.id})">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
     </div>
   `;
 }
 
-function renderTechniciansTable() {
-  return `
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="mb-0">Listado de Técnicos</h5>
-      <button class="btn btn-primary" onclick="showAddTechnicianForm()">
-        <i class="fas fa-plus-circle me-1"></i> Nuevo Técnico
-      </button>
+function showAddPersonalForm(personData = null) {
+  const mainContent = document.getElementById('mainContent');
+  const isEdit = personData !== null;
+  
+  mainContent.innerHTML = `
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">${isEdit ? 'Editar' : 'Agregar'} Personal</h1>
     </div>
     
-    <div class="card border-0 shadow-sm">
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
-              <tr>
-                <th width="25%">Nombre</th>
-                <th width="20%">Contacto</th>
-                <th width="20%">Especialidades</th>
-                <th width="15%">Estado</th>
-                <th width="20%" class="text-end">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${adminData.technicians.map(tech => `
-                <tr>
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <div class="avatar me-3">
-                        <span class="avatar-text bg-primary rounded-circle">
-                          ${tech.name.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                      <div>
-                        <h6 class="mb-0">${tech.name}</h6>
-                        <small class="text-muted">ID: ${tech.id}</small>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="text-muted small">
-                      <div><i class="fas fa-envelope me-2"></i>${tech.email}</div>
-                      <div><i class="fas fa-phone me-2"></i>${tech.phone || 'N/A'}</div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="d-flex flex-wrap gap-1">
-                      ${tech.specialties.map(spec => `
-                        <span class="badge bg-light text-dark border">${spec}</span>
-                      `).join('')}
-                    </div>
-                  </td>
-                  <td>
-                    <span class="badge rounded-pill ${tech.status === 'Disponible' ? 'bg-success' : 'bg-secondary'}">
-                      ${tech.status}
-                    </span>
-                  </td>
-                  <td class="text-end">
-                    <div class="btn-group" role="group">
-                      <button class="btn btn-sm btn-outline-primary" onclick="editTechnician(${tech.id})">
-                        <i class="fas fa-edit"></i>
-                      </button>
-                      <button class="btn btn-sm btn-outline-success" onclick="manageSpecialties(${tech.id})">
-                        <i class="fas fa-certificate"></i>
-                      </button>
-                      <button class="btn btn-sm btn-outline-danger" onclick="deleteTechnician(${tech.id})">
-                        <i class="fas fa-trash-alt"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
+    <div class="admin-form">
+      <form id="personalForm" onsubmit="handlePersonalForm(event, ${isEdit ? personData.id : 'null'})">
+        <h5 class="mb-3"><i class="fas fa-user-tie me-2"></i>Datos personales</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="personName" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="personName" value="${personData?.name?.split(' ')[0] || ''}" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="personLastName" class="form-label">Apellidos</label>
+              <input type="text" class="form-control" id="personLastName" value="${personData?.name?.split(' ').slice(1).join(' ') || ''}" required>
+            </div>
+          </div>
         </div>
-      </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="personEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="personEmail" value="${personData?.email || ''}" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="personPhone" class="form-label">Teléfono</label>
+              <input type="tel" class="form-control" id="personPhone" value="${personData?.phone || ''}">
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="personAddress" class="form-label">Dirección</label>
+          <input type="text" class="form-control" id="personAddress" value="${personData?.address || ''}">
+        </div>
+
+        <h5 class="mb-3 mt-4"><i class="fas fa-key me-2"></i>Datos de acceso</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="personUsername" class="form-label">Usuario</label>
+              <input type="text" class="form-control" id="personUsername" value="${personData?.username || ''}" ${isEdit ? 'readonly' : 'required'}>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="personPassword" class="form-label">Contraseña</label>
+              <input type="password" class="form-control" id="personPassword" ${isEdit ? 'placeholder="Dejar en blanco para no cambiar"' : 'required'}>
+            </div>
+          </div>
+        </div>
+        
+        <h5 class="mb-3 mt-4"><i class="fas fa-user-tag me-2"></i>Rol</h5>
+        <div class="mb-3">
+          <select class="form-select" id="personRole" required>
+            <option value="Técnico" ${personData?.role === 'Técnico' ? 'selected' : ''}>Técnico</option>
+            <option value="Asesor" ${personData?.role === 'Asesor' ? 'selected' : ''}>Asesor</option>
+            <option value="Administrador" ${personData?.role === 'Administrador' ? 'selected' : ''}>Administrador</option>
+          </select>
+        </div>
+        
+        <div class="mb-3 mt-4">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="personActive" ${!personData || personData.status === 'Disponible' ? 'checked' : ''}>
+            <label class="form-check-label" for="personActive">Personal activo</label>
+          </div>
+        </div>
+        
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+          <button type="button" class="btn btn-secondary me-md-2" onclick="showPersonalManagement()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">${isEdit ? 'Actualizar' : 'Guardar'}</button>
+        </div>
+      </form>
     </div>
   `;
 }
 
-function renderAdvisorsTable() {
-  return `
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="mb-0">Listado de Asesores</h5>
-      <button class="btn btn-primary" onclick="showAddAdvisorForm()">
-        <i class="fas fa-plus-circle me-1"></i> Nuevo Asesor
-      </button>
-    </div>
-    
-    <div class="card border-0 shadow-sm">
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
-              <tr>
-                <th width="30%">Nombre</th>
-                <th width="25%">Contacto</th>
-                <th width="20%">Estado</th>
-                <th width="25%" class="text-end">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${adminData.advisors.map(advisor => `
-                <tr>
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <div class="avatar me-3">
-                        <span class="avatar-text bg-info rounded-circle">
-                          ${advisor.name.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                      <div>
-                        <h6 class="mb-0">${advisor.name}</h6>
-                        <small class="text-muted">ID: ${advisor.id}</small>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="text-muted small">
-                      <div><i class="fas fa-envelope me-2"></i>${advisor.email}</div>
-                      <div><i class="fas fa-phone me-2"></i>${advisor.phone || 'N/A'}</div>
-                    </div>
-                  </td>
-                  <td>
-                    <span class="badge rounded-pill ${advisor.status === 'Activo' ? 'bg-success' : 'bg-secondary'}">
-                      ${advisor.status}
-                    </span>
-                  </td>
-                  <td class="text-end">
-                    <div class="btn-group" role="group">
-                      <button class="btn btn-sm btn-outline-primary" onclick="editAdvisor(${advisor.id})">
-                        <i class="fas fa-edit"></i>
-                      </button>
-                      <button class="btn btn-sm btn-outline-danger" onclick="deleteAdvisor(${advisor.id})">
-                        <i class="fas fa-trash-alt"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  `;
+function handlePersonalForm(event, personId = null) {
+  event.preventDefault();
+  
+  const personData = {
+    id: personId || Math.max(...adminData.technicians.map(p => p.id), 0) + 1,
+    name: `${document.getElementById('personName').value} ${document.getElementById('personLastName').value}`,
+    email: document.getElementById('personEmail').value,
+    phone: document.getElementById('personPhone').value,
+    address: document.getElementById('personAddress').value,
+    username: document.getElementById('personUsername').value,
+    role: document.getElementById('personRole').value,
+    status: document.getElementById('personActive').checked ? 'Disponible' : 'Inactivo'
+  };
+  
+  const password = document.getElementById('personPassword').value;
+  if (password) {
+    personData.password = password; // En una app real, esto debería encriptarse
+  }
+  
+  if (personId) {
+    // Editar personal existente
+    const index = adminData.technicians.findIndex(p => p.id === personId);
+    if (index !== -1) {
+      adminData.technicians[index] = personData;
+    }
+  } else {
+    // Agregar nuevo personal
+    adminData.technicians.push(personData);
+  }
+  
+  showPersonalManagement();
 }
 
-function renderAdminsTable() {
-  return `
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="mb-0">Listado de Administradores</h5>
-      <button class="btn btn-primary" onclick="showAddAdminForm()">
-        <i class="fas fa-plus-circle me-1"></i> Nuevo Administrador
+function editPersonal(id) {
+  const person = adminData.technicians.find(p => p.id === id);
+  if (person) {
+    showAddPersonalForm(person);
+  }
+}
+
+function viewPersonal(id) {
+  const person = adminData.technicians.find(p => p.id === id);
+  if (!person) return;
+
+  const mainContent = document.getElementById('mainContent');
+  mainContent.innerHTML = `
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Detalles de Personal</h1>
+      <button class="btn btn-secondary" onclick="showPersonalManagement()">
+        <i class="fas fa-arrow-left me-2"></i>Volver
       </button>
     </div>
     
-    <div class="card border-0 shadow-sm">
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
-              <tr>
-                <th width="30%">Nombre</th>
-                <th width="25%">Contacto</th>
-                <th width="20%">Estado</th>
-                <th width="25%" class="text-end">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${adminData.admins.map(admin => `
-                <tr>
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <div class="avatar me-3">
-                        <span class="avatar-text bg-warning rounded-circle">
-                          ${admin.name.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                      <div>
-                        <h6 class="mb-0">${admin.name}</h6>
-                        <small class="text-muted">ID: ${admin.id}</small>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="text-muted small">
-                      <div><i class="fas fa-envelope me-2"></i>${admin.email}</div>
-                      <div><i class="fas fa-phone me-2"></i>${admin.phone || 'N/A'}</div>
-                    </div>
-                  </td>
-                  <td>
-                    <span class="badge rounded-pill ${admin.status === 'Activo' ? 'bg-success' : 'bg-secondary'}">
-                      ${admin.status}
-                    </span>
-                  </td>
-                  <td class="text-end">
-                    <div class="btn-group" role="group">
-                      <button class="btn btn-sm btn-outline-primary" onclick="editAdmin(${admin.id})">
-                        <i class="fas fa-edit"></i>
-                      </button>
-                      ${admin.id !== 1 ? `
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteAdmin(${admin.id})">
-                          <i class="fas fa-trash-alt"></i>
-                        </button>
-                      ` : ''}
-                    </div>
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-user me-2"></i>${person.name}</h5>
+        <p><strong>Email:</strong> ${person.email}</p>
+        <p><strong>Teléfono:</strong> ${person.phone || 'N/A'}</p>
+        <p><strong>Dirección:</strong> ${person.address || 'N/A'}</p>
+        <p><strong>Rol:</strong> ${person.role}</p>
+        <p><strong>Estado:</strong> 
+          <span class="badge ${person.status === 'Disponible' ? 'bg-success' : 'bg-secondary'}">
+            ${person.status}
+          </span>
+        </p>
       </div>
     </div>
   `;
@@ -663,7 +802,7 @@ function showReports() {
     </div>
     
     <div class="row mb-4">
-      <div class="col-md-6">
+      <div class="col-lg-6 col-xl-4">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title"><i class="fas fa-chart-pie me-2"></i>Órdenes por estado</h5>
@@ -671,7 +810,7 @@ function showReports() {
           </div>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-lg-6 col-xl-4">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title"><i class="fas fa-chart-bar me-2"></i>Órdenes mensuales</h5>
@@ -682,15 +821,15 @@ function showReports() {
     </div>
     
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-lg-6 col-xl-4">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-chart-line me-2"></i>Ingresos mensuales</h5>
-            <canvas id="incomeChart" width="400" height="250"></canvas>
+            <h5 class="card-title"><i class="fas fa-tools me-2"></i>Tipos de problemas reportados</h5>
+            <canvas id="problemTypeChart" width="400" height="250"></canvas>
           </div>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-lg-6 col-xl-4">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title"><i class="fas fa-users me-2"></i>Productividad por técnico</h5>
@@ -706,13 +845,34 @@ function showReports() {
 }
 
 function initReportCharts() {
+  // Datos dinámicos para las gráficas
+  const orderStatuses = ordersData.reduce((acc, order) => {
+    acc[order.status] = (acc[order.status] || 0) + 1;
+    return acc;
+  }, {});
+
+  const monthlyOrders = Array(12).fill(0);
+  ordersData.forEach(order => {
+    const month = new Date(order.date.split('/').reverse().join('-')).getMonth();
+    monthlyOrders[month]++;
+  });
+
+  const problemTypes = ordersData.reduce((acc, order) => {
+    acc[order.problem] = (acc[order.problem] || 0) + 1;
+    return acc;
+  }, {});
+
+  const technicianProductivity = adminData.technicians.map(tech => {
+    return ordersData.filter(order => order.technician === tech.name && order.status === 'Completada').length;
+  });
+
   // Gráfico de estado de órdenes
   new Chart(document.getElementById('statusChart'), {
     type: 'pie',
     data: {
-      labels: ['Completadas', 'En progreso', 'Pendientes', 'Canceladas'],
+      labels: Object.keys(orderStatuses),
       datasets: [{
-        data: [65, 15, 10, 5],
+        data: Object.values(orderStatuses),
         backgroundColor: ['#28a745', '#ffc107', '#17a2b8', '#dc3545']
       }]
     }
@@ -722,26 +882,23 @@ function initReportCharts() {
   new Chart(document.getElementById('monthlyChart'), {
     type: 'bar',
     data: {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May'],
+      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
       datasets: [{
         label: 'Órdenes',
-        data: [45, 60, 75, 65, 85],
+        data: monthlyOrders,
         backgroundColor: 'rgba(54, 162, 235, 0.7)'
       }]
     }
   });
   
-  // Gráfico de ingresos
-  new Chart(document.getElementById('incomeChart'), {
-    type: 'line',
+  // Gráfico de tipos de problemas reportados
+  new Chart(document.getElementById('problemTypeChart'), {
+    type: 'doughnut',
     data: {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May'],
+      labels: Object.keys(problemTypes),
       datasets: [{
-        label: 'Ingresos ($)',
-        data: [3200, 4100, 3750, 4800, 5200],
-        borderColor: 'rgba(40, 167, 69, 1)',
-        backgroundColor: 'rgba(40, 167, 69, 0.1)',
-        fill: true
+        data: Object.values(problemTypes),
+        backgroundColor: ['#007bff', '#6c757d', '#28a745', '#ffc107', '#dc3545']
       }]
     }
   });
@@ -753,7 +910,7 @@ function initReportCharts() {
       labels: adminData.technicians.map(t => t.name.split(' ')[0]),
       datasets: [{
         label: 'Órdenes completadas',
-        data: [12, 8, 5],
+        data: technicianProductivity,
         backgroundColor: 'rgba(108, 117, 125, 0.7)'
       }]
     }
@@ -768,34 +925,11 @@ function exportToPDF() {
   alert('Exportando a PDF...'); // Implementación real usaría una librería como jsPDF
 }
 
-
-
 // =============================
 // GESTIÓN DE ÓRDENES (ADMIN)
 // =============================
 
-let ordersData = [
-  {
-      id: 1245,
-      client: "María González",
-      device: "iPhone 12",
-      problem: "Pantalla rota",
-      status: "En progreso",
-      date: "15/05/2023",
-      technician: "Juan Pérez",
-
-  },
-  {
-      id: 1244,
-      client: "Carlos Mendoza",
-      device: "Samsung S21",
-      problem: "Batería defectuosa",
-      status: "Completada",
-      date: "14/05/2023",
-      technician: "María García",
-
-  }
-];
+let ordersData = [];
 
 function showInterventionOrders(filter = 'all') {
   const mainContent = document.getElementById('mainContent');
@@ -844,7 +978,6 @@ function showInterventionOrders(filter = 'all') {
                               <span class="badge ${getStatusBadgeClass(order.status)}">
                                   ${order.status}
                               </span>
-                              
                           </td>
                           <td>
                               <button class="btn btn-sm btn-primary me-1" onclick="showOrderDetails(${order.id})">
@@ -883,77 +1016,101 @@ function showOrderForm(order = null) {
           <h1 class="h2">${isEdit ? 'Editar' : 'Nueva'} Orden</h1>
       </div>
       
-      <div class="card">
-          <div class="card-body">
-              <form id="orderForm" onsubmit="handleOrderForm(event, ${isEdit ? order.id : 'null'})">
-                  <div class="row">
-                      <div class="col-md-6">
-                          <h5 class="mb-3"><i class="fas fa-user me-2"></i>Datos del Cliente</h5>
-                          <div class="mb-3">
-                              <label for="clientName" class="form-label">Nombre completo</label>
-                              <input type="text" class="form-control" id="clientName" value="${isEdit ? order.client : ''}" required>
-                          </div>
-                          <div class="mb-3">
-                              <label for="clientPhone" class="form-label">Teléfono</label>
-                              <input type="tel" class="form-control" id="clientPhone" value="${isEdit ? order.phone || '' : ''}" required>
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <h5 class="mb-3"><i class="fas fa-laptop me-2"></i>Datos del Dispositivo</h5>
-                          <div class="mb-3">
-                              <label for="deviceType" class="form-label">Tipo de dispositivo</label>
-                              <select class="form-select" id="deviceType" required>
-                                  <option value="">Seleccionar...</option>
-                                  <option value="Smartphone" ${isEdit && order.deviceType === 'Smartphone' ? 'selected' : ''}>Smartphone</option>
-                                  <option value="Tablet" ${isEdit && order.deviceType === 'Tablet' ? 'selected' : ''}>Tablet</option>
-                                  <option value="Laptop" ${isEdit && order.deviceType === 'Laptop' ? 'selected' : ''}>Laptop</option>
-                              </select>
-                          </div>
-                          <div class="mb-3">
-                              <label for="deviceModel" class="form-label">Modelo</label>
-                              <input type="text" class="form-control" id="deviceModel" value="${isEdit ? order.device : ''}" required>
-                          </div>
-                      </div>
-                  </div>
-                  
-                  <div class="mb-3">
-                      <label for="problemDescription" class="form-label">Descripción del problema</label>
-                      <textarea class="form-control" id="problemDescription" rows="3" required>${isEdit ? order.problem : ''}</textarea>
-                  </div>
-                  
-                  <div class="row">
-                      <div class="col-md-4">
-                          <div class="mb-3">
-                              <label for="technician" class="form-label">Técnico asignado</label>
-                              <select class="form-select" id="technician">
-                                  <option value="">Sin asignar</option>
-                                  ${adminData.technicians.map(tech => `
-                                      <option value="${tech.id}" ${isEdit && order.technicianId === tech.id ? 'selected' : ''}>
-                                          ${tech.name}
-                                      </option>
-                                  `).join('')}
-                              </select>
-                          </div>
-                      </div>
-                      <div class="col-md-4">
-                          <div class="mb-3">
-                              <label for="estimatedDate" class="form-label">Fecha estimada</label>
-                              <input type="date" class="form-control" id="estimatedDate" value="${isEdit ? order.estimatedDate || '' : ''}">
-                          </div>
-                      </div>
-                  </div>
-                  
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-                      <button type="button" class="btn btn-secondary me-md-2" onclick="showInterventionOrders()">Cancelar</button>
-                      <button type="submit" class="btn btn-primary">${isEdit ? 'Actualizar' : 'Guardar'} Orden</button>
-                  </div>
-              </form>
+          <div class="card">
+      <div class="card-body">
+        <form id="orderForm" onsubmit="handleOrderForm(event, ${isEdit ? order.id : 'null'})">
+          <div class="row">
+            <div class="col-md-6">
+              <h5 class="mb-3"><i class="fas fa-user me-2"></i>Datos del Cliente</h5>
+              <div class="mb-3">
+                <label for="clientName" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="clientName" value="${isEdit ? order.client : ''}" required>
+              </div>
+              <div class="mb-3">
+                <label for="clientName" class="form-label">Apellido</label>
+                <input type="text" class="form-control" id="clientName" value="${isEdit ? order.client : ''}" required>
+              </div>
+              <div class="mb-3">
+                <label for="clientPhone" class="form-label">Teléfono</label>
+                <input type="tel" class="form-control" id="clientPhone" value="${isEdit ? order.phone || '' : ''}" required>
+              </div>
+              <div class="mb-3">
+                <label for="clientAddress" class="form-label">Dirección</label>
+                <input type="tel" class="form-control" id="clientaddress" value="${isEdit ? order.Addres || '' : ''}" required>
+              </div>
+               
+            </div>
+            <div class="col-md-6">
+              <h5 class="mb-3"><i class="fas fa-laptop me-2"></i>Datos del Dispositivo</h5>
+              <div class="mb-3">
+                <label for="deviceType" class="form-label">Tipo de dispositivo</label>
+                <select class="form-select" id="deviceType" required>
+                  <option value="">Seleccionar...</option>
+                  <option value="Smartphone" ${isEdit && order.deviceType === 'Smartphone' ? 'selected' : ''}>Smartphone</option>
+                  <option value="Tablet" ${isEdit && order.deviceType === 'Tablet' ? 'selected' : ''}>Tablet</option>
+                  <option value="Laptop" ${isEdit && order.deviceType === 'Laptop' ? 'selected' : ''}>Laptop</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="deviceModel" class="form-label">Modelo</label>
+                <input type="text" class="form-control" id="deviceModel" value="${isEdit ? order.device : ''}" required>
+              </div>
+              <div class="mb-3">
+                <label for="deviceMarca" class="form-label">Marca</label>
+                <input type="text" class="form-control" id="deviceMarca" value="${isEdit ? order.device : ''}" required>
+              </div>
+              <div class="mb-3">
+                <label for="deviceSerial" class="form-label">Serial</label>
+                <input type="text" class="form-control" id="deviceSerial" value="${isEdit ? order.device : ''}" required>
+              </div>
+            </div>
           </div>
+          
+          <div class="mb-3">
+            <label for="problemDescription" class="form-label">Descripción del problema</label>
+            <textarea 
+              class="form-control auto-expand" 
+              id="problemDescription" 
+              rows="1" 
+              required
+              style="min-height: 100px; overflow-y: hidden;"
+              oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px'"
+            >${isEdit ? order.problem : ''}</textarea>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="technician" class="form-label">Técnico asignado</label>
+                <select class="form-select" id="technician">
+                  <option value="">Sin asignar</option>
+                  ${adminData.technicians.map(tech => `
+                    <option value="${tech.id}" ${isEdit && order.technicianId === tech.id ? 'selected' : ''}>
+                      ${tech.name}
+                    </option>
+                  `).join('')}
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="estimatedDate" class="form-label">Fecha y hora estimada</label>
+                <input type="datetime-local" class="form-control" id="estimatedDate" value="${isEdit ? order.estimatedDate || '' : ''}">
+              </div>
+            </div>
+          </div>
+          
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+            <button type="button" class="btn btn-secondary me-md-2" onclick="showInterventionOrders()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">${isEdit ? 'Actualizar' : 'Guardar'} Orden</button>
+          </div>
+        </form>
       </div>
+    </div>
   `;
   
   // Establecer fecha mínima como hoy
-  document.getElementById('estimatedDate').min = new Date().toISOString().split('T')[0];
+  document.getElementById('estimatedDate').min = new Date().toISOString().slice(0, 16);
 }
 
 function handleOrderForm(event, orderId = null) {
@@ -970,7 +1127,7 @@ function handleOrderForm(event, orderId = null) {
       technician: document.getElementById('technician').options[document.getElementById('technician').selectedIndex].text,
       estimatedDate: document.getElementById('estimatedDate').value,
       status: 'Pendiente',
-      date: new Date().toLocaleDateString('es-ES')
+      date: new Date().toLocaleString('es-ES')
   };
   
   if (orderId) {
@@ -1022,10 +1179,10 @@ function showOrderDetails(orderId) {
               <p>${order.problem}</p>
               
               <div class="row mt-4">
-                  <div class="col-md-4">
+                  <div class="col-md-6">
                       <p><strong>Técnico Asignado:</strong> ${order.technician || 'Sin asignar'}</p>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-6">
                       <p><strong>Fecha Estimada:</strong> ${order.estimatedDate || 'No especificada'}</p>
                   </div>
               </div>
@@ -1060,39 +1217,14 @@ function completeOrder(orderId) {
   }
 }
 
-
 // =============================
 // GESTIÓN DE PERMISOS
 // =============================
 
 let permissionsData = {
-  roles: ['Administrador', 'Técnico', 'Asesor'],
-  permissions: {
-      'Dashboard': ['read'],
-      'Repuestos': ['read', 'create', 'update', 'delete'],
-      'Técnicos': ['read', 'create', 'update', 'delete'],
-      'Órdenes': ['read', 'create', 'update', 'complete'],
-      'Reportes': ['read'],
-      'Configuración': ['read', 'update']
-  },
-  rolePermissions: {
-      'Administrador': {
-          'Dashboard': ['read'],
-          'Repuestos': ['read', 'create', 'update', 'delete'],
-          'Técnicos': ['read', 'create', 'update', 'delete'],
-          'Órdenes': ['read', 'create', 'update', 'complete'],
-          'Reportes': ['read'],
-          'Configuración': ['read', 'update']
-      },
-      'Técnico': {
-          'Dashboard': ['read'],
-          'Órdenes': ['read', 'update', 'complete']
-      },
-      'Asesor': {
-          'Dashboard': ['read'],
-          'Órdenes': ['read', 'create']
-      }
-  }
+  roles: [],
+  permissions: {},
+  rolePermissions: {}
 };
 
 function showPermissionsManagement() {
@@ -1283,11 +1415,7 @@ function deleteRole(role) {
 // GESTIÓN DE CATEGORÍAS
 // =============================
 
-let categoriesData = [
-  { id: 1, name: 'Pantallas', description: 'Reparación y reemplazo de pantallas' },
-  { id: 2, name: 'Baterías', description: 'Reemplazo de baterías' },
-  { id: 3, name: 'Software', description: 'Problemas de sistema operativo' }
-];
+let categoriesData = [];
 
 function showCategoriesManagement() {
   const mainContent = document.getElementById('mainContent');
@@ -1405,22 +1533,21 @@ function deleteCategory(categoryId) {
   }
 }
 
-
 // =============================
 // PERFIL DE USUARIO
 // =============================
 
 // Datos del usuario (simulados)
 let currentUser = {
-  id: 1,
-  name: "Admin",
-  lastName: "Sistema",
-  email: "admin@fixpro.com",
-  phone: "555-1234",
-  avatar: "assets/img/profile-placeholder.png",
-  role: "Administrador",
-  lastLogin: new Date().toLocaleString(),
-  notifications: true,
+  id: null,
+  name: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  avatar: "./assets/img/profile-placeholder.png", // Ruta de la imagen por defecto
+  role: "",
+  lastLogin: "",
+  notifications: false,
   darkMode: false
 };
 
