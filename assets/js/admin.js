@@ -12,6 +12,14 @@ let adminData = {
     { id: 1, name: "Juan Pérez", email: "juan.perez@example.com", specialties: ["Pantallas", "Baterías"], status: "Disponible" },
     { id: 2, name: "María García", email: "maria.garcia@example.com", specialties: ["Placas", "Conectores"], status: "Disponible" }
   ],
+  advisors: [
+    { id: 1, name: "Carlos López", email: "carlos.lopez@example.com", status: "Activo" },
+    { id: 2, name: "Ana Torres", email: "ana.torres@example.com", status: "Activo" }
+  ],
+  admins: [
+    { id: 1, name: "Admin Principal", email: "admin.principal@example.com", status: "Activo" },
+    { id: 2, name: "Sofía Martínez", email: "sofia.martinez@example.com", status: "Activo" }
+  ],
   parts: [
     { code: "SCR-001", description: "Pantalla iPhone 12", type: "Pantalla", stock: 5, price: 120 },
     { code: "BAT-045", description: "Batería Samsung S21", type: "Batería", stock: 3, price: 65 }
@@ -120,9 +128,8 @@ function initAdminCharts() {
     }
   });
 }
-
 // =============================
-// GESTIÓN DE REPUESTOS (PARTS)
+// MÓDULO DE REPUESTOS
 // =============================
 
 function showPartsManagement() {
@@ -136,6 +143,36 @@ function showPartsManagement() {
       </button>
     </div>
     
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <div class="input-group">
+          <input type="text" id="partsSearch" class="form-control" placeholder="Buscar repuesto..." onkeyup="filterParts()">
+          <button class="btn btn-outline-secondary" type="button">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <select class="form-select" id="partsCategoryFilter" onchange="filterParts()">
+          <option value="">Todas las categorías</option>
+          <option value="Pantallas">Pantallas</option>
+          <option value="Baterías">Baterías</option>
+          <option value="Conectores">Conectores</option>
+          <option value="Herramientas">Herramientas</option>
+          <option value="Accesorios">Accesorios</option>
+          <option value="Software">Software</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <select class="form-select" id="partsStatusFilter" onchange="filterParts()">
+          <option value="">Todos los estados</option>
+          <option value="Disponible">Disponible</option>
+          <option value="Bajo stock">Bajo stock</option>
+          <option value="Agotado">Agotado</option>
+        </select>
+      </div>
+    </div>
+    
     <div class="table-responsive">
       <table class="table table-hover admin-table">
         <thead class="table-dark">
@@ -146,38 +183,90 @@ function showPartsManagement() {
             <th>Marca/Modelo</th>
             <th>Stock</th>
             <th>Precio</th>
+            <th>Estado</th>
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody>
-          ${adminData.parts.map(part => `
-            <tr>
-              <td>${part.code}</td>
-              <td>${part.description}</td>
-              <td>${part.type}</td>
-              <td>${part.model || 'N/A'}</td>
-              <td>${part.stock}</td>
-              <td>$${part.price}</td>
-              <td>
-                <button class="btn btn-sm btn-warning me-1" onclick="editPart('${part.code}')">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-sm btn-danger" onclick="deletePart('${part.code}')">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-          `).join('')}
+        <tbody id="partsTableBody">
+          <!-- Los datos se cargarán dinámicamente -->
         </tbody>
       </table>
     </div>
   `;
+
+  loadPartsTable(adminData.parts);
+}
+
+function loadPartsTable(data) {
+  const tableBody = document.getElementById('partsTableBody');
+  if (!tableBody) return;
+
+  tableBody.innerHTML = '';
+
+  data.forEach(part => {
+    const status = getPartStatus(part.stock);
+    const statusClass = status === 'Disponible' ? 'success' : status === 'Bajo stock' ? 'warning' : 'danger';
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${part.code}</td>
+      <td>${part.description}</td>
+      <td>${part.type}</td>
+      <td>${part.model || 'N/A'}</td>
+      <td>${part.stock}</td>
+      <td>$${part.price.toFixed(2)}</td>
+      <td><span class="badge bg-${statusClass}">${status}</span></td>
+      <td>
+        <button class="btn btn-sm btn-warning me-1" onclick="editPart('${part.code}')">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="btn btn-sm btn-danger" onclick="deletePart('${part.code}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    `;
+    tableBody.appendChild(row);
+  });
+}
+
+function getPartStatus(stock) {
+  if (stock === 0) return 'Agotado';
+  if (stock <= 5) return 'Bajo stock';
+  return 'Disponible';
+}
+
+function filterParts() {
+  const categoryFilter = document.getElementById('partsCategoryFilter').value;
+  const statusFilter = document.getElementById('partsStatusFilter').value;
+  const searchTerm = document.getElementById('partsSearch').value.toLowerCase();
+
+  let filteredParts = adminData.parts;
+
+  if (categoryFilter) {
+    filteredParts = filteredParts.filter(part => part.type === categoryFilter);
+  }
+
+  if (statusFilter) {
+    filteredParts = filteredParts.filter(part => {
+      const status = getPartStatus(part.stock);
+      return status === statusFilter;
+    });
+  }
+
+  if (searchTerm) {
+    filteredParts = filteredParts.filter(part => 
+      part.description.toLowerCase().includes(searchTerm) || 
+      part.code.toLowerCase().includes(searchTerm)
+    );
+  }
+
+  loadPartsTable(filteredParts);
 }
 
 function showAddPartForm(partData = null) {
   const mainContent = document.getElementById('mainContent');
   const isEdit = partData !== null;
-  
+
   mainContent.innerHTML = `
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
       <h1 class="h2">${isEdit ? 'Editar' : 'Agregar'} Repuesto</h1>
@@ -204,6 +293,9 @@ function showAddPartForm(partData = null) {
                 <option value="Pantalla" ${partData?.type === 'Pantalla' ? 'selected' : ''}>Pantalla</option>
                 <option value="Batería" ${partData?.type === 'Batería' ? 'selected' : ''}>Batería</option>
                 <option value="Conector" ${partData?.type === 'Conector' ? 'selected' : ''}>Conector</option>
+                <option value="Herramienta" ${partData?.type === 'Herramienta' ? 'selected' : ''}>Herramienta</option>
+                <option value="Accesorio" ${partData?.type === 'Accesorio' ? 'selected' : ''}>Accesorio</option>
+                <option value="Software" ${partData?.type === 'Software' ? 'selected' : ''}>Software</option>
               </select>
             </div>
             <div class="mb-3">
@@ -250,7 +342,7 @@ function showAddPartForm(partData = null) {
 
 function handlePartForm(event, partCode = null) {
   event.preventDefault();
-  
+
   const partData = {
     code: document.getElementById('partCode').value,
     description: document.getElementById('partDescription').value,
@@ -261,18 +353,16 @@ function handlePartForm(event, partCode = null) {
     price: parseFloat(document.getElementById('partPrice').value),
     notes: document.getElementById('partNotes').value
   };
-  
+
   if (partCode) {
-    // Editar repuesto existente
     const index = adminData.parts.findIndex(p => p.code === partCode);
     if (index !== -1) {
       adminData.parts[index] = partData;
     }
   } else {
-    // Agregar nuevo repuesto
     adminData.parts.push(partData);
   }
-  
+
   showPartsManagement();
 }
 
@@ -290,8 +380,9 @@ function deletePart(code) {
   }
 }
 
+
 // =============================
-// GESTIÓN DE Personal
+// GESTIÓN DE PERSONAL
 // =============================
 
 function showPersonalManagement() {
@@ -299,299 +390,256 @@ function showPersonalManagement() {
   
   mainContent.innerHTML = `
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Gestión de Tecnico</h1>
-      <button class="btn btn-success" onclick="showAddTechnicianForm()">
-        <i class="fas fa-plus me-2"></i>Agregar técnico
-      </button>
-    </div>
-    
-    <div class="table-responsive">
-      <table class="table table-hover admin-table">
-        <thead class="table-dark">
-          <tr>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Teléfono</th>
-            <th>Especialidades</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${adminData.technicians.map(tech => `
-            <tr>
-              <td>${tech.name}</td>
-              <td>${tech.email}</td>
-              <td>${tech.phone || 'N/A'}</td>
-              <td>${tech.specialties.join(', ')}</td>
-              <td>
-                <span class="badge ${tech.status === 'Disponible' ? 'bg-success' : 'bg-secondary'}">
-                  ${tech.status}
-                </span>
-              </td>
-              <td>
-                <button class="btn btn-sm btn-warning me-1" onclick="editTechnician(${tech.id})">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-sm btn-info" onclick="manageSpecialties(${tech.id})">
-                  <i class="fas fa-certificate"></i>
-                </button>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Gestión de Asesor</h1>
-      <button class="btn btn-success" onclick="showAddManagerForm()">
-        <i class="fas fa-plus me-2"></i>Agregar asesor
-      </button>
-    </div>
-    
-    <div class="table-responsive">
-      <table class="table table-hover admin-table">
-        <thead class="table-dark">
-          <tr>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Teléfono</th>
-            <th>Especialidades</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${adminData.Asesor.map(tech => `
-            <tr>
-              <td>${Asesor.name}</td>
-              <td>${Asesor.email}</td>
-              <td>${Asesor.phone || 'N/A'}</td>
-              <td>${Asesor.adress}</td>
-              <td>
-                <button class="btn btn-sm btn-warning me-1" onclick="editasesor(${Asesor.id})">
-                  <i class="fas fa-edit"></i>
-                </button>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>        
-
-
-    </div>
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Gestión de administradores</h1>
-      <button class="btn btn-success" onclick="showAddManagerForm()">
-        <i class="fas fa-plus me-2"></i>Agregar Admin
-      </button>
+      <h1 class="h2">Gestión de Personal</h1>
     </div>
 
-    
-    <div class="table-responsive">
-      <table class="table table-hover admin-table">
-        <thead class="table-dark">
-          <tr>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Teléfono</th>
-            <th>Especialidades</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${adminData.technicians.map(tech => `
-            <tr>
-              <td>${admin.name}</td>
-              <td>${admin.email}</td>
-              <td>${admin.phone || 'N/A'}</td>
-              <td>${admin.specialties.join(', ')}</td>
-              <td>
-                <span class="badge ${tech.status === 'Disponible' ? 'bg-success' : 'bg-secondary'}">
-                  ${tech.status}
-                </span>
-              </td>
-              <td>
-                <button class="btn btn-sm btn-warning me-1" onclick="editTechnician(${tech.id})">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-sm btn-info" onclick="manageSpecialties(${tech.id})">
-                  <i class="fas fa-certificate"></i>
-                </button>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-  `;
-}
+    <ul class="nav nav-tabs mb-4" id="personalTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="technicians-tab" data-bs-toggle="tab" data-bs-target="#technicians" type="button" role="tab">
+          <i class="fas fa-user-cog me-1"></i> Técnicos
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="advisors-tab" data-bs-toggle="tab" data-bs-target="#advisors" type="button" role="tab">
+          <i class="fas fa-headset me-1"></i> Asesores
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="admins-tab" data-bs-toggle="tab" data-bs-target="#admins" type="button" role="tab">
+          <i class="fas fa-user-shield me-1"></i> Administradores
+        </button>
+      </li>
+    </ul>
 
-function showAddTechnicianForm(techData = null) {
-  const mainContent = document.getElementById('mainContent');
-  const isEdit = techData !== null;
-  
-  mainContent.innerHTML = `
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">${isEdit ? 'Editar' : 'Agregar'} Técnico</h1>
-    </div>
-    
-    <div class="admin-form">
-      <form id="techForm" onsubmit="handleTechForm(event, ${isEdit ? techData.id : 'null'})">
-        <h5 class="mb-3"><i class="fas fa-user-tie me-2"></i>Datos personales</h5>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="techName" class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="techName" value="${techData?.name?.split(' ')[0] || ''}" required>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="techLastName" class="form-label">Apellidos</label>
-              <input type="text" class="form-control" id="techLastName" value="${techData?.name?.split(' ').slice(1).join(' ') || ''}" required>
-            </div>
-          </div>
-        </div>
-        
-        <div class="row">
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="techEmail" class="form-label">Email</label>
-              <input type="email" class="form-control" id="techEmail" value="${techData?.email || ''}" required>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="techPhone" class="form-label">Teléfono</label>
-              <input type="tel" class="form-control" id="techPhone" value="${techData?.phone || ''}">
-            </div>
-          </div>
-        </div>
-        
-        <div class="row">
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="techDirección" class="form-label">Dirección</label>
-              <input type="Dirección" class="form-control" id="techDirección" value="${techData?.Addres || ''}" required>
-            </div>
-          </div>
-        </div>
-
-        <h5 class="mb-3 mt-4"><i class="fas fa-key me-2"></i>Datos de acceso</h5>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="techUsername" class="form-label">Usuario</label>
-              <input type="text" class="form-control" id="techUsername" value="${techData?.username || ''}" ${isEdit ? 'readonly' : 'required'}>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="techPassword" class="form-label">Contraseña</label>
-              <input type="password" class="form-control" id="techPassword" ${isEdit ? 'placeholder="Dejar en blanco para no cambiar"' : 'required'}>
-            </div>
-          </div>
-        </div>
-        
-        <h5 class="mb-3 mt-4"><i class="fas fa-certificate me-2"></i>Especialidades</h5>
-        <div class="dropdown">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Seleccionar especialidades
-          </button>
-          <ul class="dropdown-menu p-3" style="width: 300px;">
-            <li>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="spec1" ${techData?.specialties?.includes('Pantallas') ? 'checked' : ''}>
-                <label class="form-check-label" for="spec1">Pantallas</label>
-              </div>
-            </li>
-            <li>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="spec2" ${techData?.specialties?.includes('Baterías') ? 'checked' : ''}>
-                <label class="form-check-label" for="spec2">Baterías</label>
-              </div>
-            </li>
-            <li>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="spec3" ${techData?.specialties?.includes('Placas') ? 'checked' : ''}>
-                <label class="form-check-label" for="spec3">Placas</label>
-              </div>
-            </li>
-            <li>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="spec4" ${techData?.specialties?.includes('Software') ? 'checked' : ''}>
-                <label class="form-check-label" for="spec4">Software</label>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        
-        <div class="mb-3 mt-4">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="techActive" ${!techData || techData.status === 'Disponible' ? 'checked' : ''}>
-            <label class="form-check-label" for="techActive">Técnico activo</label>
-          </div>
-        </div>
-        
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-          <button type="button" class="btn btn-secondary me-md-2" onclick="showPersonalManagement()">Cancelar</button>
-          <button type="submit" class="btn btn-primary">${isEdit ? 'Actualizar' : 'Guardar'}</button>
-        </div>
-      </form>
+    <div class="tab-content" id="personalTabsContent">
+      <div class="tab-pane fade show active" id="technicians" role="tabpanel">
+        ${renderTechniciansTable()}
+      </div>
+      <div class="tab-pane fade" id="advisors" role="tabpanel">
+        ${renderAdvisorsTable()}
+      </div>
+      <div class="tab-pane fade" id="admins" role="tabpanel">
+        ${renderAdminsTable()}
+      </div>
     </div>
   `;
 }
 
-function handleTechForm(event, techId = null) {
-  event.preventDefault();
-  
-  const specialties = [];
-  if (document.getElementById('spec1').checked) specialties.push('Pantallas');
-  if (document.getElementById('spec2').checked) specialties.push('Baterías');
-  if (document.getElementById('spec3').checked) specialties.push('Placas');
-  if (document.getElementById('spec4').checked) specialties.push('Software');
-  
-  const techData = {
-    id: techId || Math.max(...adminData.technicians.map(t => t.id), 0) + 1,
-    name: `${document.getElementById('techName').value} ${document.getElementById('techLastName').value}`,
-    email: document.getElementById('techEmail').value,
-    phone: document.getElementById('techPhone').value,
-    username: document.getElementById('techUsername').value,
-    specialties,
-    status: document.getElementById('techActive').checked ? 'Disponible' : 'Inactivo'
-  };
-  
-  const password = document.getElementById('techPassword').value;
-  if (password) {
-    techData.password = password; // En una app real, esto debería encriptarse
-  }
-  
-  if (techId) {
-    // Editar técnico existente
-    const index = adminData.technicians.findIndex(t => t.id === techId);
-    if (index !== -1) {
-      adminData.technicians[index] = techData;
-    }
-  } else {
-    // Agregar nuevo técnico
-    adminData.technicians.push(techData);
-  }
-  
-  showPersonalManagement();
+function renderTechniciansTable() {
+  return `
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0">Listado de Técnicos</h5>
+      <button class="btn btn-primary" onclick="showAddTechnicianForm()">
+        <i class="fas fa-plus-circle me-1"></i> Nuevo Técnico
+      </button>
+    </div>
+    
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th width="25%">Nombre</th>
+                <th width="20%">Contacto</th>
+                <th width="20%">Especialidades</th>
+                <th width="15%">Estado</th>
+                <th width="20%" class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${adminData.technicians.map(tech => `
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar me-3">
+                        <span class="avatar-text bg-primary rounded-circle">
+                          ${tech.name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      <div>
+                        <h6 class="mb-0">${tech.name}</h6>
+                        <small class="text-muted">ID: ${tech.id}</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="text-muted small">
+                      <div><i class="fas fa-envelope me-2"></i>${tech.email}</div>
+                      <div><i class="fas fa-phone me-2"></i>${tech.phone || 'N/A'}</div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex flex-wrap gap-1">
+                      ${tech.specialties.map(spec => `
+                        <span class="badge bg-light text-dark border">${spec}</span>
+                      `).join('')}
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge rounded-pill ${tech.status === 'Disponible' ? 'bg-success' : 'bg-secondary'}">
+                      ${tech.status}
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <div class="btn-group" role="group">
+                      <button class="btn btn-sm btn-outline-primary" onclick="editTechnician(${tech.id})">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-success" onclick="manageSpecialties(${tech.id})">
+                        <i class="fas fa-certificate"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-danger" onclick="deleteTechnician(${tech.id})">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
-function editTechnician(id) {
-  const tech = adminData.technicians.find(t => t.id === id);
-  if (tech) {
-    showAddTechnicianForm(tech);
-  }
+function renderAdvisorsTable() {
+  return `
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0">Listado de Asesores</h5>
+      <button class="btn btn-primary" onclick="showAddAdvisorForm()">
+        <i class="fas fa-plus-circle me-1"></i> Nuevo Asesor
+      </button>
+    </div>
+    
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th width="30%">Nombre</th>
+                <th width="25%">Contacto</th>
+                <th width="20%">Estado</th>
+                <th width="25%" class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${adminData.advisors.map(advisor => `
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar me-3">
+                        <span class="avatar-text bg-info rounded-circle">
+                          ${advisor.name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      <div>
+                        <h6 class="mb-0">${advisor.name}</h6>
+                        <small class="text-muted">ID: ${advisor.id}</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="text-muted small">
+                      <div><i class="fas fa-envelope me-2"></i>${advisor.email}</div>
+                      <div><i class="fas fa-phone me-2"></i>${advisor.phone || 'N/A'}</div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge rounded-pill ${advisor.status === 'Activo' ? 'bg-success' : 'bg-secondary'}">
+                      ${advisor.status}
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <div class="btn-group" role="group">
+                      <button class="btn btn-sm btn-outline-primary" onclick="editAdvisor(${advisor.id})">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-danger" onclick="deleteAdvisor(${advisor.id})">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
-function manageSpecialties(id) {
-  // Implementar gestión avanzada de especialidades
-  alert(`Gestión de especialidades para técnico ID: ${id}`);
+function renderAdminsTable() {
+  return `
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0">Listado de Administradores</h5>
+      <button class="btn btn-primary" onclick="showAddAdminForm()">
+        <i class="fas fa-plus-circle me-1"></i> Nuevo Administrador
+      </button>
+    </div>
+    
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th width="30%">Nombre</th>
+                <th width="25%">Contacto</th>
+                <th width="20%">Estado</th>
+                <th width="25%" class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${adminData.admins.map(admin => `
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar me-3">
+                        <span class="avatar-text bg-warning rounded-circle">
+                          ${admin.name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      <div>
+                        <h6 class="mb-0">${admin.name}</h6>
+                        <small class="text-muted">ID: ${admin.id}</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="text-muted small">
+                      <div><i class="fas fa-envelope me-2"></i>${admin.email}</div>
+                      <div><i class="fas fa-phone me-2"></i>${admin.phone || 'N/A'}</div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge rounded-pill ${admin.status === 'Activo' ? 'bg-success' : 'bg-secondary'}">
+                      ${admin.status}
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <div class="btn-group" role="group">
+                      <button class="btn btn-sm btn-outline-primary" onclick="editAdmin(${admin.id})">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      ${admin.id !== 1 ? `
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteAdmin(${admin.id})">
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
+                      ` : ''}
+                    </div>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 // =====================
@@ -735,7 +783,7 @@ let ordersData = [
       status: "En progreso",
       date: "15/05/2023",
       technician: "Juan Pérez",
-      priority: "Alta"
+
   },
   {
       id: 1244,
@@ -745,7 +793,7 @@ let ordersData = [
       status: "Completada",
       date: "14/05/2023",
       technician: "María García",
-      priority: "Normal"
+
   }
 ];
 
@@ -796,7 +844,7 @@ function showInterventionOrders(filter = 'all') {
                               <span class="badge ${getStatusBadgeClass(order.status)}">
                                   ${order.status}
                               </span>
-                              ${order.priority === 'Alta' ? '<span class="badge bg-danger ms-1">Urgente</span>' : ''}
+                              
                           </td>
                           <td>
                               <button class="btn btn-sm btn-primary me-1" onclick="showOrderDetails(${order.id})">
@@ -889,16 +937,6 @@ function showOrderForm(order = null) {
                       </div>
                       <div class="col-md-4">
                           <div class="mb-3">
-                              <label for="priority" class="form-label">Prioridad</label>
-                              <select class="form-select" id="priority">
-                                  <option value="Normal" ${isEdit && order.priority === 'Normal' ? 'selected' : ''}>Normal</option>
-                                  <option value="Alta" ${isEdit && order.priority === 'Alta' ? 'selected' : ''}>Alta</option>
-                                  <option value="Urgente" ${isEdit && order.priority === 'Urgente' ? 'selected' : ''}>Urgente</option>
-                              </select>
-                          </div>
-                      </div>
-                      <div class="col-md-4">
-                          <div class="mb-3">
                               <label for="estimatedDate" class="form-label">Fecha estimada</label>
                               <input type="date" class="form-control" id="estimatedDate" value="${isEdit ? order.estimatedDate || '' : ''}">
                           </div>
@@ -930,7 +968,6 @@ function handleOrderForm(event, orderId = null) {
       problem: document.getElementById('problemDescription').value,
       technicianId: document.getElementById('technician').value,
       technician: document.getElementById('technician').options[document.getElementById('technician').selectedIndex].text,
-      priority: document.getElementById('priority').value,
       estimatedDate: document.getElementById('estimatedDate').value,
       status: 'Pendiente',
       date: new Date().toLocaleDateString('es-ES')
@@ -987,13 +1024,6 @@ function showOrderDetails(orderId) {
               <div class="row mt-4">
                   <div class="col-md-4">
                       <p><strong>Técnico Asignado:</strong> ${order.technician || 'Sin asignar'}</p>
-                  </div>
-                  <div class="col-md-4">
-                      <p><strong>Prioridad:</strong> 
-                          <span class="badge ${order.priority === 'Alta' ? 'bg-danger' : 'bg-primary'}">
-                              ${order.priority}
-                          </span>
-                      </p>
                   </div>
                   <div class="col-md-4">
                       <p><strong>Fecha Estimada:</strong> ${order.estimatedDate || 'No especificada'}</p>
