@@ -1,12 +1,14 @@
 package com.localMantenimiento.fixpro.person.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import com.localMantenimiento.fixpro.interventions.model.InterventionOrder;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -27,6 +29,7 @@ public class Person {
   @Column(name = "email", length = 100)
   private String email;
 
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @Column(name = "password")
   private String password;
 
@@ -49,7 +52,18 @@ public class Person {
   private List<Specialty> specialties;
 
   @ManyToMany(mappedBy = "people")
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private List<InterventionOrder> interventionOrders;
+
+  @JsonProperty("interventionOrderIds")
+  public List<Long> getInterventionOrderIds() {
+    if (interventionOrders == null) {
+      return Collections.emptyList();
+    }
+    return interventionOrders.stream()
+        .map(InterventionOrder::getId)
+        .collect(Collectors.toList());
+  }
 
   public void encryptPassword(PasswordEncoder passwordEncoder) {
     this.password = passwordEncoder.encode(this.password);

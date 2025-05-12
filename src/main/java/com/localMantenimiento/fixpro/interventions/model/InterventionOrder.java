@@ -1,20 +1,15 @@
 package com.localMantenimiento.fixpro.interventions.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.localMantenimiento.fixpro.device.model.Device;
 import com.localMantenimiento.fixpro.person.model.Person;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "intervention_orders")
@@ -43,9 +38,20 @@ public class InterventionOrder {
   @JoinColumn(name = "FK_device_id", nullable = false)
   private Device device;
 
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @ManyToMany
   @JoinTable(name = "intervention_order_person", joinColumns = @JoinColumn(name = "intervention_order_id"),
   inverseJoinColumns = @JoinColumn(name = "person_id"))
   private List<Person> people;
+
+  @JsonProperty("peopleIds")
+  public List<Long> getPeopleIds() {
+    if (people == null) {
+      return Collections.emptyList();
+    }
+    return people.stream()
+        .map(Person::getId)
+        .collect(Collectors.toList());
+  }
 
 }

@@ -21,4 +21,6 @@ public interface InterventionService {
   public Optional<InterventionDetails> getInterventionDetailsById(Long id);
 
   public ArrayList<Integer> getSalesInformation();
+
+  public List<InterventionOrder> getTop5RecentInterventionOrders();
 }

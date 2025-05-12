@@ -83,4 +83,8 @@ public class InterventionServiceImpl implements InterventionService {
     List<InterventionOrder> ordersInProcess = interventionOrderRepository.findByInterventionStatus("En Proceso");
     return new ArrayList<>(Arrays.asList(orders.size(), ordersCompleted.size(), pendingOrders.size(), ordersInProcess.size()));
   }
+
+  public List<InterventionOrder> getTop5RecentInterventionOrders() {
+    return interventionOrderRepository.findTop5ByOrderByEntryDateDesc();
+  }
 }

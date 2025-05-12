@@ -12,4 +12,5 @@ public interface InterventionOrderRepository extends JpaRepository<InterventionO
   boolean existsInterventionDetailsById(Long id);
 
   List<InterventionOrder> findByInterventionStatus(String interventionStatus);
+  List<InterventionOrder> findTop5ByOrderByEntryDateDesc();
 }
