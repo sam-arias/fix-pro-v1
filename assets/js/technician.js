@@ -4,43 +4,24 @@
 
 // Variables globales para el técnico
 let technicianData = {
-    id: 1001,
-    name: "Juan Pérez",
-    email: "juan.perez@fixpro.com",
-    specialties: ["Pantallas", "Baterías"],
-    status: "Disponible",
-    assignedOrders: [
-      { 
-        id: 1245, 
-        client: "María González", 
-        device: "iPhone 12", 
-        problem: "Pantalla rota", 
-        status: "En progreso", 
-        assignedDate: "2023-05-15",
-        estimatedCompletion: "2023-05-20"
-      },
-      { 
-        id: 1243, 
-        client: "Laura Jiménez", 
-        device: "Samsung S21", 
-        problem: "Batería defectuosa", 
-        status: "Pendiente", 
-        assignedDate: "2023-05-14",
-        estimatedCompletion: "2023-05-18"
-      }
-    ],
+    id: null,
+    name: "",
+    email: "",
+    specialties: [],
+    status: "",
+    assignedOrders: [],
     stats: {
-      assigned: 5,
-      completed: 3,
-      completionRate: 85
+        assigned: 0,
+        completed: 0,
+        completionRate: 0
     }
-  };
-  
-  // ======================
-  // FUNCIONES DEL DASHBOARD
-  // ======================
-  
-  function loadTechnicianDashboard() {
+};
+
+// ======================
+// FUNCIONES DEL DASHBOARD
+// ======================
+
+function loadTechnicianDashboard() {
     const mainContent = document.getElementById('mainContent');
     
     mainContent.innerHTML = `
@@ -112,13 +93,13 @@ let technicianData = {
         </div>
       </div>
     `;
-  }
-  
-  // =============================
-  // GESTIÓN DE ESPECIALIDADES
-  // =============================
-  
-  function showSpecialties() {
+}
+
+// =============================
+// GESTIÓN DE ESPECIALIDADES
+// =============================
+
+function showSpecialties() {
     const mainContent = document.getElementById('mainContent');
     
     mainContent.innerHTML = `
@@ -172,9 +153,9 @@ let technicianData = {
         </div>
       </div>
     `;
-  }
-  
-  function showAddSpecialtyForm() {
+}
+
+function showAddSpecialtyForm() {
     const mainContent = document.getElementById('mainContent');
     
     mainContent.innerHTML = `
@@ -212,9 +193,9 @@ let technicianData = {
         </div>
       </div>
     `;
-  }
-  
-  function addSpecialty(event) {
+}
+
+function addSpecialty(event) {
     event.preventDefault();
     const specialtyName = document.getElementById('specialtyName').value;
     
@@ -225,25 +206,25 @@ let technicianData = {
     
     technicianData.specialties.push(specialtyName);
     showSpecialties();
-  }
-  
-  function updateSpecialtyLevel(index, level) {
+}
+
+function updateSpecialtyLevel(index, level) {
     // Aquí iría la lógica para actualizar el nivel en la base de datos
     console.log(`Actualizando especialidad ${technicianData.specialties[index]} a nivel ${level}`);
-  }
-  
-  function removeSpecialty(index) {
+}
+
+function removeSpecialty(index) {
     if (confirm(`¿Eliminar la especialidad ${technicianData.specialties[index]}?`)) {
       technicianData.specialties.splice(index, 1);
       showSpecialties();
     }
-  }
-  
-  // =============================
-  // GESTIÓN DE ÓRDENES
-  // =============================
-  
-  function showAssignedOrders() {
+}
+
+// =============================
+// GESTIÓN DE ÓRDENES
+// =============================
+
+function showAssignedOrders() {
     const mainContent = document.getElementById('mainContent');
     
     mainContent.innerHTML = `
@@ -303,9 +284,9 @@ let technicianData = {
         </div>
       </div>
     `;
-  }
-  
-  function filterOrders(status) {
+}
+
+function filterOrders(status) {
     const tbody = document.getElementById('ordersTableBody');
     let filteredOrders = technicianData.assignedOrders;
     
@@ -344,9 +325,9 @@ let technicianData = {
         </td>
       </tr>
     `).join('');
-  }
-  
-  function viewOrderDetails(orderId) {
+}
+
+function viewOrderDetails(orderId) {
     const order = technicianData.assignedOrders.find(o => o.id === orderId);
     if (!order) return;
     
@@ -421,9 +402,9 @@ let technicianData = {
         </div>
       </div>
     `;
-  }
-  
-  function updateOrderStatus(orderId, newStatus) {
+}
+
+function updateOrderStatus(orderId, newStatus) {
     const order = technicianData.assignedOrders.find(o => o.id === orderId);
     if (order) {
       order.status = newStatus;
@@ -440,9 +421,9 @@ let technicianData = {
         document.getElementById('orderStatus').value = newStatus;
       }
     }
-  }
-  
-  function completeOrder(orderId) {
+}
+
+function completeOrder(orderId) {
     if (!confirm('¿Marcar esta orden como completada?')) return;
     
     const order = technicianData.assignedOrders.find(o => o.id === orderId);
@@ -454,51 +435,26 @@ let technicianData = {
       showSuccess(`Orden #${orderId} marcada como completada`);
       showAssignedOrders();
     }
-  }
-  
-  function saveOrderDetails(orderId) {
+}
+
+function saveOrderDetails(orderId) {
     const notes = document.getElementById('orderNotes').value;
     // Aquí iría la lógica para guardar las notas en la base de datos
     showSuccess('Cambios guardados correctamente');
-  }
-  
-  function addPartToOrder(orderId) {
+}
+
+function addPartToOrder(orderId) {
     // Implementar lógica para agregar partes a la orden
     alert(`Agregar parte a la orden #${orderId}`);
-  }
-  
-  // =============================
-  // NOTIFICACIONES
-  // =============================
-  
-  let notifications = [
-    {
-      id: 1,
-      title: "Nueva orden asignada",
-      message: "Se te ha asignado la orden #1245 para reparar un iPhone 12",
-      date: "2023-05-15T09:30:00",
-      read: false,
-      type: "assignment"
-    },
-    {
-      id: 2,
-      title: "Repuesto disponible",
-      message: "El repuesto SCR-001 (Pantalla iPhone 12) ya está disponible",
-      date: "2023-05-14T14:15:00",
-      read: true,
-      type: "inventory"
-    },
-    {
-      id: 3,
-      title: "Recordatorio de entrega",
-      message: "La orden #1243 debe ser completada hoy",
-      date: "2023-05-18T08:00:00",
-      read: false,
-      type: "reminder"
-    }
-  ];
-  
-  function showNotifications() {
+}
+
+// =============================
+// NOTIFICACIONES
+// =============================
+
+let notifications = [];
+
+function showNotifications() {
     const mainContent = document.getElementById('mainContent');
     
     mainContent.innerHTML = `
@@ -527,9 +483,9 @@ let technicianData = {
         </div>
       </div>
     `;
-  }
-  
-  function viewNotification(notificationId) {
+}
+
+function viewNotification(notificationId) {
     const notification = notifications.find(n => n.id === notificationId);
     if (!notification) return;
     
@@ -547,32 +503,32 @@ let technicianData = {
         alert(notification.message);
         showNotifications(); // Recargar notificaciones
     }
-  }
-  
-  function clearAllNotifications() {
+}
+
+function clearAllNotifications() {
     if (confirm('¿Eliminar todas las notificaciones?')) {
       notifications = notifications.filter(n => !n.read);
       showNotifications();
     }
-  }
+}
 
-  // =============================
+// =============================
 // PERFIL DE USUARIO - TÉCNICO
 // =============================
 
 // Datos del técnico (simulados)
 let currentUser = {
-  id: 105,
-  name: "Carlos",
-  lastName: "Mendoza",
-  email: "tecnico.cmendoza@fixpro.com",
-  phone: "555-9876",
-  avatar: "assets/img/perfile-placeholder.png",
-  role: "Técnico Especialista",
-  specialty: "Electrodomésticos",
-  experience: "5 años",
-  lastLogin: new Date().toLocaleString(),
-  notifications: true,
+  id: null,
+  name: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  avatar: "assets/img/profile-placeholder.png",
+  role: "",
+  specialty: "",
+  experience: "",
+  lastLogin: "",
+  notifications: false,
   darkMode: false
 };
 
@@ -676,25 +632,6 @@ function showProfile() {
                   </div>
               </div>
               
-              <div class="card mt-3">
-                  <div class="card-body">
-                      <h5 class="card-title"><i class="fas fa-tools me-2"></i>Herramientas y Certificaciones</h5>
-                      <div class="mb-3">
-                          <label class="form-label">Certificaciones</label>
-                          <div id="certificationsContainer">
-                              ${renderCertifications()}
-                          </div>
-                          <button class="btn btn-sm btn-outline-primary mt-2" onclick="addCertification()">
-                              <i class="fas fa-plus me-1"></i> Añadir certificación
-                          </button>
-                      </div>
-                      
-                      <div class="mb-3">
-                          <label class="form-label">Herramientas propias</label>
-                          <textarea class="form-control" rows="2" placeholder="Lista de herramientas que posees">${currentUser.tools || 'Multímetro digital, juego de destornilladores especializados, soldador, kit de reparación'}</textarea>
-                      </div>
-                  </div>
-              </div>
           </div>
       </div>
       
@@ -757,10 +694,7 @@ function renderStars(rating) {
 
 // Función para renderizar certificaciones
 function renderCertifications() {
-  const certs = currentUser.certifications || [
-    "Certificación en reparación de lavadoras - MarcaX (2022)",
-    "Técnico certificado en refrigeración (2021)"
-  ];
+  const certs = currentUser.certifications || [];
   
   return certs.map(cert => `
     <div class="d-flex align-items-center mb-2">
@@ -864,17 +798,17 @@ function toggleNotifications() {
   currentUser.notifications = document.getElementById('notificationToggle').checked;
   // Aquí podrías guardar este cambio en el servidor
 }
-  
-  // =============================
-  // FUNCIONES DE UTILIDAD
-  // =============================
-  
-  function formatDate(dateString) {
+
+// =============================
+// FUNCIONES DE UTILIDAD
+// =============================
+
+function formatDate(dateString) {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('es-ES', options);
-  }
-  
-  function formatTimeAgo(dateString) {
+}
+
+function formatTimeAgo(dateString) {
     const now = new Date();
     const date = new Date(dateString);
     const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
@@ -884,9 +818,9 @@ function toggleNotifications() {
     
     const diffInDays = Math.floor(diffInHours / 24);
     return `Hace ${diffInDays} días`;
-  }
-  
-  function formatNotificationType(type) {
+}
+
+function formatNotificationType(type) {
     const types = {
       'assignment': 'Asignación',
       'inventory': 'Inventario',
@@ -894,9 +828,9 @@ function toggleNotifications() {
       'system': 'Sistema'
     };
     return types[type] || type;
-  }
-  
-  function getStatusBadgeClass(status) {
+}
+
+function getStatusBadgeClass(status) {
     const statusClasses = {
       'Pendiente': 'bg-secondary',
       'En progreso': 'bg-warning',
@@ -904,18 +838,18 @@ function toggleNotifications() {
       'Cancelada': 'bg-danger'
     };
     return statusClasses[status] || 'bg-light text-dark';
-  }
-  
-  function showSuccess(message) {
+}
+
+function showSuccess(message) {
     // Implementar toast de éxito
     alert(message); // Temporal, reemplazar con implementación real
-  }
-  
-  // =============================
-  // INICIALIZACIÓN
-  // =============================
-  
-  document.addEventListener('DOMContentLoaded', function() {
+}
+
+// =============================
+// INICIALIZACIÓN
+// =============================
+
+document.addEventListener('DOMContentLoaded', function() {
     // Verificar rol de usuario (en una app real esto vendría del sistema de autenticación)
     const userRole = localStorage.getItem('userRole') || 'technician';
     
@@ -933,4 +867,4 @@ function toggleNotifications() {
     } else {
       window.location.href = 'unauthorized.html';
     }
-  });
+});
