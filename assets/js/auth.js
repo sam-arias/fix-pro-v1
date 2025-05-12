@@ -1,12 +1,12 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('loginForm');
-    
-    loginForm.addEventListener('submit', async function(e) {
+
+    loginForm.addEventListener('submit', async function (e) {
         e.preventDefault();
-        
+
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
-        
+
         if (!username || !password) {
             Swal.fire({
                 icon: 'error',
@@ -15,27 +15,30 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             return;
         }
-        
+
         try {
             const response = await fetch('http://localhost:8080/api/people/login', {
                 method: 'POST',
-                mode: 'cors',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: `email=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
             });
-            
-            if (!response.ok) {
-                throw new Error('Error en la autenticación');
-            }
-            
+
             const data = await response.json();
-            
+
+            if (!response.ok) {
+                // Usar el mensaje del servidor o uno por defecto
+                const errorMsg = data.message || 'Error en la autenticación';
+                throw new Error(errorMsg);
+            }
+
+            //const data = await response.json();
+
             if (data.success) {
                 // Determinar a qué dashboard redirigir según el rol
                 let dashboardUrl;
-                switch(data.role.toLowerCase()) {
+                switch (data.role.toLowerCase()) {
                     case 'administrador':
                         dashboardUrl = 'admin-dashboard.html';
                         break;
@@ -48,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     default:
                         dashboardUrl = 'dashboard.html'; // Página por defecto
                 }
-                
+
                 Swal.fire({
                     icon: 'success',
                     title: '¡Bienvenido!',
@@ -60,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Usuario o contraseña incorrectos'
+                    text: data.message || 'Usuario o contraseña incorrectos'
                 });
             }
         } catch (error) {
