@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="assets/css/admin.css" rel="stylesheet">
     <link href="assets/css/styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="admin-dashboard">
     <!-- Header -->
@@ -34,9 +35,11 @@
                     <li><a class="dropdown-item" href="#" onclick="showSystemSettings()"><i class="fas fa-sliders-h me-2" style="color: var(--color4)"></i> Configuración</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
+
                 </ul>
             </div>
         </div>
+        
     </header>
 
     <div class="container-fluid">
@@ -46,27 +49,27 @@
                 <div class="position-sticky pt-3 vh-100">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#" id="nav-dashboard">
+                            <a class="nav-link active" href="#" onclick="loadAdminDashboard()">
                                 <i class="fas fa-tachometer-alt me-2"></i> Inicio
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" id="nav-parts">
+                            <a class="nav-link" href="#" onclick="showPartsManagement()">
                                 <i class="fas fa-box-open me-2"></i> Repuestos
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" id="nav-personal">
+                            <a class="nav-link" href="#" onclick="showPersonalManagement()">
                                 <i class="fas fa-users-cog me-2"></i> Personal
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" id="nav-orders">
+                            <a class="nav-link" href="#" onclick="showInterventionOrders()">
                                 <i class="fas fa-clipboard-list me-2"></i> Órdenes
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" id="nav-reports">
+                            <a class="nav-link" href="#" onclick="showReports()">
                                 <i class="fas fa-chart-bar me-2"></i> Reportes
                             </a>
                         </li>
@@ -78,12 +81,12 @@
                     </h6>
                     <ul class="nav flex-column mb-2">
                         <li class="nav-item">
-                            <a class="nav-link" href="#" id="nav-permissions">
+                            <a class="nav-link" href="#" onclick="showPermissionsManagement()">
                                 <i class="fas fa-user-shield me-2"></i> Permisos
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" id="nav-categories">
+                            <a class="nav-link" href="#" onclick="showCategoriesManagement()">
                                 <i class="fas fa-tags me-2"></i> Categorías
                             </a>
                         </li>
@@ -128,53 +131,8 @@
             return;
         }
         
-        // Configuración de navegación principal
-        const navLinks = {
-            'nav-dashboard': loadAdminDashboard,
-            'nav-parts': showPartsManagement,
-            'nav-personal': showPersonalManagement,
-            'nav-orders': showInterventionOrders,
-            'nav-reports': showReports,
-            'nav-permissions': showPermissionsManagement,
-            'nav-categories': showCategoriesManagement
-        };
-        
-        // Configurar event listeners para navegación
-        Object.keys(navLinks).forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    setActiveNav(this);
-                    navLinks[id]();
-                });
-            }
-        });
-        
-        // Configurar eventos para el menú de usuario
-        document.querySelector('[onclick="showProfile()"]')?.addEventListener('click', function(e) {
-            e.preventDefault();
-            showProfile();
-        });
-        
-        document.querySelector('[onclick="showSystemSettings()"]')?.addEventListener('click', function(e) {
-            e.preventDefault();
-            showSystemSettings();
-        });
-        
-        // Function to set the active navigation link
-        function setActiveNav(activeLink) {
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-                link.removeAttribute('aria-current');
-            });
-            activeLink.classList.add('active');
-            activeLink.setAttribute('aria-current', 'page');
-        }
-        
         // Cargar dashboard por defecto
         loadAdminDashboard();
-        setActiveNav(document.getElementById('nav-dashboard'));
         
         // Efecto de navbar al hacer scroll
         const navbar = document.querySelector('.navbar');
@@ -182,6 +140,11 @@
             navbar.classList.toggle('scrolled', window.scrollY > 50);
         });
     });
-</script>
+
+    function showLogoutConfirmation() {
+        const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+        logoutModal.show();
+    }
+    </script>
 </body>
 </html>

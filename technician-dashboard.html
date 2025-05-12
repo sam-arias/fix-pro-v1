@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/technician.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <body class="technician-dashboard">
     <!-- Header -->
@@ -158,87 +160,6 @@
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/technician.js"></script>
-    <script>
-        // Función para verificar autenticación y rol
-        async function checkAuthAndRole(requiredRole) {
-            return new Promise((resolve, reject) => {
-                // Verificar si el usuario está autenticado
-                const currentUser = auth.getCurrentUser();
-                
-                if (!currentUser) {
-                    // Redirigir al login si no está autenticado
-                    window.location.href = 'login.html';
-                    return;
-                }
-                
-                // Mostrar nombre de usuario en el navbar
-                document.getElementById('username-display').textContent = currentUser.nombre || currentUser.username;
-                
-                // Verificar si el usuario tiene el rol requerido
-                if (!auth.hasRole(requiredRole)) {
-                    // Redirigir a página no autorizada
-                    window.location.href = 'unauthorized.html';
-                    return;
-                }
-                
-                // Si todo está bien, resolver la promesa
-                resolve();
-            });
-        }
-        
-        // Función para cerrar sesión
-        function logout() {
-            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-                auth.logout();
-            }
-        }
-        
-        
-        // Función para mostrar configuración
-        function showSettings() {
-            // Implementación para mostrar configuración
-            alert('Mostrando configuración del técnico');
-        }
-        
-        // Función para cargar datos del dashboard
-        function loadDashboardData() {
-            // Implementación para cargar datos del dashboard
-            console.log('Cargando datos del dashboard...');
-            
-            // Simulación de carga de datos
-            setTimeout(() => {
-                document.getElementById('assigned-count').textContent = '5';
-                document.getElementById('completed-count').textContent = '12';
-                document.getElementById('priority-count').textContent = '2';
-                document.getElementById('notification-count').textContent = '3';
-                
-                // Actualizar tabla de órdenes
-                const tableBody = document.querySelector('#assigned-orders-table tbody');
-                tableBody.innerHTML = `
-                    <tr>
-                        <td>#ORD-2023-001</td>
-                        <td>iPhone 12</td>
-                        <td>Pantalla rota</td>
-                        <td>15/10/2023</td>
-                        <td><span class="badge bg-warning">En progreso</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-outline-primary">Detalles</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#ORD-2023-002</td>
-                        <td>MacBook Pro</td>
-                        <td>Problema de batería</td>
-                        <td>16/10/2023</td>
-                        <td><span class="badge bg-primary">Asignada</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-outline-primary">Detalles</button>
-                        </td>
-                    </tr>
-                `;
-            }, 1000);
-        }
 
-    </script>
 </body>
 </html>

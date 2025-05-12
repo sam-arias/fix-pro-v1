@@ -76,3 +76,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+const auth = {
+    logout: function () {
+        Swal.fire({
+            title: '¿Cerrar sesión?',
+            text: "Se cerrará tu sesión actual",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, salir',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Aquí puedes limpiar el almacenamiento local si usas tokens o sesiones
+                // localStorage.clear(); // si aplica
+                // sessionStorage.clear(); // si aplica
+
+                window.location.href = 'login.html'; // Redirige al login
+            }
+        });
+    }
+};
