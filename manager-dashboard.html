@@ -33,7 +33,7 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
             <li><a class="dropdown-item" href="#" onclick="showProfile()"><i class="fas fa-user-cog me-2" style="color: var(--color4)"></i> Perfil</a></li>                    
-            <li><a class="dropdown-item" href="#" onclick="showLogoutConfirmation()"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
+            <li><a class="dropdown-item" href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
           </ul>
         </div>
       </div>
@@ -104,11 +104,6 @@
       // Carga inicial
       showDashboard();
     });
-
-    function showLogoutConfirmation() {
-      const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
-      logoutModal.show();
-    }
   </script>
 </body>
 </html>
