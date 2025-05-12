@@ -4,9 +4,12 @@ import com.localMantenimiento.fixpro.interventions.model.InterventionDetails;
 import com.localMantenimiento.fixpro.interventions.model.InterventionOrder;
 import com.localMantenimiento.fixpro.interventions.repository.InterventionDetailsRepository;
 import com.localMantenimiento.fixpro.interventions.repository.InterventionOrderRepository;
+import com.localMantenimiento.fixpro.spare_part.repository.UsedSparePartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +20,8 @@ public class InterventionServiceImpl implements InterventionService {
   InterventionOrderRepository interventionOrderRepository;
   @Autowired
   InterventionDetailsRepository interventionDetailsRepository;
+  @Autowired
+  UsedSparePartRepository usedSparePartRepository;
 
   @Override
   public boolean createInterventionOrder(InterventionOrder newInterventionOrder) {
@@ -45,7 +50,7 @@ public class InterventionServiceImpl implements InterventionService {
   }
 
   @Override
-  public Optional<List<InterventionOrder>> getInterventionOrdersByStatus(String status) {
+  public List<InterventionOrder> getInterventionOrdersByStatus(String status) {
     return interventionOrderRepository.findByInterventionStatus(status);
   }
 
@@ -68,5 +73,14 @@ public class InterventionServiceImpl implements InterventionService {
   @Override
   public Optional<InterventionDetails> getInterventionDetailsById(Long id) {
     return interventionDetailsRepository.findById(id);
+  }
+
+  @Override
+  public ArrayList<Integer> getSalesInformation() {
+    List<InterventionOrder> orders = interventionOrderRepository.findAll();
+    List<InterventionOrder> ordersCompleted = interventionOrderRepository.findByInterventionStatus("Completada");
+    List<InterventionOrder> pendingOrders = interventionOrderRepository.findByInterventionStatus("Pendiente");
+    List<InterventionOrder> ordersInProcess = interventionOrderRepository.findByInterventionStatus("En Proceso");
+    return new ArrayList<>(Arrays.asList(orders.size(), ordersCompleted.size(), pendingOrders.size(), ordersInProcess.size()));
   }
 }

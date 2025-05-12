@@ -5,6 +5,8 @@ import com.localMantenimiento.fixpro.interventions.model.InterventionOrder;
 import com.localMantenimiento.fixpro.interventions.service.InterventionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +42,7 @@ public class InterventionController {
   }
 
   @GetMapping("/orders/status/{status}")
-  public Optional<List<InterventionOrder>> getInterventionOrdersByStatus(@PathVariable String status) {
+  public List<InterventionOrder> getInterventionOrdersByStatus(@PathVariable String status) {
     return interventionService.getInterventionOrdersByStatus(status);
   }
 
@@ -58,5 +60,10 @@ public class InterventionController {
   @GetMapping("/details/{id}")
   public Optional<InterventionDetails> getInterventionDetailsById(@PathVariable Long id) {
     return interventionService.getInterventionDetailsById(id);
+  }
+
+  @GetMapping("/orders/sales-information")
+  public ArrayList<Integer> getSalesInformation() {
+    return interventionService.getSalesInformation();
   }
 }

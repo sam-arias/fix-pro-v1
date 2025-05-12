@@ -3,6 +3,7 @@ package com.localMantenimiento.fixpro.interventions.service;
 import com.localMantenimiento.fixpro.interventions.model.InterventionDetails;
 import com.localMantenimiento.fixpro.interventions.model.InterventionOrder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,10 +13,12 @@ public interface InterventionService {
 
   public Optional<InterventionOrder> getInterventionOrderById(Long id);
   public Optional<List<InterventionOrder>> getAllInterventionOrders();
-  public Optional<List<InterventionOrder>> getInterventionOrdersByStatus(String status);
+  public List<InterventionOrder> getInterventionOrdersByStatus(String status);
 
   public boolean createInterventionDetails(InterventionDetails newInterventionDetails);
   public boolean updateInterventionDetails(Long id, InterventionDetails updatedInterventionDetails);
 
   public Optional<InterventionDetails> getInterventionDetailsById(Long id);
+
+  public ArrayList<Integer> getSalesInformation();
 }

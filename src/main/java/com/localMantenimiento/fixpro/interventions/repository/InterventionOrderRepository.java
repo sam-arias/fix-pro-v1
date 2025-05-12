@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface InterventionOrderRepository extends JpaRepository<InterventionOrder, Long> {
   boolean existsInterventionDetailsById(Long id);
 
-  Optional<List<InterventionOrder>> findByInterventionStatus(String interventionStatus);
+  List<InterventionOrder> findByInterventionStatus(String interventionStatus);
 }
