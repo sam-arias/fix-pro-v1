@@ -17,7 +17,6 @@ let technicianData = {
         problem: "Pantalla rota", 
         status: "En progreso", 
         assignedDate: "2023-05-15",
-        priority: "Alta",
         estimatedCompletion: "2023-05-20"
       },
       { 
@@ -27,14 +26,12 @@ let technicianData = {
         problem: "Batería defectuosa", 
         status: "Pendiente", 
         assignedDate: "2023-05-14",
-        priority: "Normal",
         estimatedCompletion: "2023-05-18"
       }
     ],
     stats: {
       assigned: 5,
       completed: 3,
-      priority: 2,
       completionRate: 85
     }
   };
@@ -47,8 +44,8 @@ let technicianData = {
     const mainContent = document.getElementById('mainContent');
     
     mainContent.innerHTML = `
-      <div class="row mb-4">
-        <div class="col-md-4">
+      <div class="row mb-6">
+        <div class="col-md-6">
           <div class="card stats-card primary">
             <div class="card-body">
               <h5 class="card-title">Órdenes asignadas</h5>
@@ -57,21 +54,12 @@ let technicianData = {
             </div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
           <div class="card stats-card success">
             <div class="card-body">
               <h5 class="card-title">Completadas</h5>
               <h2 class="card-text">${technicianData.stats.completed}</h2>
               <p class="small text-muted">Esta semana</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card stats-card warning">
-            <div class="card-body">
-              <h5 class="card-title">Prioritarias</h5>
-              <h2 class="card-text">${technicianData.stats.priority}</h2>
-              <p class="small text-muted">Urgentes</p>
             </div>
           </div>
         </div>
@@ -91,7 +79,6 @@ let technicianData = {
                       <th>Dispositivo</th>
                       <th>Problema</th>
                       <th>Fecha asignación</th>
-                      <th>Prioridad</th>
                       <th>Estado</th>
                       <th>Acciones</th>
                     </tr>
@@ -104,11 +91,6 @@ let technicianData = {
                         <td>${order.device}</td>
                         <td>${order.problem}</td>
                         <td>${formatDate(order.assignedDate)}</td>
-                        <td>
-                          ${order.priority === 'Alta' ? 
-                            '<span class="badge bg-danger">Alta</span>' : 
-                            '<span class="badge bg-primary">Normal</span>'}
-                        </td>
                         <td><span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></td>
                         <td>
                           <button class="btn btn-sm btn-primary me-1" onclick="viewOrderDetails(${order.id})">
@@ -286,7 +268,6 @@ let technicianData = {
                   <th>Dispositivo</th>
                   <th>Problema</th>
                   <th>Fecha asignación</th>
-                  <th>Prioridad</th>
                   <th>Estado</th>
                   <th>Acciones</th>
                 </tr>
@@ -299,11 +280,7 @@ let technicianData = {
                     <td>${order.device}</td>
                     <td>${order.problem}</td>
                     <td>${formatDate(order.assignedDate)}</td>
-                    <td>
-                      ${order.priority === 'Alta' ? 
-                        '<span class="badge bg-danger">Alta</span>' : 
-                        '<span class="badge bg-primary">Normal</span>'}
-                    </td>
+
                     <td><span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></td>
                     <td>
                       <button class="btn btn-sm btn-primary me-1" onclick="viewOrderDetails(${order.id})">
@@ -351,11 +328,6 @@ let technicianData = {
         <td>${order.device}</td>
         <td>${order.problem}</td>
         <td>${formatDate(order.assignedDate)}</td>
-        <td>
-          ${order.priority === 'Alta' ? 
-            '<span class="badge bg-danger">Alta</span>' : 
-            '<span class="badge bg-primary">Normal</span>'}
-        </td>
         <td><span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></td>
         <td>
           <button class="btn btn-sm btn-primary me-1" onclick="viewOrderDetails(${order.id})">
@@ -401,11 +373,6 @@ let technicianData = {
               <h5><i class="fas fa-laptop me-2"></i>Información del Dispositivo</h5>
               <p><strong>Dispositivo:</strong> ${order.device}</p>
               <p><strong>Problema:</strong> ${order.problem}</p>
-              <p><strong>Prioridad:</strong> 
-                <span class="badge ${order.priority === 'Alta' ? 'bg-danger' : 'bg-primary'}">
-                  ${order.priority}
-                </span>
-              </p>
             </div>
           </div>
         </div>
