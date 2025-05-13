@@ -1414,27 +1414,46 @@ function deleteRole(role) {
       showPermissionsManagement();
   }
 }
-
 // =============================
 // PERFIL DE USUARIO
 // =============================
 
-// Datos del usuario (simulados)
-let currentUser = {
-  id: null,
-  name: "",
-  lastName: "",
-  email: "",
-  phone: "",
-  avatar: "./assets/img/profile-placeholder.png", // Ruta de la imagen por defecto
-  role: "",
-  lastLogin: "",
-  notifications: false,
-  darkMode: false
-};
+// Datos del usuario (simulados, se deben cargar dinámicamente)
+let currentUser = {};
 
-// Función para mostrar el perfil
+/**
+ * Carga los datos del usuario desde el servidor o almacenamiento local
+ */
+function loadUserProfile() {
+  // Simulación de carga de datos desde el servidor o localStorage
+  currentUser = JSON.parse(localStorage.getItem('currentUser')) || {
+    id: null,
+    name: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    avatar: "./assets/img/profile-placeholder.png", // Ruta de la imagen por defecto
+    role: "",
+    lastLogin: "",
+    notifications: false,
+    darkMode: false
+  };
+}
+
+/**
+ * Guarda los datos del usuario en el servidor o almacenamiento local
+ */
+function saveUserProfile() {
+  // Simulación de guardado en localStorage (en una app real, enviar al servidor)
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+}
+
+/**
+ * Muestra el perfil del usuario
+ */
 function showProfile() {
+  loadUserProfile(); // Asegurarse de cargar los datos actualizados
+
   const mainContent = document.getElementById('mainContent');
 
   mainContent.innerHTML = `
@@ -1467,31 +1486,6 @@ function showProfile() {
                               <i class="fas fa-key me-1"></i> Cambiar contraseña
                           </button>
                       </div>
-                  </div>
-              </div>
-              
-              <div class="card mt-3">
-                  <div class="card-body">
-                      <h5 class="card-title"><i class="fas fa-info-circle me-1"></i>Información de Cuenta</h5>
-                      <ul class="list-group list-group-flush small">
-                          <li class="list-group-item d-flex justify-content-between">
-                              <span>Último acceso:</span>
-                              <span class="text-muted">${currentUser.lastLogin}</span>
-                          </li>
-                          <li class="list-group-item d-flex justify-content-between">
-                              <span>Estado:</span>
-                              <span class="badge bg-success">Activo</span>
-                          </li>
-                          <li class="list-group-item d-flex justify-content-between">
-                              <span>Notificaciones:</span>
-                              <div class="form-check form-switch">
-                                  <input class="form-check-input" type="checkbox" 
-                                         id="notificationToggle" 
-                                         ${currentUser.notifications ? 'checked' : ''}
-                                         onchange="toggleNotifications()">
-                              </div>
-                          </li>
-                      </ul>
                   </div>
               </div>
           </div>
@@ -1578,7 +1572,9 @@ function showProfile() {
   `;
 }
 
-// Función para actualizar el avatar
+/**
+ * Actualiza el avatar del usuario
+ */
 function updateAvatar(event) {
   const file = event.target.files[0];
   if (file && file.type.match('image.*')) {
@@ -1586,7 +1582,7 @@ function updateAvatar(event) {
       reader.onload = function(e) {
           document.getElementById('profileAvatarImg').src = e.target.result;
           currentUser.avatar = e.target.result;
-          // Aquí normalmente enviarías la imagen al servidor
+          saveUserProfile(); // Guardar cambios
       };
       reader.readAsDataURL(file);
   } else {
@@ -1594,19 +1590,22 @@ function updateAvatar(event) {
   }
 }
 
-// Función para mostrar el modal de contraseña
+/**
+ * Muestra el modal para cambiar la contraseña
+ */
 function showPasswordModal() {
   const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
   passwordModal.show();
 }
 
-// Función para cambiar contraseña
+/**
+ * Cambia la contraseña del usuario
+ */
 function changePassword() {
   const currentPass = document.getElementById('currentPassword').value;
   const newPass = document.getElementById('newPassword').value;
   const confirmPass = document.getElementById('confirmPassword').value;
   
-  // Validaciones básicas
   if (newPass !== confirmPass) {
       alert('Las contraseñas no coinciden');
       return;
@@ -1617,13 +1616,14 @@ function changePassword() {
       return;
   }
   
-  // Aquí iría la lógica para enviar al servidor
   alert('Contraseña cambiada exitosamente');
   const passwordModal = bootstrap.Modal.getInstance(document.getElementById('passwordModal'));
   passwordModal.hide();
 }
 
-// Función para actualizar el perfil
+/**
+ * Actualiza el perfil del usuario
+ */
 function updateProfile() {
   currentUser = {
       ...currentUser,
@@ -1634,15 +1634,11 @@ function updateProfile() {
       bio: document.getElementById('inputBio').value
   };
   
+  saveUserProfile(); // Guardar cambios
   alert('Perfil actualizado correctamente');
   showProfile(); // Recargar la vista
 }
 
-// Función para toggle de notificaciones
-function toggleNotifications() {
-  currentUser.notifications = document.getElementById('notificationToggle').checked;
-  // Aquí podrías guardar este cambio en el servidor
-}
 // =====================
 // INICIALIZACIÓN
 // =====================
