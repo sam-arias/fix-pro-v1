@@ -11,7 +11,6 @@ let adminData = {
   technicians: [],
   parts: []
 };
-
 // ======================
 // FUNCIONES DEL DASHBOARD
 // ======================
@@ -21,39 +20,27 @@ function loadAdminDashboard() {
   
   mainContent.innerHTML = `
     <div class="row mb-4">
-      <div class="col-md-3">
-        <div class="card stats-card primary">
+      <div class="col-md-4">
+        <div class="card stats-card primary" onclick="showInterventionOrders()">
           <div class="card-body">
             <h5 class="card-title">Órdenes totales</h5>
-            <h2 class="card-text">${adminData.orders}</h2>
-            <p class="small text-muted">Este mes</p>
+            <h2 class="card-text">${adminData.orders || 0}</h2>
           </div>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="card stats-card success">
-          <div class="card-body">
-            <h5 class="card-title">Ingresos</h5>
-            <h2 class="card-text">$${adminData.income.toLocaleString()}</h2>
-            <p class="small text-muted">Este mes</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card stats-card warning">
+      <div class="col-md-4">
+        <div class="card stats-card warning" onclick="showPartsManagement()">
           <div class="card-body">
             <h5 class="card-title">Repuestos bajos</h5>
-            <h2 class="card-text">${adminData.lowStock}</h2>
-            <p class="small text-muted">Necesitan reposición</p>
+            <h2 class="card-text">${adminData.lowStock || 0}</h2>
           </div>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="card stats-card danger">
+      <div class="col-md-4">
+        <div class="card stats-card danger" onclick="showInterventionOrders('atrasadas')">
           <div class="card-body">
             <h5 class="card-title">Órdenes atrasadas</h5>
-            <h2 class="card-text">${adminData.lateOrders}</h2>
-            <p class="small text-muted">Fuera de plazo</p>
+            <h2 class="card-text">${adminData.lateOrders || 0}</h2>
           </div>
         </div>
       </div>
@@ -72,15 +59,24 @@ function loadAdminDashboard() {
         <div class="card">
           <div class="card-body">
             <h5 class="card-title"><i class="fas fa-exclamation-triangle me-2"></i>Alertas</h5>
-            <div class="alert alert-warning">
-              <strong>Repuestos bajos:</strong> Pantallas iPhone 12, baterías Samsung S20
-            </div>
-            <div class="alert alert-danger">
-              <strong>Órdenes atrasadas:</strong> #1234, #1237, #1239
-            </div>
-            <div class="alert alert-info">
-              <strong>Nuevo técnico:</strong> Carlos López se unió al equipo
-            </div>
+            ${adminData.parts && adminData.parts.length > 0
+              ? adminData.parts
+                  .filter(part => part.stock <= part.minStock)
+                  .map(part => `<div class="alert alert-warning"><strong>Repuesto bajo:</strong> ${part.description}</div>`)
+                  .join('')
+              : '<div class="alert alert-info">No hay alertas de repuestos bajos.</div>'}
+            ${ordersData && ordersData.length > 0
+              ? ordersData
+                  .filter(order => new Date(order.estimatedDate) < new Date() && order.status !== 'Completada')
+                  .map(order => `<div class="alert alert-danger"><strong>Orden atrasada:</strong> #${order.id}</div>`)
+                  .join('')
+              : '<div class="alert alert-info">No hay órdenes atrasadas.</div>'}
+            ${adminData.technicians && adminData.technicians.length > 0
+              ? adminData.technicians
+                  .filter(tech => new Date(tech.joinDate) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+                  .map(tech => `<div class="alert alert-info"><strong>Nuevo técnico:</strong> ${tech.name}</div>`)
+                  .join('')
+              : '<div class="alert alert-info">No hay nuevos técnicos registrados recientemente.</div>'}
           </div>
         </div>
       </div>
@@ -92,13 +88,21 @@ function loadAdminDashboard() {
 
 function initAdminCharts() {
   const ctx = document.getElementById('ordersChart').getContext('2d');
+  const monthlyOrders = Array(12).fill(0);
+
+  // Simulación de datos dinámicos
+  ordersData.forEach(order => {
+    const month = new Date(order.date).getMonth();
+    monthlyOrders[month]++;
+  });
+
   new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May'],
+      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
       datasets: [{
         label: 'Órdenes por mes',
-        data: [65, 59, 80, 81, 56],
+        data: monthlyOrders,
         backgroundColor: 'rgba(54, 162, 235, 0.5)',
         borderColor: 'rgba(54, 162, 235, 1)',
         borderWidth: 1
@@ -1412,128 +1416,6 @@ function deleteRole(role) {
 }
 
 // =============================
-// GESTIÓN DE CATEGORÍAS
-// =============================
-
-let categoriesData = [];
-
-function showCategoriesManagement() {
-  const mainContent = document.getElementById('mainContent');
-  
-  mainContent.innerHTML = `
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2">Gestión de Categorías</h1>
-          <button class="btn btn-sm btn-primary" onclick="showAddCategoryForm()">
-              <i class="fas fa-plus me-1"></i> Nueva Categoría
-          </button>
-      </div>
-      
-      <div class="card">
-          <div class="card-body">
-              <div class="table-responsive">
-                  <table class="table table-hover">
-                      <thead class="table-dark">
-                          <tr>
-                              <th>ID</th>
-                              <th>Nombre</th>
-                              <th>Descripción</th>
-                              <th>Acciones</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          ${categoriesData.map(category => `
-                              <tr>
-                                  <td>${category.id}</td>
-                                  <td>${category.name}</td>
-                                  <td>${category.description}</td>
-                                  <td>
-                                      <button class="btn btn-sm btn-warning me-1" onclick="editCategory(${category.id})">
-                                          <i class="fas fa-edit"></i>
-                                      </button>
-                                      <button class="btn btn-sm btn-danger" onclick="deleteCategory(${category.id})">
-                                          <i class="fas fa-trash"></i>
-                                      </button>
-                                  </td>
-                              </tr>
-                          `).join('')}
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-      </div>
-  `;
-}
-
-function showAddCategoryForm(category = null) {
-  const isEdit = category !== null;
-  const mainContent = document.getElementById('mainContent');
-  
-  mainContent.innerHTML = `
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2">${isEdit ? 'Editar' : 'Nueva'} Categoría</h1>
-      </div>
-      
-      <div class="card">
-          <div class="card-body">
-              <form id="categoryForm" onsubmit="handleCategoryForm(event, ${isEdit ? category.id : 'null'})">
-                  <div class="mb-3">
-                      <label for="categoryName" class="form-label">Nombre</label>
-                      <input type="text" class="form-control" id="categoryName" value="${isEdit ? category.name : ''}" required>
-                  </div>
-                  
-                  <div class="mb-3">
-                      <label for="categoryDescription" class="form-label">Descripción</label>
-                      <textarea class="form-control" id="categoryDescription" rows="3">${isEdit ? category.description : ''}</textarea>
-                  </div>
-                  
-                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                      <button type="button" class="btn btn-secondary me-md-2" onclick="showCategoriesManagement()">Cancelar</button>
-                      <button type="submit" class="btn btn-primary">${isEdit ? 'Actualizar' : 'Guardar'}</button>
-                  </div>
-              </form>
-          </div>
-      </div>
-  `;
-}
-
-function handleCategoryForm(event, categoryId = null) {
-  event.preventDefault();
-  
-  const categoryData = {
-      id: categoryId || Math.max(...categoriesData.map(c => c.id), 0) + 1,
-      name: document.getElementById('categoryName').value,
-      description: document.getElementById('categoryDescription').value
-  };
-  
-  if (categoryId) {
-      // Editar categoría existente
-      const index = categoriesData.findIndex(c => c.id === categoryId);
-      if (index !== -1) {
-          categoriesData[index] = categoryData;
-      }
-  } else {
-      // Agregar nueva categoría
-      categoriesData.push(categoryData);
-  }
-  
-  showCategoriesManagement();
-}
-
-function editCategory(categoryId) {
-  const category = categoriesData.find(c => c.id === categoryId);
-  if (category) {
-      showAddCategoryForm(category);
-  }
-}
-
-function deleteCategory(categoryId) {
-  if (confirm('¿Estás seguro de eliminar esta categoría?')) {
-      categoriesData = categoriesData.filter(c => c.id !== categoryId);
-      showCategoriesManagement();
-  }
-}
-
-// =============================
 // PERFIL DE USUARIO
 // =============================
 
@@ -1761,155 +1643,6 @@ function toggleNotifications() {
   currentUser.notifications = document.getElementById('notificationToggle').checked;
   // Aquí podrías guardar este cambio en el servidor
 }
-
-// =============================
-// CONFIGURACIÓN DEL SISTEMA
-// =============================
-
-let systemSettings = {
-  appName: "FixPro",
-  maintenanceMode: false,
-  notificationTypes: {
-      email: true,
-      push: true,
-      sms: false
-  },
-  theme: "light",
-  inventoryThreshold: 5,
-  autoBackup: true
-};
-
-function showSystemSettings() {
-  const mainContent = document.getElementById('mainContent');
-  
-  mainContent.innerHTML = `
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2">Configuración del Sistema</h1>
-          <div class="btn-toolbar mb-2 mb-md-0">
-              <button class="btn btn-sm btn-success me-2" onclick="saveSystemSettings()">
-                  <i class="fas fa-save me-1"></i> Guardar
-              </button>
-              <button class="btn btn-sm btn-outline-secondary" onclick="resetSettings()">
-                  <i class="fas fa-undo me-1"></i> Restablecer
-              </button>
-          </div>
-      </div>
-      
-      <div class="card mb-4">
-          <div class="card-body">
-              <h5 class="card-title"><i class="fas fa-sliders-h me-2"></i>Ajustes Generales</h5>
-              <form id="systemSettingsForm">
-                  <div class="row">
-                      <div class="col-md-6">
-                          <div class="mb-3">
-                              <label for="appName" class="form-label">Nombre de la aplicación</label>
-                              <input type="text" class="form-control" id="appName" value="${systemSettings.appName}">
-                          </div>
-                          
-                          <div class="mb-3 form-check form-switch">
-                              <input class="form-check-input" type="checkbox" id="maintenanceMode" ${systemSettings.maintenanceMode ? 'checked' : ''}>
-                              <label class="form-check-label" for="maintenanceMode">Modo mantenimiento</label>
-                          </div>
-                          
-                          <div class="mb-3">
-                              <label for="inventoryThreshold" class="form-label">Umbral de inventario bajo</label>
-                              <input type="number" class="form-control" id="inventoryThreshold" min="1" value="${systemSettings.inventoryThreshold}">
-                          </div>
-                      </div>
-                      <div class="col-md-6">
-                          <div class="mb-3">
-                              <label class="form-label">Tema de la aplicación</label>
-                              <select class="form-select" id="theme">
-                                  <option value="light" ${systemSettings.theme === 'light' ? 'selected' : ''}>Claro</option>
-                                  <option value="dark" ${systemSettings.theme === 'dark' ? 'selected' : ''}>Oscuro</option>
-                                  <option value="auto" ${systemSettings.theme === 'auto' ? 'selected' : ''}>Automático</option>
-                              </select>
-                          </div>
-                          
-                          <div class="mb-3 form-check form-switch">
-                              <input class="form-check-input" type="checkbox" id="autoBackup" ${systemSettings.autoBackup ? 'checked' : ''}>
-                              <label class="form-check-label" for="autoBackup">Copia de seguridad automática</label>
-                          </div>
-                      </div>
-                  </div>
-              </form>
-          </div>
-      </div>
-      
-      <div class="card">
-          <div class="card-body">
-              <h5 class="card-title"><i class="fas fa-bell me-2"></i>Configuración de Notificaciones</h5>
-              <div class="row">
-                  <div class="col-md-4">
-                      <div class="mb-3 form-check form-switch">
-                          <input class="form-check-input" type="checkbox" id="emailNotifications" ${systemSettings.notificationTypes.email ? 'checked' : ''}>
-                          <label class="form-check-label" for="emailNotifications">Notificaciones por Email</label>
-                      </div>
-                  </div>
-                  <div class="col-md-4">
-                      <div class="mb-3 form-check form-switch">
-                          <input class="form-check-input" type="checkbox" id="pushNotifications" ${systemSettings.notificationTypes.push ? 'checked' : ''}>
-                          <label class="form-check-label" for="pushNotifications">Notificaciones Push</label>
-                      </div>
-                  </div>
-                  <div class="col-md-4">
-                      <div class="mb-3 form-check form-switch">
-                          <input class="form-check-input" type="checkbox" id="smsNotifications" ${systemSettings.notificationTypes.sms ? 'checked' : ''}>
-                          <label class="form-check-label" for="smsNotifications">Notificaciones por SMS</label>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  `;
-}
-
-function saveSystemSettings() {
-  systemSettings = {
-      appName: document.getElementById('appName').value,
-      maintenanceMode: document.getElementById('maintenanceMode').checked,
-      notificationTypes: {
-          email: document.getElementById('emailNotifications').checked,
-          push: document.getElementById('pushNotifications').checked,
-          sms: document.getElementById('smsNotifications').checked
-      },
-      theme: document.getElementById('theme').value,
-      inventoryThreshold: parseInt(document.getElementById('inventoryThreshold').value),
-      autoBackup: document.getElementById('autoBackup').checked
-  };
-  
-  alert('Configuración guardada correctamente');
-  applyTheme(systemSettings.theme);
-}
-
-function resetSettings() {
-  if (confirm('¿Restablecer configuración a valores por defecto?')) {
-      systemSettings = {
-          appName: "FixPro",
-          maintenanceMode: false,
-          notificationTypes: {
-              email: true,
-              push: true,
-              sms: false
-          },
-          theme: "light",
-          inventoryThreshold: 5,
-          autoBackup: true
-      };
-      
-      showSystemSettings();
-      applyTheme('light');
-  }
-}
-
-function applyTheme(theme) {
-  if (theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.body.classList.add('dark-theme');
-  } else {
-      document.body.classList.remove('dark-theme');
-  }
-}
-
 // =====================
 // INICIALIZACIÓN
 // =====================
