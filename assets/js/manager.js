@@ -29,14 +29,16 @@ function showDashboard() {
             <h5 class="card-title">Órdenes Totales</h5>
             <h2 class="card-stat">${managerData.stats.orders}</h2>
           </div>
+          <i class="fas fa-clipboard-list fa-2x opacity-50"></i>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card stat-card bg-success text-white">
           <div class="card-body">
-            <h5 class="card-title">Órdenes Completas</h5>
+            <h5 class="card-title">En Reparacion</h5>
             <h2 class="card-stat">${managerData.stats.completed}</h2>
           </div>
+          <i class="fas fa-tools fa-2x opacity-50"></i>
         </div>
       </div>
       <div class="col-md-3">
@@ -45,14 +47,16 @@ function showDashboard() {
             <h5 class="card-title">Órdenes Pendientes</h5>
             <h2 class="card-stat">${managerData.stats.pending}</h2>
           </div>
+          <i class="fas fa-clock fa-2x opacity-50"></i>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card stat-card bg-info text-white">
           <div class="card-body">
-            <h5 class="card-title">Órdenes en Proceso</h5>
+            <h5 class="card-title">Listo para entregra</h5>
             <h2 class="card-stat">${managerData.stats.sales}</h2>
           </div>
+          <i class="fas fa-check-circle fa-2x opacity-50"></i>
         </div>
       </div>
     </div>
@@ -160,6 +164,7 @@ function initSalesChart() {
 }
 
 
+
 // =============================
 // GESTIÓN DE ÓRDENES
 // =============================
@@ -173,25 +178,47 @@ const adminData = {
 let ordersData = [];
 
 // Mostrar todas las órdenes
-function showInterventionOrders(filter = 'all') {
+function showInterventionOrders(filter = 'all', technicianFilter = '', searchQuery = '') {
   const mainContent = document.getElementById('main-content');
-  const filteredOrders = filter === 'all' ? ordersData : ordersData.filter(order => 
-    order.status.toLowerCase().includes(filter.toLowerCase())
-  );
-  
+  const filteredOrders = ordersData.filter(order => {
+    const matchesStatus = filter === 'all' || order.status.toLowerCase().includes(filter.toLowerCase());
+    const matchesTechnician = !technicianFilter || (order.technician && order.technician.toLowerCase().includes(technicianFilter.toLowerCase()));
+    const matchesSearch = !searchQuery || order.client.toLowerCase().includes(searchQuery.toLowerCase()) || order.device.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesStatus && matchesTechnician && matchesSearch;
+  });
+
   mainContent.innerHTML = `
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
       <h1 class="h2">Gestión de Órdenes</h1>
       <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group me-2">
-          <button class="btn btn-sm btn-outline-secondary" onclick="showInterventionOrders('all')">Todas</button>
-          <button class="btn btn-sm btn-outline-primary" onclick="showInterventionOrders('pendiente')">Pendientes</button>
-          <button class="btn btn-sm btn-outline-warning" onclick="showInterventionOrders('progreso')">En progreso</button>
-          <button class="btn btn-sm btn-outline-success" onclick="showInterventionOrders('completada')">Completadas</button>
-        </div>
         <button class="btn btn-sm btn-primary" onclick="showOrderForm()">
           <i class="fas fa-plus me-1"></i> Nueva orden
         </button>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <input type="text" class="form-control" id="searchQuery" placeholder="Buscar por cliente o dispositivo" oninput="showInterventionOrders('${filter}', document.getElementById('technicianFilter').value, this.value)">
+      </div>
+      <div class="col-md-4">
+        <select class="form-select" id="technicianFilter" onchange="showInterventionOrders('${filter}', this.value, document.getElementById('searchQuery').value)">
+          <option value="">Filtrar por técnico</option>
+          ${adminData.technicians.map(tech => `<option value="${tech.name}">${tech.name}</option>`).join('')}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" id="statusFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Filtrar por estado
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="statusFilterDropdown">
+            <li><a class="dropdown-item" href="#" onclick="showInterventionOrders('all')">Todas</a></li>
+            <li><a class="dropdown-item" href="#" onclick="showInterventionOrders('pendiente')">Pendientes</a></li>
+            <li><a class="dropdown-item" href="#" onclick="showInterventionOrders('progreso')">En progreso</a></li>
+            <li><a class="dropdown-item" href="#" onclick="showInterventionOrders('completada')">Completadas</a></li>
+          </ul>
+        </div>
       </div>
     </div>
 

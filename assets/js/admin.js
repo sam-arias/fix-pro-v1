@@ -21,26 +21,26 @@ function loadAdminDashboard() {
   mainContent.innerHTML = `
     <div class="row mb-4">
       <div class="col-md-4">
-        <div class="card stats-card primary" onclick="showInterventionOrders()">
+        <div class="card stats-card bg-success text-white" onclick="showInterventionOrders()">
           <div class="card-body">
             <h5 class="card-title">Órdenes totales</h5>
-            <h2 class="card-text">${adminData.orders || 0}</h2>
+            <h2 class="card-text">✔️ ${adminData.orders || 0}</h2>
           </div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card stats-card warning" onclick="showPartsManagement()">
+        <div class="card stats-card bg-warning text-dark" onclick="showPartsManagement()">
           <div class="card-body">
             <h5 class="card-title">Repuestos bajos</h5>
-            <h2 class="card-text">${adminData.lowStock || 0}</h2>
+            <h2 class="card-text">⚠️ ${adminData.lowStock || 0}</h2>
           </div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card stats-card danger" onclick="showInterventionOrders('atrasadas')">
+        <div class="card stats-card bg-danger text-white" onclick="showInterventionOrders('atrasadas')">
           <div class="card-body">
             <h5 class="card-title">Órdenes atrasadas</h5>
-            <h2 class="card-text">${adminData.lateOrders || 0}</h2>
+            <h2 class="card-text">❌ ${adminData.lateOrders || 0}</h2>
           </div>
         </div>
       </div>
@@ -118,25 +118,26 @@ function initAdminCharts() {
     }
   });
 }
-
 // =============================
-// MÓDULO DE REPUESTOS
+// MÓDULO DE INVENTARIO Y REPUESTOS
 // =============================
 
-const inventoryData = [];
+let inventoryData = [];
+let currentPage = 1;
+const itemsPerPage = 10;
 
 /**
- * Muestra la vista de inventario
+ * Muestra la vista de inventario y repuestos
  */
 function showInventory() {
-  const content = document.getElementById('main-content');
+  const content = document.getElementById('mainContent');
   if (!content) return;
 
   content.innerHTML = `
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
       <h1 class="h2">Gestión de Repuestos</h1>
       <div class="btn-toolbar mb-2 mb-md-0">
-        <button type="button" class="btn btn-sm btn-primary" onclick="showAddItemModal()">
+        <button type="button" class="btn btn-sm btn-primary" onclick="showAddPartForm()">
           <i class="fas fa-plus me-1"></i> Nuevo Producto
         </button>
       </div>
@@ -146,25 +147,28 @@ function showInventory() {
       <div class="col-md-4">
         <div class="input-group">
           <input type="text" id="inventorySearch" class="form-control" placeholder="Buscar producto..." 
-                onkeyup="searchInventory()">
+                onkeyup="filterInventory()">
           <button class="btn btn-outline-secondary" type="button">
             <i class="fas fa-search"></i>
           </button>
         </div>
       </div>
       <div class="col-md-4">
-        <select class="form-select" id="inventoryCategoryFilter" onchange="filterInventory()">
-          <option value="">Todas las categorías</option>
-          <option value="Pantallas">Pantallas</option>
-          <option value="Baterías">Baterías</option>
-          <option value="Software">Software</option>
-          <option value="Herramientas">Herramientas</option>
-          <option value="Accesorios">Accesorios</option>
+        <select class="form-select" id="inventoryTypeFilter" onchange="filterInventory()">
+          <option value="">Todos los Tipos</option>
+          <option value="Pantalla">Pantalla</option>
+          <option value="Batería">Batería</option>
+          <option value="Puerto de carga">Puerto de carga</option>
+          <option value="Micrófono">Micrófono</option>
+          <option value="Parlante">Parlante</option>
+          <option value="Cámara">Cámara</option>
+          <option value="Lógica de carga">Lógica de carga</option>
+          <option value="FPC">FPC</option>
         </select>
       </div>
       <div class="col-md-4">
         <select class="form-select" id="inventoryStatusFilter" onchange="filterInventory()">
-          <option value="">Todos los estados</option>
+          <option value="">Todos los Estados</option>
           <option value="Disponible">Disponible</option>
           <option value="Bajo stock">Bajo stock</option>
           <option value="Agotado">Agotado</option>
@@ -177,10 +181,11 @@ function showInventory() {
         <thead class="table-dark">
           <tr>
             <th>ID</th>
-            <th>Producto</th>
-            <th>Categoría</th>
-            <th>Stock</th>
+            <th>Tipo</th>
+            <th>Modelo</th>
+            <th>Marca</th>
             <th>Precio</th>
+            <th>Stock</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
@@ -190,284 +195,99 @@ function showInventory() {
         </tbody>
       </table>
     </div>
+
+    <nav>
+      <ul class="pagination justify-content-center" id="pagination">
+        <!-- Botones de paginación -->
+      </ul>
+    </nav>
   `;
 
-  // Cargar los datos del inventario
-  loadInventoryTable(inventoryData);
+  filterInventory(); // Cargar los datos del inventario con filtros aplicados
 }
 
 /**
- * Carga los datos en la tabla de inventario
- * @param {Array} data - Array de productos
+ * Filtra y carga los datos del inventario en la tabla
+ */
+function filterInventory() {
+  const searchQuery = document.getElementById('inventorySearch').value.toLowerCase();
+  const typeFilter = document.getElementById('inventoryTypeFilter').value;
+  const statusFilter = document.getElementById('inventoryStatusFilter').value;
+
+  const filteredData = inventoryData.filter(item => {
+    const matchesSearch = item.description.toLowerCase().includes(searchQuery) || item.code.toLowerCase().includes(searchQuery);
+    const matchesType = !typeFilter || item.type === typeFilter;
+    const matchesStatus = !statusFilter || getStockStatus(item.stock) === statusFilter;
+    return matchesSearch && matchesType && matchesStatus;
+  });
+
+  loadInventoryTable(filteredData);
+}
+
+/**
+ * Carga los datos del inventario en la tabla con paginación
  */
 function loadInventoryTable(data) {
-  const tableBody = document.getElementById('inventoryTableBody');
-  if (!tableBody) return;
+  const tbody = document.getElementById('inventoryTableBody');
+  const pagination = document.getElementById('pagination');
+  if (!tbody || !pagination) return;
 
-  tableBody.innerHTML = '';
+  const totalItems = data.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
 
-  data.forEach(item => {
-    const status = getInventoryStatus(item.stock, item.minStock);
-    const statusClass = status === 'Disponible' ? 'success' : status === 'Bajo stock' ? 'warning' : 'danger';
-
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${item.id}</td>
-      <td>${item.name}</td>
-      <td>${item.category}</td>
+  tbody.innerHTML = data.slice(startIndex, endIndex).map(item => `
+    <tr>
+      <td>${item.code}</td>
+      <td>${item.type}</td>
+      <td>${item.description}</td>
+      <td>${item.brand || 'N/A'}</td>
+      <td>${item.price.toFixed(2)}</td>
       <td>${item.stock}</td>
-      <td>$${item.price.toFixed(2)}</td>
-      <td><span class="badge bg-${statusClass}">${status}</span></td>
+      <td>${getStockStatus(item.stock)}</td>
       <td>
-        <button class="btn btn-sm btn-outline-primary me-1" onclick="editInventoryItem(${item.id})">
+        <button class="btn btn-sm btn-warning me-1" onclick="editPart('${item.code}')">
           <i class="fas fa-edit"></i>
         </button>
-        <button class="btn btn-sm btn-outline-danger" onclick="confirmDeleteItem(${item.id}, '${item.name}')">
-          <i class="fas fa-trash-alt"></i>
+        <button class="btn btn-sm btn-danger" onclick="deletePart('${item.code}')">
+          <i class="fas fa-trash"></i>
         </button>
       </td>
-    `;
-    tableBody.appendChild(row);
-  });
+    </tr>
+  `).join('');
+
+  pagination.innerHTML = Array.from({ length: totalPages }, (_, i) => `
+    <li class="page-item ${i + 1 === currentPage ? 'active' : ''}">
+      <button class="page-link" onclick="changePage(${i + 1})">${i + 1}</button>
+    </li>
+  `).join('');
 }
 
 /**
- * Determina el estado del inventario basado en el stock
- * @param {number} stock - Cantidad actual
- * @param {number} minStock - Cantidad mínima requerida
- * @returns {string} Estado del producto
+ * Cambia la página actual y recarga la tabla
  */
-function getInventoryStatus(stock, minStock) {
+function changePage(page) {
+  currentPage = page;
+  filterInventory();
+}
+
+/**
+ * Obtiene el estado del stock basado en la cantidad
+ */
+function getStockStatus(stock) {
   if (stock === 0) return 'Agotado';
-  if (stock <= minStock) return 'Bajo stock';
+  if (stock < 5) return 'Bajo stock';
   return 'Disponible';
 }
 
 /**
- * Filtra los productos del inventario
+ * Muestra el formulario para agregar o editar un repuesto
  */
-function filterInventory() {
-  const categoryFilter = document.getElementById('inventoryCategoryFilter').value;
-  const statusFilter = document.getElementById('inventoryStatusFilter').value;
-  const searchTerm = document.getElementById('inventorySearch').value.toLowerCase();
-
-  let filteredData = inventoryData;
-
-  // Aplicar filtros
-  if (categoryFilter) {
-    filteredData = filteredData.filter(item => item.category === categoryFilter);
-  }
-
-  if (statusFilter) {
-    filteredData = filteredData.filter(item => {
-      const status = getInventoryStatus(item.stock, item.minStock);
-      return status === statusFilter;
-    });
-  }
-
-if (searchTerm) {
-    filteredData = filteredData.filter(item => {
-      return item.name.toLowerCase().includes(searchTerm) || 
-             item.id.toString().includes(searchTerm);
-    });
-}
-
-  loadInventoryTable(filteredData);
-}
-/**
- * Busca productos en el inventario
- */
-function searchInventory() {
-  filterInventory(); // Reutilizamos la función de filtrado
-}
-
-/**
- * Muestra el modal para agregar un nuevo producto
- */
-function showAddItemModal() {
-  const modal = new bootstrap.Modal(document.getElementById('inventoryItemModal'));
-  document.getElementById('inventoryModalTitle').textContent = 'Nuevo Producto';
-  document.getElementById('itemId').value = '';
-  document.getElementById('inventoryItemForm').reset();
-  document.getElementById('saveItemBtn').onclick = () => saveInventoryItem();
-  modal.show();
-}
-
-/**
- * Muestra el modal para editar un producto existente
- * @param {number} id - ID del producto a editar
- */
-function editInventoryItem(id) {
-  const item = inventoryData.find(item => item.id === id);
-  if (!item) return;
-
-  const modal = new bootstrap.Modal(document.getElementById('inventoryItemModal'));
-  document.getElementById('inventoryModalTitle').textContent = 'Editar Producto';
-  document.getElementById('itemId').value = item.id;
-  document.getElementById('itemName').value = item.name;
-  document.getElementById('itemCategory').value = item.category;
-  document.getElementById('itemStock').value = item.stock;
-  document.getElementById('itemMinStock').value = item.minStock;
-  document.getElementById('itemPrice').value = item.price;
-  document.getElementById('itemLocation').value = item.location || '';
-  document.getElementById('itemSupplier').value = item.supplier || '';
-  document.getElementById('itemNotes').value = item.notes || '';
-  document.getElementById('saveItemBtn').onclick = () => saveInventoryItem();
-  modal.show();
-}
-
-/**
- * Guarda un producto en el inventario (nuevo o existente)
- */
-function saveInventoryItem() {
-  const form = document.getElementById('inventoryItemForm');
-  if (!form.checkValidity()) {
-    form.classList.add('was-validated');
-    return;
-  }
-
-  const itemId = document.getElementById('itemId').value;
-  const itemData = {
-    id: itemId ? parseInt(itemId) : generateItemId(),
-    name: document.getElementById('itemName').value,
-    category: document.getElementById('itemCategory').value,
-    stock: parseInt(document.getElementById('itemStock').value),
-    minStock: parseInt(document.getElementById('itemMinStock').value),
-    price: parseFloat(document.getElementById('itemPrice').value),
-    location: document.getElementById('itemLocation').value,
-    supplier: document.getElementById('itemSupplier').value,
-    notes: document.getElementById('itemNotes').value
-  };
-
-  if (itemId) {
-    // Editar producto existente
-    const index = inventoryData.findIndex(item => item.id === parseInt(itemId));
-    if (index !== -1) {
-      inventoryData[index] = itemData;
-    }
-  } else {
-    // Agregar nuevo producto
-    inventoryData.push(itemData);
-  }
-
-  // Cerrar modal y actualizar tabla
-  bootstrap.Modal.getInstance(document.getElementById('inventoryItemModal')).hide();
-  loadInventoryTable(inventoryData);
-  
-  // Mostrar notificación de éxito
-  showAlert('¡Éxito!', 'El producto se ha guardado correctamente.', 'success');
-}
-
-/**
- * Genera un nuevo ID para productos
- * @returns {number} Nuevo ID
- */
-function generateItemId() {
-  const maxId = Math.max(...inventoryData.map(item => item.id));
-  return maxId + 1;
-}
-
-/**
- * Muestra el modal de confirmación para eliminar un producto
- * @param {number} id - ID del producto
- * @param {string} name - Nombre del producto
- */
-function confirmDeleteItem(id, name) {
-  const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
-  document.getElementById('itemToDeleteName').textContent = name;
-  document.getElementById('confirmDeleteBtn').onclick = () => deleteInventoryItem(id);
-  modal.show();
-}
-
-/**
- * Elimina un producto del inventario
- * @param {number} id - ID del producto a eliminar
- */
-function deleteInventoryItem(id) {
-  const index = inventoryData.findIndex(item => item.id === id);
-  if (index !== -1) {
-    inventoryData.splice(index, 1);
-    loadInventoryTable(inventoryData);
-    bootstrap.Modal.getInstance(document.getElementById('confirmDeleteModal')).hide();
-    showAlert('¡Éxito!', 'El producto ha sido eliminado.', 'success');
-  }
-}
-
-/**
- * Exporta el inventario a Excel (simulado)
- */
-function exportInventoryToExcel() {
-  // En una implementación real, aquí iría el código para generar un Excel
-  showAlert('Exportar a Excel', 'Esta función exportaría los datos a Excel en una implementación real.', 'info');
-}
-
-/**
- * Muestra una alerta/notificación
- * @param {string} title - Título de la alerta
- * @param {string} message - Mensaje a mostrar
- * @param {string} type - Tipo de alerta (success, error, info, warning)
- */
-function showAlert(title, message, type) {
-  // Implementación básica - podrías usar Toast de Bootstrap o SweetAlert en producción
-  alert(`${title}\n${message}`);
-}
-
-// =============================
-// GESTIÓN DE REPUESTOS (PARTS)
-// =============================
-
-function showPartsManagement() {
-  const mainContent = document.getElementById('mainContent');
-  
-  mainContent.innerHTML = `
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Gestión de Repuestos</h1>
-      <button class="btn btn-success" onclick="showAddPartForm()">
-        <i class="fas fa-plus me-2"></i>Agregar repuesto
-      </button>
-    </div>
-    
-    <div class="table-responsive">
-      <table class="table table-hover admin-table">
-        <thead class="table-dark">
-          <tr>
-            <th>Código</th>
-            <th>Descripción</th>
-            <th>Tipo</th>
-            <th>Marca/Modelo</th>
-            <th>Stock</th>
-            <th>Precio</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${adminData.parts.map(part => `
-            <tr>
-              <td>${part.code}</td>
-              <td>${part.description}</td>
-              <td>${part.type}</td>
-              <td>${part.model || 'N/A'}</td>
-              <td>${part.stock}</td>
-              <td>$${part.price}</td>
-              <td>
-                <button class="btn btn-sm btn-warning me-1" onclick="editPart('${part.code}')">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-sm btn-danger" onclick="deletePart('${part.code}')">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-  `;
-}
 function showAddPartForm(partData = null) {
   const mainContent = document.getElementById('mainContent');
   const isEdit = partData !== null;
-  
+
   mainContent.innerHTML = `
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
       <h1 class="h2">${isEdit ? 'Editar' : 'Agregar'} Repuesto</h1>
@@ -482,18 +302,17 @@ function showAddPartForm(partData = null) {
               <input type="text" class="form-control" id="partCode" value="${partData?.code || ''}" ${isEdit ? 'readonly' : 'required'}>
             </div>
             <div class="mb-3">
-              <label for="partDescription" class="form-label">Descripción</label>
-              <input type="text" class="form-control" id="partDescription" value="${partData?.description || ''}" required>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3">
               <label for="partType" class="form-label">Tipo</label>
               <select class="form-select" id="partType" required>
                 <option value="">Seleccione...</option>
                 <option value="Pantalla" ${partData?.type === 'Pantalla' ? 'selected' : ''}>Pantalla</option>
                 <option value="Batería" ${partData?.type === 'Batería' ? 'selected' : ''}>Batería</option>
-                <option value="Conector" ${partData?.type === 'Conector' ? 'selected' : ''}>Conector</option>
+                <option value="Puerto de carga" ${partData?.type === 'Puerto de carga' ? 'selected' : ''}>Puerto de carga</option>
+                <option value="Micrófono" ${partData?.type === 'Micrófono' ? 'selected' : ''}>Micrófono</option>
+                <option value="Parlante" ${partData?.type === 'Parlante' ? 'selected' : ''}>Parlante</option>
+                <option value="Cámara" ${partData?.type === 'Cámara' ? 'selected' : ''}>Cámara</option>
+                <option value="FPC" ${partData?.type === 'FPC' ? 'selected' : ''}>FPC</option>
+                <option value="Lógica de carga" ${partData?.type === 'Lógica de carga' ? 'selected' : ''}>Lógica de carga</option>
               </select>
             </div>
             <div class="mb-3">
@@ -501,25 +320,24 @@ function showAddPartForm(partData = null) {
               <input type="text" class="form-control" id="partBrand" value="${partData?.brand || ''}">
             </div>
           </div>
-        </div>
-        
-        <div class="row">
           <div class="col-md-6">
+            <div class="mb-3">
+              <label for="partDescription" class="form-label">Modelo</label>
+              <input type="text" class="form-control" id="partDescription" value="${partData?.description || ''}" required>
+            </div>
+            <div class="mb-3">
+              <label for="partPrice" class="form-label">Precio unitario</label>
+              <input type="number" class="form-control" id="partPrice" min="0" step="0.01" value="${partData?.price || 0}" required>
+            </div>
             <div class="mb-3">
               <label for="partStock" class="form-label">Stock</label>
               <input type="number" class="form-control" id="partStock" min="0" value="${partData?.stock || 0}" required>
             </div>
           </div>
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="partPrice" class="form-label">Precio unitario</label>
-              <input type="number" class="form-control" id="partPrice" min="0" step="0.01" value="${partData?.price || 0}" required>
-            </div>
-          </div>
         </div>
         
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-          <button type="button" class="btn btn-secondary me-md-2" onclick="showPartsManagement()">Cancelar</button>
+          <button type="button" class="btn btn-secondary me-md-2" onclick="showInventory()">Cancelar</button>
           <button type="submit" class="btn btn-primary">${isEdit ? 'Actualizar' : 'Guardar'}</button>
         </div>
       </form>
@@ -527,52 +345,62 @@ function showAddPartForm(partData = null) {
   `;
 }
 
-
+/**
+ * Maneja el envío del formulario de repuestos
+ */
 function handlePartForm(event, partCode = null) {
   event.preventDefault();
-  
+
   const partData = {
     code: document.getElementById('partCode').value,
     description: document.getElementById('partDescription').value,
     type: document.getElementById('partType').value,
     brand: document.getElementById('partBrand').value,
-    model: document.getElementById('partModel').value,
     stock: parseInt(document.getElementById('partStock').value),
-    price: parseFloat(document.getElementById('partPrice').value),
-    notes: document.getElementById('partNotes').value
+    price: parseFloat(document.getElementById('partPrice').value)
   };
-  
+
   if (partCode) {
     // Editar repuesto existente
-    const index = adminData.parts.findIndex(p => p.code === partCode);
+    const index = inventoryData.findIndex(p => p.code === partCode);
     if (index !== -1) {
-      adminData.parts[index] = partData;
+      inventoryData[index] = partData;
     }
   } else {
     // Agregar nuevo repuesto
-    adminData.parts.push(partData);
+    inventoryData.push(partData);
   }
-  
-  showPartsManagement();
+
+  showInventory();
 }
 
+/**
+ * Edita un repuesto existente
+ */
 function editPart(code) {
-  const part = adminData.parts.find(p => p.code === code);
+  const part = inventoryData.find(p => p.code === code);
   if (part) {
     showAddPartForm(part);
   }
 }
 
+/**
+ * Elimina un repuesto existente
+ */
 function deletePart(code) {
   if (confirm('¿Está seguro de eliminar este repuesto?')) {
-    adminData.parts = adminData.parts.filter(p => p.code !== code);
-    showPartsManagement();
+    inventoryData = inventoryData.filter(p => p.code !== code);
+    showInventory();
   }
 }
+
 
 // =============================
 // GESTIÓN DE Personal
 // =============================
+
+let personalCurrentPage = 1;
+const personalItemsPerPage = 10;
 
 function showPersonalManagement() {
   const mainContent = document.getElementById('mainContent');
@@ -584,7 +412,31 @@ function showPersonalManagement() {
         <i class="fas fa-plus me-2"></i>Agregar Personal
       </button>
     </div>
-    
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input 
+          type="text" 
+          class="form-control mb-2" 
+          id="personalSearch" 
+          placeholder="Buscar por nombre..." 
+          onkeyup="filterPersonal()"
+        >
+      </div>
+      <div class="col-md-6">
+        <select 
+          class="form-select" 
+          id="roleFilter" 
+          onchange="filterPersonal()"
+        >
+          <option value="">Todos los Roles</option>
+          <option value="Técnico">Técnico</option>
+          <option value="Asesor">Asesor</option>
+          <option value="Administrador">Administrador</option>
+        </select>
+      </div>
+    </div>
+
     <div class="table-responsive">
       <table class="table table-hover admin-table">
         <thead class="table-dark">
@@ -598,33 +450,78 @@ function showPersonalManagement() {
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody>
-          ${adminData.technicians.map(person => `
-            <tr>
-              <td>${person.name}</td>
-              <td>${person.email}</td>
-              <td>${person.phone || 'N/A'}</td>
-              <td>${person.address || 'N/A'}</td>
-              <td>${person.role}</td>
-              <td>
-                <span class="badge ${person.status === 'Disponible' ? 'bg-success' : 'bg-secondary'}">
-                  ${person.status}
-                </span>
-              </td>
-              <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="viewPersonal(${person.id})">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button class="btn btn-sm btn-warning me-1" onclick="editPersonal(${person.id})">
-                  <i class="fas fa-edit"></i>
-                </button>
-              </td>
-            </tr>
-          `).join('')}
+        <tbody id="personalTableBody">
+          <!-- Datos cargados dinámicamente -->
         </tbody>
       </table>
     </div>
+
+    <nav>
+      <ul class="pagination justify-content-center" id="personalPagination">
+        <!-- Botones de paginación -->
+      </ul>
+    </nav>
   `;
+
+  filterPersonal(); // Cargar datos iniciales
+}
+
+function filterPersonal() {
+  const searchQuery = document.getElementById('personalSearch').value.toLowerCase();
+  const roleFilter = document.getElementById('roleFilter').value;
+
+  const filteredData = adminData.technicians.filter(person => {
+    const matchesSearch = person.name.toLowerCase().includes(searchQuery);
+    const matchesRole = !roleFilter || person.role === roleFilter;
+    return matchesSearch && matchesRole;
+  });
+
+  loadPersonalTable(filteredData);
+}
+
+function loadPersonalTable(data) {
+  const tbody = document.getElementById('personalTableBody');
+  const pagination = document.getElementById('personalPagination');
+  if (!tbody || !pagination) return;
+
+  const totalItems = data.length;
+  const totalPages = Math.ceil(totalItems / personalItemsPerPage);
+  const startIndex = (personalCurrentPage - 1) * personalItemsPerPage;
+  const endIndex = Math.min(startIndex + personalItemsPerPage, totalItems);
+
+  tbody.innerHTML = data.slice(startIndex, endIndex).map(person => `
+    <tr>
+      <td>${person.name}</td>
+      <td>${person.email}</td>
+      <td>${person.phone || 'N/A'}</td>
+      <td>${person.address || 'N/A'}</td>
+      <td>${person.role}</td>
+      <td>
+        <span class="badge ${person.status === 'Disponible' ? 'bg-success' : 'bg-secondary'}">
+          ${person.status}
+        </span>
+      </td>
+      <td>
+        <button class="btn btn-sm btn-primary me-1" onclick="viewPersonal(${person.id})">
+          <i class="fas fa-eye"></i>
+        </button>
+        <button class="btn btn-sm btn-warning me-1" onclick="editPersonal(${person.id})">
+          <i class="fas fa-edit"></i>
+        </button>
+      </td>
+    </tr>
+  `).join('');
+
+  pagination.innerHTML = Array.from({ length: totalPages }, (_, i) => `
+    <li class="page-item ${i + 1 === personalCurrentPage ? 'active' : ''}">
+      <button class="page-link" onclick="changePersonalPage(${i + 1})">${i + 1}</button>
+    </li>
+  `).join('');
+}
+
+function changePersonalPage(page) {
+  personalCurrentPage = page;
+  filterPersonal();
 }
 
 function showAddPersonalForm(personData = null) {
@@ -928,6 +825,7 @@ function exportToExcel() {
 function exportToPDF() {
   alert('Exportando a PDF...'); // Implementación real usaría una librería como jsPDF
 }
+
 
 // =============================
 // GESTIÓN DE ÓRDENES (ADMIN)
