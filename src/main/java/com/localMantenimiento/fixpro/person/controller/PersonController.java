@@ -70,6 +70,7 @@ public class PersonController {
     return personService.getRoleById(id);
   }
 
+
   @GetMapping("/roles")
   public Optional<List<Role>> getAllRoles() {
     return personService.getAllRoles();

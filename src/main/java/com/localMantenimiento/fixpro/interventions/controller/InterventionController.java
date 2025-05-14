@@ -67,6 +67,7 @@ public class InterventionController {
     return interventionService.getSalesInformation();
   }
 
+
   @GetMapping("/orders/recent-orders")
   public List<InterventionOrder> getTop5RecentInterventionOrders() {
     return interventionService.getTop5RecentInterventionOrders();
