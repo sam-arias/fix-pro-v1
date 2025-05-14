@@ -13,11 +13,11 @@ public class CorsConfig {
     return new WebMvcConfigurer() {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/*") // Aplica a todas las rutas
-            .allowedOrigins("http://127.0.0.1:5500/") // Ajusta si usas otro puerto
+        registry.addMapping("/api/**") // Aplica a todas las rutas
+            .allowedOrigins("http://127.0.0.1:5500") // Ajusta si usas otro puerto
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-            .allowedHeaders("")
-            .allowCredentials(true);
+            .allowedHeaders("*")
+            .allowCredentials(false);
 
       }
     };

@@ -98,8 +98,9 @@ public class PersonController {
 
   @PostMapping("/login")
   public ResponseEntity<Map<String, Object>> login(
-      @RequestParam String email,
-      @RequestParam String password) {
+      @RequestBody Map<String, String> credentials) {
+    String email = credentials.get("email");
+    String password = credentials.get("password");
 
     Role userRole = personService.login(email, password);
 
