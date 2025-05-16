@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repuestos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="assets/css/admin.css" rel="stylesheet">
+    <link href="assets/css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="navbar navbar-expand-md navbar-dark shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Admin</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse bg-light">
+                <div class="position-sticky pt-3 vh-100">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="admin-dashboard.html">
+                                <i class="fas fa-tachometer-alt me-2"></i> Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Repuestos.html">
+                                <i class="fas fa-box-open me-2"></i> Repuestos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Personal.html">
+                                <i class="fas fa-users-cog me-2"></i> Personal
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Orders.html">
+                                <i class="fas fa-clipboard-list me-2"></i> Órdenes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Reports.html">
+                                <i class="fas fa-chart-bar me-2"></i> Reportes
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-4 bg-white">
+                <!-- Header Section -->
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Gestión de Repuestos</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <a href="Micromodulos_repuestos/AddRepuesto.html" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus me-1"></i> Nuevo Producto
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Filters Section -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="text" id="inventorySearch" class="form-control" placeholder="Buscar producto...">
+                            <button class="btn btn-outline-secondary" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" id="inventoryTypeFilter">
+                            <option value="">Todos los Tipos</option>
+                            <option value="Pantalla">Pantalla</option>
+                            <option value="Batería">Batería</option>
+                            <option value="Puerto de carga">Puerto de carga</option>
+                            <option value="Micrófono">Micrófono</option>
+                            <option value="Parlante">Parlante</option>
+                            <option value="Cámara">Cámara</option>
+                            <option value="Lógica de carga">Lógica de carga</option>
+                            <option value="FPC">FPC</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" id="inventoryStatusFilter">
+                            <option value="">Todos los Estados</option>
+                            <option value="Disponible">Disponible</option>
+                            <option value="Bajo stock">Bajo stock</option>
+                            <option value="Agotado">Agotado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Table Section -->
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Tipo</th>
+                                <th>Modelo</th>
+                                <th>Marca</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="repuestosTableBody">
+                            <tr>
+                                <td>RP001</td>
+                                <td>Pantalla</td>
+                                <td>Galaxy S21</td>
+                                <td>Samsung</td>
+                                <td>$120.00</td>
+                                <td>15</td>
+                                <td><span class="badge bg-success">Disponible</span></td>
+                                <td>
+                                  <button class="btn btn-sm btn-outline-primary" onclick="viewRepuesto('RP001', 'Pantalla', 'Galaxy S21', 'Samsung', 120.00, 15)">
+                                    <i class="fas fa-eye"></i>
+                                  </button>
+                                  <button class="btn btn-sm btn-outline-secondary" onclick="editRepuesto('RP001', 'Pantalla', 'Galaxy S21', 'Samsung', 120.00, 15)">
+                                    <i class="fas fa-edit"></i>
+                                  </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>RP002</td>
+                                <td>Batería</td>
+                                <td>iPhone 12</td>
+                                <td>Apple</td>
+                                <td>$80.00</td>
+                                <td>10</td>
+                                <td><span class="badge bg-warning">Bajo stock</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewRepuesto('RP002', 'Batería', 'iPhone 12', 'Apple', 80.00, 10)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="editRepuesto('RP002', 'Batería', 'iPhone 12', 'Apple', 80.00, 10)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>RP003</td>
+                                <td>Puerto de carga</td>
+                                <td>Redmi Note 10</td>
+                                <td>Xiaomi</td>
+                                <td>$25.00</td>
+                                <td>0</td>
+                                <td><span class="badge bg-danger">Agotado</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewRepuesto('RP003', 'Puerto de carga', 'Redmi Note 10', 'Xiaomi', 25.00, 0)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="editRepuesto('RP003', 'Puerto de carga', 'Redmi Note 10', 'Xiaomi', 25.00, 0)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination Section -->
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        <!-- Pagination buttons will be added here -->
+                    </ul>
+                </nav>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const repuestos = [
+            { id: 'RP001', type: 'Pantalla', model: 'Galaxy S21', brand: 'Samsung', price: 120.00, stock: 15, status: 'Disponible' },
+            { id: 'RP002', type: 'Batería', model: 'iPhone 12', brand: 'Apple', price: 80.00, stock: 10, status: 'Bajo stock' },
+            { id: 'RP003', type: 'Puerto de carga', model: 'Redmi Note 10', brand: 'Xiaomi', price: 25.00, stock: 0, status: 'Agotado' }
+        ];
+
+        function filterRepuestos() {
+            const searchValue = document.getElementById('inventorySearch').value.toLowerCase();
+            const typeFilter = document.getElementById('inventoryTypeFilter').value;
+            const statusFilter = document.getElementById('inventoryStatusFilter').value;
+
+            const filteredRepuestos = repuestos.filter(repuesto => {
+                const matchesSearch = repuesto.model.toLowerCase().includes(searchValue) || repuesto.brand.toLowerCase().includes(searchValue);
+                const matchesType = !typeFilter || repuesto.type === typeFilter;
+                const matchesStatus = !statusFilter || repuesto.status === statusFilter;
+
+                return matchesSearch && matchesType && matchesStatus;
+            });
+
+            renderRepuestos(filteredRepuestos);
+        }
+
+        function renderRepuestos(repuestos) {
+            const tbody = document.getElementById('repuestosTableBody');
+            tbody.innerHTML = '';
+
+            repuestos.forEach(repuesto => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${repuesto.id}</td>
+                        <td>${repuesto.type}</td>
+                        <td>${repuesto.model}</td>
+                        <td>${repuesto.brand}</td>
+                        <td>$${repuesto.price.toFixed(2)}</td>
+                        <td>${repuesto.stock}</td>
+                        <td><span class="badge ${getStatusBadgeClass(repuesto.status)}">${repuesto.status}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="viewRepuesto('${repuesto.id}', '${repuesto.type}', '${repuesto.model}', '${repuesto.brand}', ${repuesto.price}, ${repuesto.stock})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="editRepuesto('${repuesto.id}', '${repuesto.type}', '${repuesto.model}', '${repuesto.brand}', ${repuesto.price}, ${repuesto.stock})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function getStatusBadgeClass(status) {
+            switch (status) {
+                case 'Disponible': return 'bg-success';
+                case 'Bajo stock': return 'bg-warning';
+                case 'Agotado': return 'bg-danger';
+                default: return 'bg-secondary';
+            }
+        }
+
+        document.getElementById('inventorySearch').addEventListener('input', filterRepuestos);
+        document.getElementById('inventoryTypeFilter').addEventListener('change', filterRepuestos);
+        document.getElementById('inventoryStatusFilter').addEventListener('change', filterRepuestos);
+
+        // Initial render
+        renderRepuestos(repuestos);
+    </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Repuesto</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="assets/css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="navbar navbar-expand-md navbar-dark shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Admin</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="container mt-5 pt-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Registrar Repuesto</h1>
+            <a href="../Repuestos.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <form id="addRepuestoForm">
+                    <h5 class="mb-3"><i class="fas fa-box-open me-2"></i>Información del Repuesto</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="repuestoCode" class="form-label">Código</label>
+                                <input type="text" class="form-control" id="repuestoCode" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="repuestoType" class="form-label">Tipo</label>
+                                <select class="form-select" id="repuestoType" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="Pantalla">Pantalla</option>
+                                    <option value="Batería">Batería</option>
+                                    <option value="Puerto de carga">Puerto de carga</option>
+                                    <option value="Micrófono">Micrófono</option>
+                                    <option value="Parlante">Parlante</option>
+                                    <option value="Cámara">Cámara</option>
+                                    <option value="FPC">FPC</option>
+                                    <option value="Lógica de carga">Lógica de carga</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="repuestoBrand" class="form-label">Marca</label>
+                                <input type="text" class="form-control" id="repuestoBrand">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="repuestoModel" class="form-label">Modelo</label>
+                                <input type="text" class="form-control" id="repuestoModel" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="repuestoPrice" class="form-label">Precio Unitario</label>
+                                <input type="number" class="form-control" id="repuestoPrice" min="0" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="repuestoStock" class="form-label">Stock</label>
+                                <input type="number" class="form-control" id="repuestoStock" min="0" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="../Repuestos.html" class="btn btn-secondary me-md-2">Cancelar</a>
+                        <button type="submit" class="btn btn-primary" onclick="saveRepuesto(event)">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function saveRepuesto(event) {
+            event.preventDefault();
+
+            // Simulated save logic
+            const newRepuesto = {
+                code: document.getElementById('repuestoCode').value,
+                type: document.getElementById('repuestoType').value,
+                brand: document.getElementById('repuestoBrand').value,
+                model: document.getElementById('repuestoModel').value,
+                price: parseFloat(document.getElementById('repuestoPrice').value),
+                stock: parseInt(document.getElementById('repuestoStock').value)
+            };
+
+            // Save to localStorage or send to server
+            console.log('Repuesto saved:', newRepuesto);
+            alert('Repuesto registrado exitosamente.');
+            window.location.href = "../Repuestos.html";
+        }
+    </script>
+</body>
+</html>

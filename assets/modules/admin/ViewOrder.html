@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Orden</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="assets/css/styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="navbar navbar-expand-md navbar-dark shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Admin</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="container mt-5 pt-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Detalles de Orden</h1>
+            <a href="Orders.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="mb-3"><i class="fas fa-user me-2"></i>Datos del Cliente</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Nombre:</strong> <span id="clientName">Juan Pérez</span></p>
+                        <p><strong>Teléfono:</strong> <span id="clientPhone">555-1234</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Dirección:</strong> <span id="clientAddress">Calle 123, Ciudad</span></p>
+                    </div>
+                </div>
+
+                <h5 class="mb-3 mt-4"><i class="fas fa-laptop me-2"></i>Datos del Dispositivo</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Tipo:</strong> <span id="deviceType">Smartphone</span></p>
+                        <p><strong>Modelo:</strong> <span id="deviceModel">Galaxy S21</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Marca:</strong> <span id="deviceBrand">Samsung</span></p>
+                        <p><strong>Serial:</strong> <span id="deviceSerial">123456789</span></p>
+                    </div>
+                </div>
+
+                <h5 class="mb-3 mt-4"><i class="fas fa-exclamation-circle me-2"></i>Problema Reportado</h5>
+                <p id="problemDescription">La pantalla no responde al tacto.</p>
+
+                <h5 class="mb-3 mt-4"><i class="fas fa-user-cog me-2"></i>Información Adicional</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Técnico Asignado:</strong> <span id="technician">Carlos López</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Fecha Estimada:</strong> <span id="estimatedDate">2023-10-15 14:00</span></p>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <a href="EditOrder.html" class="btn btn-warning">
+                        <i class="fas fa-edit me-1"></i> Editar Orden
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simulated data for demonstration purposes
+        const orderData = JSON.parse(localStorage.getItem('selectedOrder')) || {
+            clientName: "Juan Pérez",
+            clientPhone: "555-1234",
+            clientAddress: "Calle 123, Ciudad",
+            deviceType: "Smartphone",
+            deviceModel: "Galaxy S21",
+            deviceBrand: "Samsung",
+            deviceSerial: "123456789",
+            problemDescription: "La pantalla no responde al tacto.",
+            technician: "Carlos López",
+            estimatedDate: "2023-10-15 14:00"
+        };
+
+        // Populate the view with order data
+        document.getElementById('clientName').textContent = orderData.clientName;
+        document.getElementById('clientPhone').textContent = orderData.clientPhone;
+        document.getElementById('clientAddress').textContent = orderData.clientAddress;
+        document.getElementById('deviceType').textContent = orderData.deviceType;
+        document.getElementById('deviceModel').textContent = orderData.deviceModel;
+        document.getElementById('deviceBrand').textContent = orderData.deviceBrand;
+        document.getElementById('deviceSerial').textContent = orderData.deviceSerial;
+        document.getElementById('problemDescription').textContent = orderData.problemDescription;
+        document.getElementById('technician').textContent = orderData.technician;
+        document.getElementById('estimatedDate').textContent = orderData.estimatedDate;
+    </script>
+</body>
+</html>
