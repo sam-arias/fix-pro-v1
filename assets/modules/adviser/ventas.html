@@ -1,118 +1,196 @@
-
-// =============================
-// MÓDULO DE VENTAS
-// =============================
-
-const salesData = {
-  monthlySummary: [],
-  byCategory: [],
-  recentTransactions: []
-};
-
-// Función para formatear fechas
-function formatDate(dateString) {
-  const options = { year: 'numeric', month: 'short', day: 'numeric' };
-  return new Date(dateString).toLocaleDateString('es-ES', options);
-}
-
-// Función principal para mostrar el dashboard de ventas
-function showSales() {
-  const content = document.getElementById('main-content');
-  if (!content) return;
-
-  content.innerHTML = `
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Ventas</h1>
-      <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group me-2">
-          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="exportSalesReport()">
-            <i class="fas fa-file-pdf me-1"></i> Exportar
-          </button>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ventas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/global.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="navbar navbar-expand-md navbar-dark shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">
+        <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Asesor</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="dropdown ms-auto">
+          <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="/assets/img/profile-placeholder.png" alt="Asesor" width="36" height="36" class="rounded-circle me-2 border border-2 border-light">
+            <span class="d-none d-md-inline" id="username-display"></span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
+            <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog me-2" style="color: var(--color4)"></i> Perfil</a></li>
+            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
+          </ul>
         </div>
       </div>
     </div>
+  </header>
 
-    <!-- Tarjetas de resumen -->
-    <div class="row mb-4">
-      <div class="col-md-3">
-        <div class="card stat-card bg-primary text-white">
-          <div class="card-body">
-            <h5 class="card-title">Órdenes Totales</h5>
-            <h2 class="card-stat">${salesData.monthlySummary.reduce((sum, month) => sum + month.orders, 0)}</h2>
-            <p class="card-text">Últimos 6 meses</p>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse vh-100" style="min-height:100vh;">
+        <div class="sidebar-sticky pt-3 h-100 d-flex flex-column">
+          <ul class="nav flex-column mb-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/views/manager-dashboard.html">
+                <i class="fas fa-tachometer-alt me-2"></i>
+                Inicio
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/assets/modules/adviser/Orders.html">
+                <i class="fas fa-clipboard-list me-2"></i>
+                Órdenes
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/assets/modules/adviser/ventas.html">
+                <i class="fas fa-chart-line me-2"></i>
+                Ventas
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <!-- Main Content -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4" id="main-content">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Ventas</h1>
+          <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+              <button type="button" class="btn btn-sm btn-outline-secondary" id="exportSalesBtn">
+                <i class="fas fa-file-pdf me-1"></i> Exportar
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card stat-card bg-success text-white">
-          <div class="card-body">
-            <h5 class="card-title">Órdenes Completas</h5>
-            <h2 class="card-stat">${salesData.monthlySummary.reduce((sum, month) => sum + (month.completedOrders || 0), 0)}</h2>
-            <p class="card-text">Últimos 6 meses</p>
+
+        <!-- Tarjetas de resumen -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="card stat-card bg-primary text-white">
+              <div class="card-body">
+                <h5 class="card-title">Órdenes Totales</h5>
+                <h2 class="card-stat" id="ordersTotal">0</h2>
+                <p class="card-text">Últimos 6 meses</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card stat-card bg-success text-white">
+              <div class="card-body">
+                <h5 class="card-title">Órdenes Completas</h5>
+                <h2 class="card-stat" id="ordersCompleted">0</h2>
+                <p class="card-text">Últimos 6 meses</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card stat-card bg-warning text-white">
+              <div class="card-body">
+                <h5 class="card-title">Órdenes Pendientes</h5>
+                <h2 class="card-stat" id="ordersPending">0</h2>
+                <p class="card-text">Últimos 6 meses</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card stat-card bg-info text-white">
+              <div class="card-body">
+                <h5 class="card-title">Órdenes en Proceso</h5>
+                <h2 class="card-stat" id="ordersInProgress">0</h2>
+                <p class="card-text">Últimos 6 meses</p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card stat-card bg-warning text-white">
+
+        <!-- Transacciones recientes -->
+        <div class="card">
+          <div class="card-header">
+            <h5>Transacciones Recientes</h5>
+          </div>
           <div class="card-body">
-            <h5 class="card-title">Órdenes Pendientes</h5>
-            <h2 class="card-stat">${salesData.monthlySummary.reduce((sum, month) => sum + (month.pendingOrders || 0), 0)}</h2>
-            <p class="card-text">Últimos 6 meses</p>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Transacción #</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Estado</th>
+                    <th>Método</th>
+                  </tr>
+                </thead>
+                <tbody id="recentTransactionsTable">
+                  <!-- Transacciones recientes aquí -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card stat-card bg-info text-white">
-          <div class="card-body">
-            <h5 class="card-title">Órdenes en Proceso</h5>
-            <h2 class="card-stat">${salesData.monthlySummary.reduce((sum, month) => sum + (month.inProgressOrders || 0), 0)}</h2>
-            <p class="card-text">Últimos 6 meses</p>
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Simulated sales data for demonstration
+    const salesData = {
+      monthlySummary: [
+        { orders: 20, completedOrders: 15, pendingOrders: 3, inProgressOrders: 2 },
+        { orders: 18, completedOrders: 12, pendingOrders: 4, inProgressOrders: 2 },
+        { orders: 22, completedOrders: 18, pendingOrders: 2, inProgressOrders: 2 },
+        { orders: 25, completedOrders: 20, pendingOrders: 3, inProgressOrders: 2 },
+        { orders: 19, completedOrders: 14, pendingOrders: 3, inProgressOrders: 2 },
+        { orders: 21, completedOrders: 16, pendingOrders: 3, inProgressOrders: 2 }
+      ],
+      byCategory: [],
+      recentTransactions: [
+        { id: 1001, date: "2024-06-01", client: "Juan Pérez", status: "Completada", method: "Efectivo" },
+        { id: 1002, date: "2024-06-03", client: "María García", status: "Pendiente", method: "Tarjeta" },
+        { id: 1003, date: "2024-06-05", client: "Pedro Ruiz", status: "Completada", method: "Transferencia" }
+      ]
+    };
 
-    <!-- Transacciones recientes -->
-    <div class="card">
-      <div class="card-header">
-        <h5>Transacciones Recientes</h5>
-      </div>
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Transacción #</th>
-                <th>Fecha</th>
-                <th>Cliente</th>
-                <th>Estado</th>
-                <th>Método</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${salesData.recentTransactions.map(transaction => `
-                <tr>
-                  <td>${transaction.id}</td>
-                  <td>${formatDate(transaction.date)}</td>
-                  <td>${transaction.client}</td>
-                  <td>
-                    <span class="badge ${
-                      transaction.status === 'Completada' ? 'bg-success' : 
-                      transaction.status === 'Pendiente' ? 'bg-warning' : 'bg-danger'
-                    }">${transaction.status}</span>
-                  </td>
-                  <td>${transaction.method}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  `;
-}
+    // Fill summary cards
+    document.getElementById('ordersTotal').textContent = salesData.monthlySummary.reduce((sum, month) => sum + month.orders, 0);
+    document.getElementById('ordersCompleted').textContent = salesData.monthlySummary.reduce((sum, month) => sum + (month.completedOrders || 0), 0);
+    document.getElementById('ordersPending').textContent = salesData.monthlySummary.reduce((sum, month) => sum + (month.pendingOrders || 0), 0);
+    document.getElementById('ordersInProgress').textContent = salesData.monthlySummary.reduce((sum, month) => sum + (month.inProgressOrders || 0), 0);
 
-// Exportar reporte de ventas
-function exportSalesReport() {
-  alert('Esta función generaría un reporte PDF en una implementación real.');
-}
+    // Fill recent transactions table
+    function formatDate(dateString) {
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('es-ES', options);
+    }
+    document.getElementById('recentTransactionsTable').innerHTML = salesData.recentTransactions.map(transaction => `
+      <tr>
+        <td>${transaction.id}</td>
+        <td>${formatDate(transaction.date)}</td>
+        <td>${transaction.client}</td>
+        <td>
+          <span class="badge ${
+            transaction.status === 'Completada' ? 'bg-success' :
+            transaction.status === 'Pendiente' ? 'bg-warning' : 'bg-danger'
+          }">${transaction.status}</span>
+        </td>
+        <td>${transaction.method}</td>
+      </tr>
+    `).join('');
+
+    // Exportar reporte de ventas
+    document.getElementById('exportSalesBtn').addEventListener('click', function() {
+      alert('Esta función generaría un reporte PDF en una implementación real.');
+    });
+  </script>
+</body>
+</html>

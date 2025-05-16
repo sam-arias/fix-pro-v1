@@ -8,69 +8,136 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link href="assets/css/manager.css" rel="stylesheet">
-  <link href="assets/css/styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/global.css">
 
 </head>
 <body class="manager-dashboard">
-  <!-- Header -->
-  <header class="navbar navbar-expand-md navbar-dark shadow-sm">        
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="#">
-        <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Asesor</span>
-      </a>
-      
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      
-      <div class="collapse navbar-collapse" id="navbarCollapse">
-        <!-- Menú usuario -->
-        <div class="dropdown ms-auto">
-          <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="assets/img/profile-placeholder.png" alt="Asesor" width="36" height="36" class="rounded-circle me-2 border border-2 border-light">
-            <span class="d-none d-md-inline" id="username-display"></span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
-            <li><a class="dropdown-item" href="#" onclick="showProfile()"><i class="fas fa-user-cog me-2" style="color: var(--color4)"></i> Perfil</a></li>                    
-            <li><a class="dropdown-item" href="#" onclick="auth.logout()"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
-          </ul>
+    <!-- Header -->
+    <header class="navbar navbar-expand-md navbar-dark shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Adviser</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="dropdown ms-auto">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="/assets/img/profile-placeholder.png" alt="Admin" width="36" height="36" class="rounded-circle me-2 border border-2 border-light">
+                    <span class="d-none d-md-inline">Adviser</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
+                    <li><a class="dropdown-item" href="/assets/modules/adviser/perfil.html"><i class="fas fa-user-cog me-2" style="color: var(--color4)"></i> Perfil</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
+                </ul>
+            </div>
         </div>
-      </div>
-    </div>
-  </header>
+    </header>
 
   <div class="container-fluid">
     <div class="row">
-      <!-- Sidebar -->
-      <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-        <div class="sidebar-sticky pt-3">
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link active" href="#" onclick="showDashboard()">
-                <i class="fas fa-tachometer-alt me-2"></i>
-                Inicio
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" onclick="showInterventionOrders('all')">
-                <i class="fas fa-clipboard-list me-2"></i>
-                Órdenes
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" onclick="showSales()">
-                <i class="fas fa-chart-line me-2"></i>
-                Ventas
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+            <!-- Sidebar -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3 vh-100">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/views/manager-dashboard.html">
+                                <i class="fas fa-tachometer-alt me-2"></i> Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/assets/modules/adviser/Orders.html" aria-current="page">
+                                <i class="fas fa-clipboard-list me-2"></i> Órdenes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/assets/modules/adviser/ventas.html">
+                                <i class="fas fa-box-open me-2"></i> Ventas
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
       
-      <!-- Contenido principal -->
-      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4" id="main-content">
-      </main>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4" id="main-content">
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card stat-card bg-primary text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Órdenes Totales</h5>
+                                <h2 class="card-stat" id="ordersTotal">0</h2>
+                            </div>
+                            <i class="fas fa-clipboard-list fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card bg-success text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">En Reparación</h5>
+                                <h2 class="card-stat" id="ordersCompleted">0</h2>
+                            </div>
+                            <i class="fas fa-tools fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card bg-warning text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Órdenes Pendientes</h5>
+                                <h2 class="card-stat" id="ordersPending">0</h2>
+                            </div>
+                            <i class="fas fa-clock fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card bg-info text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">Listo para entregar</h5>
+                                <h2 class="card-stat" id="ordersReady">0</h2>
+                            </div>
+                            <i class="fas fa-check-circle fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Órdenes recientes</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Orden #</th>
+                                                <th>Cliente</th>
+                                                <th>Dispositivo</th>
+                                                <th>Estado</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recentOrdersTable">
+                                            <!-- Órdenes recientes aquí -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Ventas por categoría</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="salesChart" height="150"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
     </div>
   </div>
 
