@@ -1,0 +1,312 @@
+
+// =============================
+// GESTIÓN DE ÓRDENES
+// =============================
+
+// Datos de técnicos disponibles
+const adminData = {
+  technicians: []
+};
+
+// Datos iniciales de órdenes
+let ordersData = [];
+
+// Mostrar todas las órdenes
+function showInterventionOrders(filter = 'all', technicianFilter = '', searchQuery = '') {
+  const mainContent = document.getElementById('main-content');
+  const filteredOrders = ordersData.filter(order => {
+    const matchesStatus = filter === 'all' || order.status.toLowerCase().includes(filter.toLowerCase());
+    const matchesTechnician = !technicianFilter || (order.technician && order.technician.toLowerCase().includes(technicianFilter.toLowerCase()));
+    const matchesSearch = !searchQuery || order.client.toLowerCase().includes(searchQuery.toLowerCase()) || order.device.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesStatus && matchesTechnician && matchesSearch;
+  });
+
+  mainContent.innerHTML = `
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Gestión de Órdenes</h1>
+      <div class="btn-toolbar mb-2 mb-md-0">
+        <button class="btn btn-sm btn-primary" onclick="showOrderForm()">
+          <i class="fas fa-plus me-1"></i> Nueva orden
+        </button>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <input type="text" class="form-control" id="searchQuery" placeholder="Buscar por cliente o dispositivo" oninput="showInterventionOrders('${filter}', document.getElementById('technicianFilter').value, this.value)">
+      </div>
+      <div class="col-md-4">
+        <select class="form-select" id="technicianFilter" onchange="showInterventionOrders('${filter}', this.value, document.getElementById('searchQuery').value)">
+          <option value="">Filtrar por técnico</option>
+          ${adminData.technicians.map(tech => `<option value="${tech.name}">${tech.name}</option>`).join('')}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" id="statusFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Filtrar por estado
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="statusFilterDropdown">
+            <li><a class="dropdown-item" href="#" onclick="showInterventionOrders('all')">Todas</a></li>
+            <li><a class="dropdown-item" href="#" onclick="showInterventionOrders('pendiente')">Pendientes</a></li>
+            <li><a class="dropdown-item" href="#" onclick="showInterventionOrders('progreso')">En progreso</a></li>
+            <li><a class="dropdown-item" href="#" onclick="showInterventionOrders('completada')">Completadas</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th>Orden #</th>
+            <th>Cliente</th>
+            <th>Dispositivo</th>
+            <th>Técnico</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${filteredOrders.map(order => `
+            <tr>
+              <td>${order.id}</td>
+              <td>${order.client}</td>
+              <td>${order.device}</td>
+              <td>${order.technician || 'Sin asignar'}</td>
+              <td>${order.date}</td>
+              <td>
+                <span class="badge ${getStatusBadgeClass(order.status)}">
+                  ${order.status}
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-primary me-1" onclick="showOrderDetails(${order.id})">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-sm btn-warning me-1" onclick="editOrder(${order.id})">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+// Clases para los badges de estado
+function getStatusBadgeClass(status) {
+  switch(status.toLowerCase()) {
+    case 'completada': return 'bg-success';
+    case 'en progreso': return 'bg-warning';
+    case 'pendiente': return 'bg-info';
+    default: return 'bg-secondary';
+  }
+}
+
+// Mostrar formulario para nueva/editar orden
+function showOrderForm(order = null) {
+  const isEdit = order !== null;
+  const mainContent = document.getElementById('main-content');
+  
+  mainContent.innerHTML = `
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">${isEdit ? 'Editar' : 'Nueva'} Orden</h1>
+    </div>
+    
+    <div class="card">
+      <div class="card-body">
+        <form id="orderForm" onsubmit="handleOrderForm(event, ${isEdit ? order.id : 'null'})">
+          <div class="row">
+            <div class="col-md-6">
+              <h5 class="mb-3"><i class="fas fa-user me-2"></i>Datos del Cliente</h5>
+              <div class="mb-3">
+                <label for="clientName" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="clientName" value="${isEdit ? order.client : ''}" required>
+              </div>
+              <div class="mb-3">
+                <label for="clientName" class="form-label">Apellido</label>
+                <input type="text" class="form-control" id="clientName" value="${isEdit ? order.client : ''}" required>
+              </div>
+              <div class="mb-3">
+                <label for="clientPhone" class="form-label">Teléfono</label>
+                <input type="tel" class="form-control" id="clientPhone" value="${isEdit ? order.phone || '' : ''}" required>
+              </div>
+              <div class="mb-3">
+                <label for="clientAddress" class="form-label">Dirección</label>
+                <input type="tel" class="form-control" id="clientaddress" value="${isEdit ? order.Addres || '' : ''}" required>
+              </div>
+               
+            </div>
+            <div class="col-md-6">
+              <h5 class="mb-3"><i class="fas fa-laptop me-2"></i>Datos del Dispositivo</h5>
+              <div class="mb-3">
+                <label for="deviceType" class="form-label">Tipo de dispositivo</label>
+                <select class="form-select" id="deviceType" required>
+                  <option value="">Seleccionar...</option>
+                  <option value="Smartphone" ${isEdit && order.deviceType === 'Smartphone' ? 'selected' : ''}>Smartphone</option>
+                  <option value="Tablet" ${isEdit && order.deviceType === 'Tablet' ? 'selected' : ''}>Tablet</option>
+                  <option value="Laptop" ${isEdit && order.deviceType === 'Laptop' ? 'selected' : ''}>Laptop</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="deviceModel" class="form-label">Modelo</label>
+                <input type="text" class="form-control" id="deviceModel" value="${isEdit ? order.device : ''}" required>
+              </div>
+              <div class="mb-3">
+                <label for="deviceMarca" class="form-label">Marca</label>
+                <input type="text" class="form-control" id="deviceMarca" value="${isEdit ? order.device : ''}" required>
+              </div>
+              <div class="mb-3">
+                <label for="deviceSerial" class="form-label">Serial</label>
+                <input type="text" class="form-control" id="deviceSerial" value="${isEdit ? order.device : ''}" required>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="problemDescription" class="form-label">Descripción del problema</label>
+            <textarea 
+              class="form-control auto-expand" 
+              id="problemDescription" 
+              rows="1" 
+              required
+              style="min-height: 100px; overflow-y: hidden;"
+              oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px'"
+            >${isEdit ? order.problem : ''}</textarea>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="technician" class="form-label">Técnico asignado</label>
+                <select class="form-select" id="technician">
+                  <option value="">Sin asignar</option>
+                  ${adminData.technicians.map(tech => `
+                    <option value="${tech.id}" ${isEdit && order.technicianId === tech.id ? 'selected' : ''}>
+                      ${tech.name}
+                    </option>
+                  `).join('')}
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="estimatedDate" class="form-label">Fecha estimada</label>
+                <input type="date" class="form-control" id="estimatedDate" value="${isEdit ? order.estimatedDate || '' : ''}">
+              </div>
+            </div>
+          </div>
+          
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+            <button type="button" class="btn btn-secondary me-md-2" onclick="showInterventionOrders()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">${isEdit ? 'Actualizar' : 'Guardar'} Orden</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+  
+  // Establecer fecha mínima como hoy
+  document.getElementById('estimatedDate').min = new Date().toISOString().split('T')[0];
+}
+
+// Manejar envío del formulario
+function handleOrderForm(event, orderId = null) {
+  event.preventDefault();
+  
+  const selectedTechId = document.getElementById('technician').value;
+  const selectedTech = adminData.technicians.find(t => t.id == selectedTechId);
+  
+  const newOrder = {
+    id: orderId || Math.max(...ordersData.map(o => o.id), 0) + 1,
+    client: document.getElementById('clientName').value,
+    phone: document.getElementById('clientPhone').value,
+    deviceType: document.getElementById('deviceType').value,
+    device: document.getElementById('deviceModel').value,
+    problem: document.getElementById('problemDescription').value,
+    technicianId: selectedTechId,
+    technician: selectedTech ? selectedTech.name : null,
+    priority: document.getElementById('priority').value,
+    estimatedDate: document.getElementById('estimatedDate').value,
+    status: 'Pendiente',
+    date: new Date().toLocaleDateString('es-ES')
+  };
+  
+  if (orderId) {
+    const index = ordersData.findIndex(o => o.id === orderId);
+    if (index !== -1) ordersData[index] = newOrder;
+  } else {
+    ordersData.unshift(newOrder);
+  }
+  
+  showInterventionOrders();
+}
+
+// Mostrar detalles de una orden
+function showOrderDetails(orderId) {
+  const order = ordersData.find(o => o.id === orderId);
+  if (!order) return;
+  
+  const mainContent = document.getElementById('main-content');
+  
+  mainContent.innerHTML = `
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Detalles de Orden #${order.id}</h1>
+      <button class="btn btn-sm btn-outline-secondary" onclick="showInterventionOrders()">
+        <i class="fas fa-arrow-left me-1"></i> Volver
+      </button>
+    </div>
+    
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h5 class="mb-3"><i class="fas fa-user me-2"></i>Datos del Cliente</h5>
+            <p><strong>Nombre:</strong> ${order.client}</p>
+            <p><strong>Teléfono:</strong> ${order.phone || 'No especificado'}</p>
+          </div>
+          <div class="col-md-6">
+            <h5 class="mb-3"><i class="fas fa-laptop me-2"></i>Datos del Dispositivo</h5>
+            <p><strong>Tipo:</strong> ${order.deviceType}</p>
+            <p><strong>Modelo:</strong> ${order.device}</p>
+          </div>
+        </div>
+        
+        <hr>
+        
+        <h5 class="mb-3"><i class="fas fa-exclamation-circle me-2"></i>Problema Reportado</h5>
+        <p>${order.problem}</p>
+        
+        <div class="row mt-4">
+          <div class="col-md-4">
+            <p><strong>Técnico Asignado:</strong> ${order.technician || 'Sin asignar'}</p>
+          </div>
+          <div class="col-md-4">
+            <p><strong>Prioridad:</strong> 
+              <span class="badge ${order.priority === 'Alta' ? 'bg-danger' : 'bg-primary'}">
+                ${order.priority}
+              </span>
+            </p>
+          </div>
+          <div class="col-md-4">
+            <p><strong>Fecha Estimada:</strong> ${order.estimatedDate || 'No especificada'}</p>
+          </div>
+        </div>
+        
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+          <button class="btn btn-warning me-md-2" onclick="editOrder(${order.id})">
+            <i class="fas fa-edit me-1"></i> Editar
+          </button>
+          <button class="btn btn-success" onclick="completeOrder(${order.id})">
+            <i class="fas fa-check me-1"></i> Marcar como Completada
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}

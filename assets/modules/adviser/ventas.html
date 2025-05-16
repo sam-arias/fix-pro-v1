@@ -1,0 +1,118 @@
+
+// =============================
+// MÓDULO DE VENTAS
+// =============================
+
+const salesData = {
+  monthlySummary: [],
+  byCategory: [],
+  recentTransactions: []
+};
+
+// Función para formatear fechas
+function formatDate(dateString) {
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString('es-ES', options);
+}
+
+// Función principal para mostrar el dashboard de ventas
+function showSales() {
+  const content = document.getElementById('main-content');
+  if (!content) return;
+
+  content.innerHTML = `
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h1 class="h2">Ventas</h1>
+      <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+          <button type="button" class="btn btn-sm btn-outline-secondary" onclick="exportSalesReport()">
+            <i class="fas fa-file-pdf me-1"></i> Exportar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjetas de resumen -->
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <div class="card stat-card bg-primary text-white">
+          <div class="card-body">
+            <h5 class="card-title">Órdenes Totales</h5>
+            <h2 class="card-stat">${salesData.monthlySummary.reduce((sum, month) => sum + month.orders, 0)}</h2>
+            <p class="card-text">Últimos 6 meses</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card stat-card bg-success text-white">
+          <div class="card-body">
+            <h5 class="card-title">Órdenes Completas</h5>
+            <h2 class="card-stat">${salesData.monthlySummary.reduce((sum, month) => sum + (month.completedOrders || 0), 0)}</h2>
+            <p class="card-text">Últimos 6 meses</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card stat-card bg-warning text-white">
+          <div class="card-body">
+            <h5 class="card-title">Órdenes Pendientes</h5>
+            <h2 class="card-stat">${salesData.monthlySummary.reduce((sum, month) => sum + (month.pendingOrders || 0), 0)}</h2>
+            <p class="card-text">Últimos 6 meses</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card stat-card bg-info text-white">
+          <div class="card-body">
+            <h5 class="card-title">Órdenes en Proceso</h5>
+            <h2 class="card-stat">${salesData.monthlySummary.reduce((sum, month) => sum + (month.inProgressOrders || 0), 0)}</h2>
+            <p class="card-text">Últimos 6 meses</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transacciones recientes -->
+    <div class="card">
+      <div class="card-header">
+        <h5>Transacciones Recientes</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Transacción #</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Estado</th>
+                <th>Método</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${salesData.recentTransactions.map(transaction => `
+                <tr>
+                  <td>${transaction.id}</td>
+                  <td>${formatDate(transaction.date)}</td>
+                  <td>${transaction.client}</td>
+                  <td>
+                    <span class="badge ${
+                      transaction.status === 'Completada' ? 'bg-success' : 
+                      transaction.status === 'Pendiente' ? 'bg-warning' : 'bg-danger'
+                    }">${transaction.status}</span>
+                  </td>
+                  <td>${transaction.method}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Exportar reporte de ventas
+function exportSalesReport() {
+  alert('Esta función generaría un reporte PDF en una implementación real.');
+}

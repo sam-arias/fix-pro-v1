@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayuda y Soporte</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/global.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="navbar navbar-expand-md navbar-dark shadow-sm bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Admin</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="dropdown ms-auto">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="/assets/img/profile-placeholder.png" alt="Admin" width="36" height="36" class="rounded-circle me-2 border border-2 border-light">
+                    <span class="d-none d-md-inline">Administrador</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
+                    <li><a class="dropdown-item" href="Perfil.html"><i class="fas fa-user-cog me-2"></i> Perfil</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3 vh-100">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/views/admin-dashboard.html">
+                                <i class="fas fa-tachometer-alt me-2"></i> Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Repuestos.html">
+                                <i class="fas fa-box-open me-2"></i> Repuestos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Personal.html">
+                                <i class="fas fa-users-cog me-2"></i> Personal
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Orders.html">
+                                <i class="fas fa-clipboard-list me-2"></i> Órdenes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Reports.html">
+                                <i class="fas fa-chart-bar me-2"></i> Reportes
+                            </a>
+                        </li>
+                    </ul>
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase small">
+                        <span>Configuración</span>
+                        <i class="fas fa-cog"></i>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="Settings.html">
+                                <i class="fas fa-cogs me-2"></i> Configuración
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Help.html">
+                                <i class="fas fa-question-circle me-2"></i> Ayuda
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2"><i class="fas fa-question-circle me-2"></i>Ayuda y Soporte</h1>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="accordion" id="helpAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingGeneral">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGeneral" aria-expanded="true" aria-controls="collapseGeneral">
+                                        <i class="fas fa-info-circle me-2"></i>Información General
+                                    </button>
+                                </h2>
+                                <div id="collapseGeneral" class="accordion-collapse collapse show" aria-labelledby="headingGeneral" data-bs-parent="#helpAccordion">
+                                    <div class="accordion-body">
+                                        <p>Bienvenido al área de ayuda de FixPro Admin. Aquí encontrarás respuestas a las preguntas más frecuentes y guías para el uso del sistema.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOrders">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOrders" aria-expanded="false" aria-controls="collapseOrders">
+                                        <i class="fas fa-clipboard-list me-2"></i>Gestión de Órdenes
+                                    </button>
+                                </h2>
+                                <div id="collapseOrders" class="accordion-collapse collapse" aria-labelledby="headingOrders" data-bs-parent="#helpAccordion">
+                                    <div class="accordion-body">
+                                        <ul>
+                                            <li><strong>¿Cómo agrego una nueva orden?</strong> <br> Haz clic en el botón <b>Agregar Orden</b> en la sección de Órdenes y completa el formulario.</li>
+                                            <li><strong>¿Cómo edito o elimino una orden?</strong> <br> Usa los botones de acción (<i class="fas fa-edit"></i> / <i class="fas fa-trash"></i>) en la tabla de órdenes.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingRepuestos">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRepuestos" aria-expanded="false" aria-controls="collapseRepuestos">
+                                        <i class="fas fa-box-open me-2"></i>Gestión de Repuestos
+                                    </button>
+                                </h2>
+                                <div id="collapseRepuestos" class="accordion-collapse collapse" aria-labelledby="headingRepuestos" data-bs-parent="#helpAccordion">
+                                    <div class="accordion-body">
+                                        <ul>
+                                            <li><strong>¿Cómo registro un nuevo repuesto?</strong> <br> Haz clic en <b>Nuevo Producto</b> en la sección de Repuestos.</li>
+                                            <li><strong>¿Cómo filtro los repuestos?</strong> <br> Usa los filtros de tipo y estado en la parte superior de la tabla.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingPersonal">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePersonal" aria-expanded="false" aria-controls="collapsePersonal">
+                                        <i class="fas fa-users-cog me-2"></i>Gestión de Personal
+                                    </button>
+                                </h2>
+                                <div id="collapsePersonal" class="accordion-collapse collapse" aria-labelledby="headingPersonal" data-bs-parent="#helpAccordion">
+                                    <div class="accordion-body">
+                                        <ul>
+                                            <li><strong>¿Cómo agrego personal?</strong> <br> Haz clic en <b>Agregar Personal</b> y completa los datos requeridos.</li>
+                                            <li><strong>¿Cómo cambio el estado de un usuario?</strong> <br> Edita el usuario y selecciona el estado deseado.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingReports">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReports" aria-expanded="false" aria-controls="collapseReports">
+                                        <i class="fas fa-chart-bar me-2"></i>Reportes y Estadísticas
+                                    </button>
+                                </h2>
+                                <div id="collapseReports" class="accordion-collapse collapse" aria-labelledby="headingReports" data-bs-parent="#helpAccordion">
+                                    <div class="accordion-body">
+                                        <ul>
+                                            <li><strong>¿Cómo exporto reportes?</strong> <br> Usa los botones <b>Excel</b> y <b>PDF</b> en la sección de Reportes.</li>
+                                            <li><strong>¿Cómo interpreto las gráficas?</strong> <br> Pasa el cursor sobre las gráficas para ver detalles de cada dato.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingSupport">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSupport" aria-expanded="false" aria-controls="collapseSupport">
+                                        <i class="fas fa-headset me-2"></i>Soporte Técnico
+                                    </button>
+                                </h2>
+                                <div id="collapseSupport" class="accordion-collapse collapse" aria-labelledby="headingSupport" data-bs-parent="#helpAccordion">
+                                    <div class="accordion-body">
+                                        <p>Si tienes problemas técnicos o necesitas asistencia personalizada, contacta a nuestro equipo de soporte:</p>
+                                        <ul>
+                                            <li><i class="fas fa-envelope me-2"></i>Email: <a href="mailto:soporte@fixpro.com">soporte@fixpro.com</a></li>
+                                            <li><i class="fas fa-phone me-2"></i>Teléfono: +57 123 456 7890</li>
+                                            <li><i class="fab fa-whatsapp me-2"></i>WhatsApp: <a href="https://wa.me/571234567890" target="_blank">+57 123 456 7890</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Contacto rápido -->
+                    <div class="col-lg-4">
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-envelope-open-text me-2"></i>Contacto Rápido</h5>
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="helpName" class="form-label">Nombre</label>
+                                        <input type="text" class="form-control" id="helpName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="helpEmail" class="form-label">Correo electrónico</label>
+                                        <input type="email" class="form-control" id="helpEmail" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="helpMessage" class="form-label">Mensaje</label>
+                                        <textarea class="form-control" id="helpMessage" rows="4" required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Enviar Mensaje</button>
+                                </form>
+                                <div class="alert alert-success mt-3 d-none" id="helpSuccess">
+                                    <i class="fas fa-check-circle me-2"></i>Tu mensaje ha sido enviado. ¡Gracias!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-book me-2"></i>Documentación</h5>
+                                <ul class="list-unstyled mb-0">
+                                    <li><a href="#" target="_blank"><i class="fas fa-file-alt me-2"></i>Manual de Usuario</a></li>
+                                    <li><a href="#" target="_blank"><i class="fas fa-video me-2"></i>Video Tutoriales</a></li>
+                                    <li><a href="#" target="_blank"><i class="fas fa-question me-2"></i>Preguntas Frecuentes</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simulación de envío de formulario de contacto rápido
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('helpSuccess').classList.remove('d-none');
+            setTimeout(() => {
+                document.getElementById('helpSuccess').classList.add('d-none');
+                e.target.reset();
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

@@ -1,43 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>inicio Administrador</title>
+    <title>Dashboard Administrador</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="assets/css/admin.css" rel="stylesheet">
-    <link href="assets/css/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/global.css">
+    <style>
+        /* Tema oscuro */
+        body.theme-dark {
+            background-color: #181a1b !important;
+            color: #f1f5f9 !important;
+        }
+        body.theme-dark main.bg-white,
+        body.theme-dark .bg-white {
+            background: #23272b !important;
+            color: #f1f5f9 !important;
+        }
+        body.theme-dark .card,
+        body.theme-dark .card-body {
+            background: #23272b !important;
+            color: #f1f5f9 !important;
+        }
+        body.theme-dark .table,
+        body.theme-dark .table th,
+        body.theme-dark .table td {
+            background: #23272b !important;
+            color: #f1f5f9 !important;
+        }
+        body.theme-dark .table-dark th {
+            background: #181a1b !important;
+            color: #f1f5f9 !important;
+        }
+        body.theme-dark .navbar,
+        body.theme-dark header.navbar {
+            background: #181a1b !important;
+        }
+        body.theme-dark .sidebar {
+            background: linear-gradient(135deg, #111827 0%, #1e293b 100%) !important;
+        }
+        body.theme-dark .form-control,
+        body.theme-dark .form-select {
+            background: #23272b !important;
+            color: #f1f5f9 !important;
+            border-color: #374151;
+        }
+        body.theme-dark .form-control:focus,
+        body.theme-dark .form-select:focus {
+            background: #23272b !important;
+            color: #f1f5f9 !important;
+            border-color: #2563eb;
+        }
+        body.theme-dark .dropdown-menu {
+            background: #23272b !important;
+            color: #f1f5f9 !important;
+        }
+        body.theme-dark .dropdown-item {
+            color: #f1f5f9 !important;
+        }
+        body.theme-dark .dropdown-item:hover {
+            background: #181a1b !important;
+        }
+        body.theme-dark .alert {
+            background: #23272b !important;
+            color: #f1f5f9 !important;
+            border-color: #374151;
+        }
+        body.theme-dark .badge.bg-warning {
+            color: #23272b !important;
+        }
+    </style>
 </head>
 <body>
-  <!-- Header -->
-    <header class="navbar navbar-expand-md navbar-dark fixed-top shadow-sm">        
+    <!-- Header -->
+    <header class="navbar navbar-expand-md navbar-dark shadow-sm bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold" href="#">
                 <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Admin</span>
             </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
-            <!-- Menú usuario -->
             <div class="dropdown ms-auto">
-                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown">
-                    <img src="assets/img/profile-placeholder.png" alt="Admin" width="36" height="36" class="rounded-circle me-2 border border-2 border-light">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="/assets/img/profile-placeholder.png" alt="Admin" width="36" height="36" class="rounded-circle me-2 border border-2 border-light">
                     <span class="d-none d-md-inline">Administrador</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end shadow">
-                    <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog me-2" style="color: var(--color4)"></i> Perfil</a></li>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
+                    <li><a class="dropdown-item" href="Perfil.html"><i class="fas fa-user-cog me-2"></i> Perfil</a></li>
                     <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
                 </ul>
             </div>
         </div>
-        
     </header>
-    
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
@@ -45,165 +102,195 @@
                 <div class="position-sticky pt-3 vh-100">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="assets/modules/admin/Dashboard.html">
+                            <a class="nav-link active" href="/views/admin-dashboard.html">
                                 <i class="fas fa-tachometer-alt me-2"></i> Inicio
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="assets/modules/admin/Repuestos.html">
+                            <a class="nav-link" href="Repuestos.html">
                                 <i class="fas fa-box-open me-2"></i> Repuestos
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="assets/modules/admin/Personal.html">
+                            <a class="nav-link" href="Personal.html">
                                 <i class="fas fa-users-cog me-2"></i> Personal
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="assets/modules/admin/Orders.html">
+                            <a class="nav-link" href="Orders.html">
                                 <i class="fas fa-clipboard-list me-2"></i> Órdenes
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="assets/modules/admin/Reports.html">
+                            <a class="nav-link" href="Reports.html">
                                 <i class="fas fa-chart-bar me-2"></i> Reportes
                             </a>
                         </li>
                     </ul>
-
                     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase small">
                         <span>Configuración</span>
                         <i class="fas fa-cog"></i>
                     </h6>
                     <ul class="nav flex-column mb-2">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-user-shield me-2"></i> Permisos
+                            <a class="nav-link" href="Settings.html">
+                                <i class="fas fa-cogs me-2"></i> Configuración
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Help.html">
+                                <i class="fas fa-question-circle me-2"></i> Ayuda
                             </a>
                         </li>
                     </ul>
                 </div>
             </nav>
-
             <!-- Main Content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-4 bg-white">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Inicio</h1>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+                    <h1 class="h2">Panel de Control</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group me-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="loadAdminDashboard()"><i class="fas fa-sync"></i> Actualizar</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-sync"></i> Actualizar
+                        </button>
+                    </div>
+                </div>
+                <!-- Estadísticas rápidas -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card stats-card bg-success text-white shadow">
+                            <div class="card-body text-center">
+                                <h5 class="card-title fw-bold mb-3"><i class="fas fa-clipboard-check fa-lg me-2"></i>Órdenes totales</h5>
+                                <h2 class="card-text display-5 fw-bold" style="letter-spacing:2px;">✔️ 120</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card stats-card bg-warning text-dark shadow">
+                            <div class="card-body text-center">
+                                <h5 class="card-title fw-bold mb-3"><i class="fas fa-box-open fa-lg me-2"></i>Repuestos bajos</h5>
+                                <h2 class="card-text display-5 fw-bold" style="letter-spacing:2px;">⚠️ 5</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card stats-card bg-danger text-white shadow">
+                            <div class="card-body text-center">
+                                <h5 class="card-title fw-bold mb-3"><i class="fas fa-clock fa-lg me-2"></i>Órdenes atrasadas</h5>
+                                <h2 class="card-text display-5 fw-bold" style="letter-spacing:2px;">❌ 2</h2>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div id="mainContent" class="container-fluid p-0">
-                    <!-- Se carga dinámicamente con JavaScript -->
+                <!-- Gráficas y alertas -->
+                <div class="row">
+                    <div class="col-lg-7 mb-4">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-chart-line me-2"></i>Órdenes por Mes</h5>
+                                <canvas id="ordersChart" height="180"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 mb-4">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-exclamation-triangle me-2"></i>Alertas</h5>
+                                <div class="alert alert-warning mb-2"><strong>Repuesto bajo:</strong> Pantalla Galaxy S21</div>
+                                <div class="alert alert-danger mb-2"><strong>Orden atrasada:</strong> #001</div>
+                                <div class="alert alert-info mb-0">No hay nuevos técnicos registrados recientemente.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Personal destacado -->
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-users me-2"></i>Personal Destacado</h5>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <img src="assets/img/profile-placeholder.png" alt="Carlos López" class="rounded-circle me-3" width="40" height="40">
+                                        <span class="fw-bold">Carlos López</span>
+                                        <span class="badge bg-success ms-auto">15 órdenes</span>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <img src="assets/img/profile-placeholder.png" alt="María García" class="rounded-circle me-3" width="40" height="40">
+                                        <span class="fw-bold">María García</span>
+                                        <span class="badge bg-success ms-auto">12 órdenes</span>
+                                    </li>
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <img src="assets/img/profile-placeholder.png" alt="Juan Pérez" class="rounded-circle me-3" width="40" height="40">
+                                        <span class="fw-bold">Juan Pérez</span>
+                                        <span class="badge bg-success ms-auto">10 órdenes</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-bell me-2"></i>Notificaciones Recientes</h5>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i>Orden #120 completada por Carlos López</li>
+                                    <li class="list-group-item"><i class="fas fa-exclamation-circle text-danger me-2"></i>Orden #119 atrasada</li>
+                                    <li class="list-group-item"><i class="fas fa-box-open text-warning me-2"></i>Repuesto "Batería iPhone 12" bajo stock</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>
     </div>
-    function loadAdminDashboard() {
-  const mainContent = document.getElementById('mainContent');
-  
-  mainContent.innerHTML = `
-    <div class="row mb-4">
-      <div class="col-md-4">
-        <div class="card stats-card bg-success text-white" onclick="showInterventionOrders()">
-          <div class="card-body">
-            <h5 class="card-title">Órdenes totales</h5>
-            <h2 class="card-text">✔️ ${adminData.orders || 0}</h2>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card stats-card bg-warning text-dark" onclick="showPartsManagement()">
-          <div class="card-body">
-            <h5 class="card-title">Repuestos bajos</h5>
-            <h2 class="card-text">⚠️ ${adminData.lowStock || 0}</h2>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card stats-card bg-danger text-white" onclick="showInterventionOrders('atrasadas')">
-          <div class="card-body">
-            <h5 class="card-title">Órdenes atrasadas</h5>
-            <h2 class="card-text">❌ ${adminData.lateOrders || 0}</h2>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-chart-line me-2"></i>Estadísticas</h5>
-            <canvas id="ordersChart" width="400" height="200"></canvas>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-exclamation-triangle me-2"></i>Alertas</h5>
-            ${adminData.parts && adminData.parts.length > 0
-              ? adminData.parts
-                  .filter(part => part.stock <= part.minStock)
-                  .map(part => `<div class="alert alert-warning"><strong>Repuesto bajo:</strong> ${part.description}</div>`)
-                  .join('')
-              : '<div class="alert alert-info">No hay alertas de repuestos bajos.</div>'}
-            ${ordersData && ordersData.length > 0
-              ? ordersData
-                  .filter(order => new Date(order.estimatedDate) < new Date() && order.status !== 'Completada')
-                  .map(order => `<div class="alert alert-danger"><strong>Orden atrasada:</strong> #${order.id}</div>`)
-                  .join('')
-              : '<div class="alert alert-info">No hay órdenes atrasadas.</div>'}
-            ${adminData.technicians && adminData.technicians.length > 0
-              ? adminData.technicians
-                  .filter(tech => new Date(tech.joinDate) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
-                  .map(tech => `<div class="alert alert-info"><strong>Nuevo técnico:</strong> ${tech.name}</div>`)
-                  .join('')
-              : '<div class="alert alert-info">No hay nuevos técnicos registrados recientemente.</div>'}
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  
-  initAdminCharts();
-}
-
-function initAdminCharts() {
-  const ctx = document.getElementById('ordersChart').getContext('2d');
-  const monthlyOrders = Array(12).fill(0);
-
-  // Simulación de datos dinámicos
-  ordersData.forEach(order => {
-    const month = new Date(order.date).getMonth();
-    monthlyOrders[month]++;
-  });
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-      datasets: [{
-        label: 'Órdenes por mes',
-        data: monthlyOrders,
-        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // --- Tema claro/oscuro ---
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('theme-dark');
+            } else {
+                document.body.classList.remove('theme-dark');
+            }
         }
-      }
-    }
-  });
-}
+        // Leer tema de localStorage y aplicar
+        document.addEventListener('DOMContentLoaded', function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            applyTheme(theme);
+
+            // Gráfica de órdenes por mes (simulada)
+            const ctx = document.getElementById('ordersChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    datasets: [{
+                        label: 'Órdenes',
+                        data: [10, 12, 8, 15, 14, 18, 20, 17, 13, 16, 19, 21],
+                        backgroundColor: 'rgba(37, 99, 235, 0.7)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        });
+
+        // Permite que Settings.html cambie el tema
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'theme') {
+                applyTheme(e.newValue);
+            }
+        });
+    </script>
 </body>
 </html>

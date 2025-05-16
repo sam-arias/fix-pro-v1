@@ -1,0 +1,225 @@
+
+// =============================
+// GESTIÓN DE ÓRDENES
+// =============================
+
+function showAssignedOrders() {
+  const mainContent = document.getElementById('mainContent');
+  
+  mainContent.innerHTML = `
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Órdenes Asignadas</h1>
+    <div class="btn-group">
+      <button class="btn btn-outline-secondary" onclick="filterOrders('all')">Todas</button>
+      <button class="btn btn-outline-primary" onclick="filterOrders('pending')">Pendientes</button>
+      <button class="btn btn-outline-warning" onclick="filterOrders('in-progress')">En progreso</button>
+      <button class="btn btn-outline-success" onclick="filterOrders('completed')">Completadas</button>
+    </div>
+    </div>
+    
+    <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th>Orden #</th>
+          <th>Cliente</th>
+          <th>Dispositivo</th>
+          <th>Problema</th>
+          <th>Fecha asignación</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody id="ordersTableBody">
+        ${technicianData.assignedOrders.map(order => `
+          <tr>
+          <td>${order.id}</td>
+          <td>${order.client}</td>
+          <td>${order.device}</td>
+          <td>${order.problem}</td>
+          <td>${formatDate(order.assignedDate)}</td>
+          <td><span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></td>
+          <td>
+            <button class="btn btn-sm btn-primary me-1" onclick="viewOrderDetails(${order.id})">
+            <i class="fas fa-eye"></i>
+            </button>
+            ${order.status !== 'Completada' ? `
+            <button class="btn btn-sm btn-success me-1" onclick="updateOrderStatus(${order.id}, 'En progreso')">
+            <i class="fas fa-play"></i>
+            </button>
+            <button class="btn btn-sm btn-success" onclick="completeOrder(${order.id})">
+            <i class="fas fa-check"></i>
+            </button>
+            ` : ''}
+          </td>
+          </tr>
+        `).join('')}
+        </tbody>
+      </table>
+      </div>
+    </div>
+    </div>
+  `;
+}
+
+function filterOrders(status) {
+  const tbody = document.getElementById('ordersTableBody');
+  let filteredOrders = technicianData.assignedOrders;
+  
+  switch(status) {
+    case 'pending':
+    filteredOrders = technicianData.assignedOrders.filter(o => o.status === 'Pendiente');
+    break;
+    case 'in-progress':
+    filteredOrders = technicianData.assignedOrders.filter(o => o.status === 'En progreso');
+    break;
+    case 'completed':
+    filteredOrders = technicianData.assignedOrders.filter(o => o.status === 'Completada');
+    break;
+  }
+  
+  tbody.innerHTML = filteredOrders.map(order => `
+    <tr>
+    <td>${order.id}</td>
+    <td>${order.client}</td>
+    <td>${order.device}</td>
+    <td>${order.problem}</td>
+    <td>${formatDate(order.assignedDate)}</td>
+    <td><span class="badge ${getStatusBadgeClass(order.status)}">${order.status}</span></td>
+    <td>
+      <button class="btn btn-sm btn-primary me-1" onclick="viewOrderDetails(${order.id})">
+      <i class="fas fa-eye"></i>
+      </button>
+      ${order.status !== 'Completada' ? `
+      <button class="btn btn-sm btn-success me-1" onclick="updateOrderStatus(${order.id}, 'En progreso')">
+      <i class="fas fa-play"></i>
+      </button>
+      <button class="btn btn-sm btn-success" onclick="completeOrder(${order.id})">
+      <i class="fas fa-check"></i>
+      </button>
+      ` : ''}
+    </td>
+    </tr>
+  `).join('');
+}
+
+function viewOrderDetails(orderId) {
+  const order = technicianData.assignedOrders.find(o => o.id === orderId);
+  if (!order) return;
+  
+  const mainContent = document.getElementById('mainContent');
+  
+  mainContent.innerHTML = `
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Detalles de Orden #${order.id}</h1>
+    <button class="btn btn-outline-secondary" onclick="showAssignedOrders()">
+      <i class="fas fa-arrow-left me-1"></i> Volver
+    </button>
+    </div>
+    
+    <div class="card mb-4">
+    <div class="card-body">
+      <div class="row">
+      <div class="col-md-6">
+        <h5><i class="fas fa-user me-2"></i>Información del Cliente</h5>
+        <p><strong>Nombre:</strong> ${order.client}</p>
+        <p><strong>Teléfono:</strong> ${order.phone || ''}</p>
+        <p><strong>Email:</strong> ${order.email || ''}</p>
+      </div>
+      <div class="col-md-6">
+        <h5><i class="fas fa-laptop me-2"></i>Información del Dispositivo</h5>
+        <p><strong>Dispositivo:</strong> ${order.device}</p>
+        <p><strong>Problema:</strong> ${order.problem}</p>
+      </div>
+      </div>
+    </div>
+    </div>
+    
+    <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><i class="fas fa-tasks me-2"></i>Progreso de la Reparación</h5>
+      
+      <div class="mb-3">
+      <label class="form-label">Estado actual</label>
+      <select class="form-select" id="orderStatus" onchange="updateOrderStatus(${order.id}, this.value)">
+        <option value="Pendiente" ${order.status === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+        <option value="En progreso" ${order.status === 'En progreso' ? 'selected' : ''}>En progreso</option>
+        <option value="Completada" ${order.status === 'Completada' ? 'selected' : ''}>Completada</option>
+      </select>
+      </div>
+      
+      <div class="mb-3">
+      <label for="orderNotes" class="form-label">Notas de la reparación</label>
+      <textarea class="form-control" id="orderNotes" rows="3" placeholder="Agregar notas sobre el proceso de reparación...">${order.notes || ''}</textarea>
+      </div>
+      
+      <div class="mb-3">
+      <label class="form-label">Partes utilizadas</label>
+      <div class="list-group mb-2" id="partsList">
+        ${(order.parts || []).map(part => `
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+          ${part.name}
+          <span class="badge bg-primary">${part.quantity}</span>
+        </div>
+        `).join('')}
+      </div>
+      <button class="btn btn-sm btn-outline-primary" onclick="addPartToOrder(${order.id})">
+        <i class="fas fa-plus me-1"></i> Agregar parte
+      </button>
+      </div>
+      
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <button class="btn btn-primary" onclick="saveOrderDetails(${order.id})">
+        <i class="fas fa-save me-1"></i> Guardar cambios
+      </button>
+      </div>
+    </div>
+    </div>
+  `;
+}
+
+function updateOrderStatus(orderId, newStatus) {
+  const order = technicianData.assignedOrders.find(o => o.id === orderId);
+  if (order) {
+    order.status = newStatus;
+    
+    if (newStatus === 'Completada') {
+    completeOrder(orderId);
+    return;
+    }
+    
+    showSuccess(`Estado de la orden #${orderId} actualizado a "${newStatus}"`);
+    
+    // Actualizar la vista actual
+    if (document.getElementById('orderStatus')) {
+    document.getElementById('orderStatus').value = newStatus;
+    }
+  }
+}
+
+function completeOrder(orderId) {
+  if (!confirm('¿Marcar esta orden como completada?')) return;
+  
+  const order = technicianData.assignedOrders.find(o => o.id === orderId);
+  if (order) {
+    order.status = 'Completada';
+    order.completionDate = new Date().toISOString().split('T')[0];
+    technicianData.stats.completed++;
+    
+    showSuccess(`Orden #${orderId} marcada como completada`);
+    showAssignedOrders();
+  }
+}
+
+function saveOrderDetails(orderId) {
+  const notes = document.getElementById('orderNotes').value;
+  // Aquí iría la lógica para guardar las notas en la base de datos
+  showSuccess('Cambios guardados correctamente');
+}
+
+function addPartToOrder(orderId) {
+  // Implementar lógica para agregar partes a la orden
+  alert(`Agregar parte a la orden #${orderId}`);
+}

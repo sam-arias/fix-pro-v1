@@ -7,28 +7,25 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="assets/css/styles.css" rel="stylesheet">
+    <link href="/assets/css/global.css" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
-    <header class="navbar navbar-expand-md navbar-dark shadow-sm">        
+    <header class="navbar navbar-expand-md navbar-dark shadow-sm bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold" href="#">
                 <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Admin</span>
             </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
-            <!-- Menú usuario -->
             <div class="dropdown ms-auto">
-                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown">
-                    <img src="assets/img/profile-placeholder.png" alt="Admin" width="36" height="36" class="rounded-circle me-2 border border-2 border-light">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="/assets/img/profile-placeholder.png" alt="Admin" width="36" height="36" class="rounded-circle me-2 border border-2 border-light">
                     <span class="d-none d-md-inline">Administrador</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end shadow">
-                    <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog me-2" style="color: var(--color4)"></i> Perfil</a></li>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
+                    <li><a class="dropdown-item" href="Perfil.html"><i class="fas fa-user-cog me-2" style="color: var(--color4)"></i> Perfil</a></li>
                     <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
                 </ul>
             </div>
@@ -42,7 +39,7 @@
                 <div class="position-sticky pt-3 vh-100">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="Dashboard.html">
+                            <a class="nav-link active" href="/views/admin-dashboard.html">
                                 <i class="fas fa-tachometer-alt me-2"></i> Inicio
                             </a>
                         </li>
@@ -67,15 +64,19 @@
                             </a>
                         </li>
                     </ul>
-
                     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase small">
                         <span>Configuración</span>
                         <i class="fas fa-cog"></i>
                     </h6>
                     <ul class="nav flex-column mb-2">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-user-shield me-2"></i> Permisos
+                            <a class="nav-link" href="Settings.html">
+                                <i class="fas fa-cogs me-2"></i> Configuración
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Help.html">
+                                <i class="fas fa-question-circle me-2"></i> Ayuda
                             </a>
                         </li>
                     </ul>
@@ -83,13 +84,13 @@
             </nav>
 
             <!-- Main Content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-4 bg-white">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
                 <!-- Vista de Tabla -->
                 <div id="tableView">
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                         <h1 class="h2">Gestión de Personal</h1>
                         <div class="d-flex">
-                            <a href="micromodulos/AddPersonal.html" class="btn btn-success">
+                            <a href="micromodulos_personas/AddPersonal.html" class="btn btn-success">
                                 <i class="fas fa-plus me-2"></i>Agregar Personal
                             </a>
                         </div>
@@ -165,12 +166,12 @@
                                     <td><span class="badge bg-warning">Administrador</span></td>
                                     <td><span class="badge bg-success">Disponible</span></td>
                                     <td>
-                                        <button class="btn btn-sm btn-outline-primary" onclick="viewPerson('Laura Martínez', 'Administrador', 'laura@example.com', '555-9876', 'Bulevar 789, Ciudad', 'Disponible')">
+                                        <a href="micromodulos_personas/ViewPersonal.html" class="btn btn-sm btn-outline-primary" onclick="viewPerson('Laura Martínez', 'Administrador', 'laura@example.com', '555-9876', 'Bulevar 789, Ciudad', 'Disponible')">
                                             <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-secondary" onclick="editPerson('Laura Martínez', 'Administrador', 'laura@example.com', '555-9876', 'Bulevar 789, Ciudad', 'Disponible')">
+                                        </a>
+                                        <a href="micromodulos_personas/EditPersonal.html" class="btn btn-sm btn-outline-secondary" onclick="editPerson('Laura Martínez', 'Administrador', 'laura@example.com', '555-9876', 'Bulevar 789, Ciudad', 'Disponible')">
                                             <i class="fas fa-edit"></i>
-                                        </button>
+                                        </a>
                                         <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
@@ -197,40 +198,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Simple toggle between views using URL hash
-        window.addEventListener('DOMContentLoaded', (event) => {
-            const tableView = document.getElementById('tableView');
-            
-            function toggleViews() {
-                if (window.location.hash === '#formView') {
-                    window.location.href = 'AddPersonal.html';
-                } else {
-                    tableView.style.display = 'block';
-                }
-            }
-            
-            window.addEventListener('hashchange', toggleViews);
-            toggleViews();
-        });
-
-        function viewPerson(name, role, email, phone, address, status) {
-            const personData = { 
-                avatar: "assets/img/profile-placeholder.png", 
-                name, role, email, phone, address, status 
-            };
-            localStorage.setItem('selectedPerson', JSON.stringify(personData));
-            window.location.href = "micromodulos/ViewPersonal.html";
-        }
-
-        function editPerson(name, role, email, phone, address, status) {
-            const personData = { 
-                avatar: "assets/img/profile-placeholder.png", 
-                name, role, email, phone, address, status 
-            };
-            localStorage.setItem('selectedPerson', JSON.stringify(personData));
-            window.location.href = "micromodulos/EditPersonal.html";
-        }
     </script>
 </body>
 </html>

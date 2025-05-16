@@ -7,155 +7,240 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/global.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="assets/css/admin.css" rel="stylesheet">
-    <link href="assets/css/styles.css" rel="stylesheet">
 </head>
 <body>
-    
+    <!-- Header -->
+    <header class="navbar navbar-expand-md navbar-dark shadow-sm bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Admin</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="dropdown ms-auto">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="/assets/img/profile-placeholder.png" alt="Admin" width="36" height="36" class="rounded-circle me-2 border border-2 border-light">
+                    <span class="d-none d-md-inline">Administrador</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
+                    <li><a class="dropdown-item" href="Perfil.html"><i class="fas fa-user-cog me-2" style="color: var(--color4)"></i> Perfil</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
 
-// =====================
-// REPORTES Y ESTADÍSTICAS
-// =====================
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3 vh-100">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/views/admin-dashboard.html">
+                                <i class="fas fa-tachometer-alt me-2"></i> Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Repuestos.html">
+                                <i class="fas fa-box-open me-2"></i> Repuestos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Personal.html">
+                                <i class="fas fa-users-cog me-2"></i> Personal
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Orders.html">
+                                <i class="fas fa-clipboard-list me-2"></i> Órdenes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="Reports.html">
+                                <i class="fas fa-chart-bar me-2"></i> Reportes
+                            </a>
+                        </li>
+                    </ul>
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase small">
+                        <span>Configuración</span>
+                        <i class="fas fa-cog"></i>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="Settings.html">
+                                <i class="fas fa-cogs me-2"></i> Configuración
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Help.html">
+                                <i class="fas fa-question-circle me-2"></i> Ayuda
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
 
-function showReports() {
-  const mainContent = document.getElementById('mainContent');
-  
-  mainContent.innerHTML = `
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Reportes y Estadísticas</h1>
-      <div>
-        <button class="btn btn-success me-2" onclick="exportToExcel()">
-          <i class="fas fa-file-excel me-1"></i>Excel
-        </button>
-        <button class="btn btn-danger" onclick="exportToPDF()">
-          <i class="fas fa-file-pdf me-1"></i>PDF
-        </button>
-      </div>
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Reportes y Estadísticas</h1>
+                    <div>
+                        <button class="btn btn-success me-2" id="btnExcel">
+                            <i class="fas fa-file-excel me-1"></i>Excel
+                        </button>
+                        <button class="btn btn-danger" id="btnPDF">
+                            <i class="fas fa-file-pdf me-1"></i>PDF
+                        </button>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-lg-6 col-xl-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-chart-pie me-2"></i>Órdenes por estado</h5>
+                                <canvas id="statusChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xl-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-chart-bar me-2"></i>Órdenes mensuales</h5>
+                                <canvas id="monthlyChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-xl-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-tools me-2"></i>Tipos de problemas reportados</h5>
+                                <canvas id="problemTypeChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xl-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-users me-2"></i>Productividad por técnico</h5>
+                                <canvas id="productivityChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
-    
-    <div class="row mb-4">
-      <div class="col-lg-6 col-xl-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-chart-pie me-2"></i>Órdenes por estado</h5>
-            <canvas id="statusChart" width="400" height="250"></canvas>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6 col-xl-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-chart-bar me-2"></i>Órdenes mensuales</h5>
-            <canvas id="monthlyChart" width="400" height="250"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="row">
-      <div class="col-lg-6 col-xl-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-tools me-2"></i>Tipos de problemas reportados</h5>
-            <canvas id="problemTypeChart" width="400" height="250"></canvas>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6 col-xl-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-users me-2"></i>Productividad por técnico</h5>
-            <canvas id="productivityChart" width="400" height="250"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  
-  // Inicializar gráficos
-  initReportCharts();
-}
+    <script>
+    // Simulación de datos para demo
+    const ordersData = [
+        {status: 'Completada', date: '10/06/2024', problem: 'Pantalla rota', technician: 'Carlos López'},
+        {status: 'Pendiente', date: '11/06/2024', problem: 'Batería', technician: 'Juan Pérez'},
+        {status: 'En progreso', date: '12/06/2024', problem: 'Puerto de carga', technician: 'Carlos López'},
+        {status: 'Completada', date: '13/06/2024', problem: 'Pantalla rota', technician: 'María García'},
+        {status: 'Pendiente', date: '14/06/2024', problem: 'Cámara', technician: 'Juan Pérez'},
+        {status: 'Completada', date: '15/06/2024', problem: 'Batería', technician: 'Carlos López'},
+        {status: 'En progreso', date: '16/06/2024', problem: 'Pantalla rota', technician: 'María García'},
+        {status: 'Completada', date: '17/06/2024', problem: 'Puerto de carga', technician: 'Juan Pérez'}
+    ];
+    const adminData = {
+        technicians: [
+            {name: 'Carlos López'},
+            {name: 'Juan Pérez'},
+            {name: 'María García'}
+        ]
+    };
 
-function initReportCharts() {
-  // Datos dinámicos para las gráficas
-  const orderStatuses = ordersData.reduce((acc, order) => {
-    acc[order.status] = (acc[order.status] || 0) + 1;
-    return acc;
-  }, {});
+    document.addEventListener('DOMContentLoaded', function() {
+        initReportCharts();
 
-  const monthlyOrders = Array(12).fill(0);
-  ordersData.forEach(order => {
-    const month = new Date(order.date.split('/').reverse().join('-')).getMonth();
-    monthlyOrders[month]++;
-  });
+        document.getElementById('btnExcel').addEventListener('click', function() {
+            alert('Exportando a Excel...');
+        });
+        document.getElementById('btnPDF').addEventListener('click', function() {
+            alert('Exportando a PDF...');
+        });
+    });
 
-  const problemTypes = ordersData.reduce((acc, order) => {
-    acc[order.problem] = (acc[order.problem] || 0) + 1;
-    return acc;
-  }, {});
+    function initReportCharts() {
+        // Órdenes por estado
+        const orderStatuses = ordersData.reduce((acc, order) => {
+            acc[order.status] = (acc[order.status] || 0) + 1;
+            return acc;
+        }, {});
+        // Órdenes mensuales
+        const monthlyOrders = Array(12).fill(0);
+        ordersData.forEach(order => {
+            const [d, m, y] = order.date.split('/');
+            const month = parseInt(m, 10) - 1;
+            if (!isNaN(month)) monthlyOrders[month]++;
+        });
+        // Tipos de problemas
+        const problemTypes = ordersData.reduce((acc, order) => {
+            acc[order.problem] = (acc[order.problem] || 0) + 1;
+            return acc;
+        }, {});
+        // Productividad por técnico
+        const technicianProductivity = adminData.technicians.map(tech => {
+            return ordersData.filter(order => order.technician === tech.name && order.status === 'Completada').length;
+        });
 
-  const technicianProductivity = adminData.technicians.map(tech => {
-    return ordersData.filter(order => order.technician === tech.name && order.status === 'Completada').length;
-  });
+        // Chart: Órdenes por estado
+        new Chart(document.getElementById('statusChart'), {
+            type: 'pie',
+            data: {
+                labels: Object.keys(orderStatuses),
+                datasets: [{
+                    data: Object.values(orderStatuses),
+                    backgroundColor: ['#10b981', '#f59e0b', '#3b82f6', '#dc2626']
+                }]
+            }
+        });
 
-  // Gráfico de estado de órdenes
-  new Chart(document.getElementById('statusChart'), {
-    type: 'pie',
-    data: {
-      labels: Object.keys(orderStatuses),
-      datasets: [{
-        data: Object.values(orderStatuses),
-        backgroundColor: ['#28a745', '#ffc107', '#17a2b8', '#dc3545']
-      }]
+        // Chart: Órdenes mensuales
+        new Chart(document.getElementById('monthlyChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                datasets: [{
+                    label: 'Órdenes',
+                    data: monthlyOrders,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                }]
+            }
+        });
+
+        // Chart: Tipos de problemas reportados
+        new Chart(document.getElementById('problemTypeChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(problemTypes),
+                datasets: [{
+                    data: Object.values(problemTypes),
+                    backgroundColor: ['#2563eb', '#64748b', '#10b981', '#f59e0b', '#dc2626']
+                }]
+            }
+        });
+
+        // Chart: Productividad por técnico
+        new Chart(document.getElementById('productivityChart'), {
+            type: 'bar',
+            data: {
+                labels: adminData.technicians.map(t => t.name.split(' ')[0]),
+                datasets: [{
+                    label: 'Órdenes completadas',
+                    data: technicianProductivity,
+                    backgroundColor: 'rgba(100, 116, 139, 0.7)'
+                }]
+            }
+        });
     }
-  });
-  
-  // Gráfico de órdenes mensuales
-  new Chart(document.getElementById('monthlyChart'), {
-    type: 'bar',
-    data: {
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-      datasets: [{
-        label: 'Órdenes',
-        data: monthlyOrders,
-        backgroundColor: 'rgba(54, 162, 235, 0.7)'
-      }]
-    }
-  });
-  
-  // Gráfico de tipos de problemas reportados
-  new Chart(document.getElementById('problemTypeChart'), {
-    type: 'doughnut',
-    data: {
-      labels: Object.keys(problemTypes),
-      datasets: [{
-        data: Object.values(problemTypes),
-        backgroundColor: ['#007bff', '#6c757d', '#28a745', '#ffc107', '#dc3545']
-      }]
-    }
-  });
-  
-  // Gráfico de productividad
-  new Chart(document.getElementById('productivityChart'), {
-    type: 'bar',
-    data: {
-      labels: adminData.technicians.map(t => t.name.split(' ')[0]),
-      datasets: [{
-        label: 'Órdenes completadas',
-        data: technicianProductivity,
-        backgroundColor: 'rgba(108, 117, 125, 0.7)'
-      }]
-    }
-  });
-}
-
-function exportToExcel() {
-  alert('Exportando a Excel...'); // Implementación real usaría una librería como SheetJS
-}
-
-function exportToPDF() {
-  alert('Exportando a PDF...'); // Implementación real usaría una librería como jsPDF
-}
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

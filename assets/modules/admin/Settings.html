@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/global.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="navbar navbar-expand-md navbar-dark shadow-sm bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Admin</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="dropdown ms-auto">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="/assets/img/profile-placeholder.png" alt="Admin" width="36" height="36" class="rounded-circle me-2 border border-2 border-light">
+                    <span class="d-none d-md-inline">Administrador</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
+                    <li><a class="dropdown-item" href="Perfil.html"><i class="fas fa-user-cog me-2"></i> Perfil</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3 vh-100">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/views/admin-dashboard.html">
+                                <i class="fas fa-tachometer-alt me-2"></i> Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Repuestos.html">
+                                <i class="fas fa-box-open me-2"></i> Repuestos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Personal.html">
+                                <i class="fas fa-users-cog me-2"></i> Personal
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Orders.html">
+                                <i class="fas fa-clipboard-list me-2"></i> Órdenes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Reports.html">
+                                <i class="fas fa-chart-bar me-2"></i> Reportes
+                            </a>
+                        </li>
+                    </ul>
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase small">
+                        <span>Configuración</span>
+                        <i class="fas fa-cog"></i>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="Settings.html">
+                                <i class="fas fa-cogs me-2"></i> Configuración
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Help.html">
+                                <i class="fas fa-question-circle me-2"></i> Ayuda
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2"><i class="fas fa-cogs me-2"></i>Configuración del Sistema</h1>
+                </div>
+                <div class="row">
+                    <!-- Preferencias de usuario -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-user-cog me-2"></i>Preferencias de Usuario</h5>
+                                <form>
+                                    <div class="mb-3">
+                                        <label class="form-label">Idioma</label>
+                                        <select class="form-select">
+                                            <option value="es">Español</option>
+                                            <option value="en">Inglés</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Tema</label>
+                                        <select class="form-select" id="themeSelect">
+                                            <option value="light">Claro</option>
+                                            <option value="dark">Oscuro</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="notificationsSwitch" checked>
+                                        <label class="form-check-label" for="notificationsSwitch">Notificaciones por correo</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Guardar Preferencias</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Seguridad -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-shield-alt me-2"></i>Seguridad</h5>
+                                <form>
+                                    <div class="mb-3">
+                                        <label class="form-label">Cambiar contraseña</label>
+                                        <input type="password" class="form-control mb-2" placeholder="Nueva contraseña">
+                                        <input type="password" class="form-control" placeholder="Confirmar contraseña">
+                                    </div>
+                                    <button type="submit" class="btn btn-warning">Actualizar Contraseña</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Configuración avanzada -->
+                <div class="row">
+                    <div class="col-lg-12 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-sliders-h me-2"></i>Configuración Avanzada</h5>
+                                <form>
+                                    <div class="mb-3">
+                                        <label class="form-label">Tiempo de sesión (minutos)</label>
+                                        <input type="number" class="form-control" value="30" min="5" max="120">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Permitir registro de nuevos usuarios</label>
+                                        <select class="form-select">
+                                            <option value="yes">Sí</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-secondary">Guardar Configuración</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Inicializa el selector según el valor guardado
+        document.addEventListener('DOMContentLoaded', function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.getElementById('themeSelect').value = theme;
+            if (theme === 'dark') {
+                document.body.classList.add('theme-dark');
+            } else {
+                document.body.classList.remove('theme-dark');
+            }
+        });
+
+        // Cambia el tema y lo guarda en localStorage
+        document.getElementById('themeSelect').addEventListener('change', function() {
+            const theme = this.value;
+            localStorage.setItem('theme', theme);
+            if (theme === 'dark') {
+                document.body.classList.add('theme-dark');
+            } else {
+                document.body.classList.remove('theme-dark');
+            }
+        });
+
+        // Aplica el tema si cambia desde otra pestaña
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'theme') {
+                if (e.newValue === 'dark') {
+                    document.body.classList.add('theme-dark');
+                } else {
+                    document.body.classList.remove('theme-dark');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

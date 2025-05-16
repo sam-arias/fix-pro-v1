@@ -1,0 +1,64 @@
+
+// =============================
+// NOTIFICACIONES
+// =============================
+
+let notifications = [];
+
+function showNotifications() {
+    const mainContent = document.getElementById('mainContent');
+    
+    mainContent.innerHTML = `
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Notificaciones</h1>
+        <button class="btn btn-outline-danger" onclick="clearAllNotifications()">
+          <i class="fas fa-trash me-1"></i> Limpiar todo
+        </button>
+      </div>
+      
+      <div class="card">
+        <div class="card-body">
+          <div class="list-group">
+            ${notifications.map(notification => `
+              <a href="#" class="list-group-item list-group-item-action ${!notification.read ? 'active' : ''}" 
+                 onclick="viewNotification(${notification.id})">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">${notification.title}</h5>
+                  <small>${formatTimeAgo(notification.date)}</small>
+                </div>
+                <p class="mb-1">${notification.message}</p>
+                <small class="text-muted">${formatNotificationType(notification.type)}</small>
+              </a>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+}
+
+function viewNotification(notificationId) {
+    const notification = notifications.find(n => n.id === notificationId);
+    if (!notification) return;
+    
+    // Marcar como leída
+    notification.read = true;
+    
+    // Mostrar detalles según el tipo de notificación
+    switch(notification.type) {
+      case 'assignment':
+        // Redirigir a la orden asignada
+        const orderId = parseInt(notification.message.match(/#(\d+)/)[1]);
+        viewOrderDetails(orderId);
+        break;
+      default:
+        alert(notification.message);
+        showNotifications(); // Recargar notificaciones
+    }
+}
+
+function clearAllNotifications() {
+    if (confirm('¿Eliminar todas las notificaciones?')) {
+      notifications = notifications.filter(n => !n.read);
+      showNotifications();
+    }
+}
