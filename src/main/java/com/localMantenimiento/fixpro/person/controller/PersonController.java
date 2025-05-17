@@ -119,13 +119,13 @@ public class PersonController {
     return ResponseEntity.ok(response);
   }
 
-  @DeleteMapping("/{id}")
-  public void changeAvailability(@PathVariable Long id){
-    personService.changeAvailability(id);
+  @PutMapping("/change-availability/{id}")
+  public void changeAvailability(@PathVariable Long id, @RequestParam String availability) {
+    personService.changeAvailability(id, availability);
   }
 
   @PutMapping("/change-password/{id}")
-  public Boolean changePassword(@PathVariable Long id, @RequestBody String oldPassword, @RequestBody String newPassword){
-    return personService.changePassword(id, oldPassword, newPassword);
+  public Boolean changePassword(@PathVariable Long id, @RequestBody Map<String, String> passwords){
+    return personService.changePassword(id, passwords.get("oldPassword"), passwords.get("newPassword"));
   }
 }

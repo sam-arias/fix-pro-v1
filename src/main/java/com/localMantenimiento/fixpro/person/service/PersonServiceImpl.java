@@ -66,17 +66,14 @@ public class PersonServiceImpl implements PersonService {
 
   @Override
   public Optional<List<Person>> getPeopleByRole(Long roleId) {
-    if(roleRepository.existsById(roleId)) {
-      return personRepository.findPersonByRoleIdAndAvailabilityNot(roleId, "Desactivado");
-    }
-    return Optional.empty();
+    return Optional.of(personRepository.findPersonByRoleId(roleId));
   }
 
   @Override
   public Optional<List<Person>> getPeopleByRoleAndSpecialty(Long roleId, Long specialtyId) {
     if (roleRepository.existsById(roleId) && specialtyRepository.existsById(specialtyId)) {
 
-      return Optional.of(personRepository.findByRoleIdAndSpecialtiesIdAndAvailabilityNot(roleId, specialtyId, "Desactivado"));
+      return Optional.of(personRepository.findByRoleIdAndSpecialtiesId(roleId, specialtyId));
     }
     return Optional.empty();
   }
@@ -155,12 +152,12 @@ public class PersonServiceImpl implements PersonService {
   }
 
   @Override
-  public void changeAvailability(Long id) {
+  public void changeAvailability(Long id, String availability) {
     Optional<Person> person = personRepository.findById(id);
-    if (person.isEmpty()) {
-      return;
-    }
-    person.get().setAvailability("Desactivado");
+    if (person.isEmpty()) {return;}
+    person.get().setId(id);
+    person.get().setAvailability(availability);
+    personRepository.save(person.get());
   }
 
   @Override
@@ -170,8 +167,7 @@ public class PersonServiceImpl implements PersonService {
       return false;
     }
     if (passwordEncoder.matches(oldPassword, person.get().getPassword()) && !passwordEncoder.matches(newPassword, person.get().getPassword())) {
-      person.get().setPassword(newPassword);
-      person.get().encryptPassword(passwordEncoder);
+      person.get().setPassword(passwordEncoder.encode(newPassword));
       personRepository.save(person.get());
       return true;
     }
