@@ -9,7 +9,7 @@ const ROLES_CONFIG = {
   ADMIN: {
       name: 'Administrador',
       color: 'e74a3b',
-      dashboard: '/assets/views/admin-dashboard.html',
+      dashboard: 'assets/views/admin-dashboard.html',
       level: 3, // Nivel de jerarquía
       menuItems: [
           { icon: 'fa-users', text: 'Usuarios', action: 'showUserManagement' },
@@ -22,7 +22,7 @@ const ROLES_CONFIG = {
   MANAGER: {
       name: 'Gerente',
       color: '1cc88a',
-      dashboard: '/assets/views/manager-dashboard.html',
+      dashboard: 'assets/views/manager-dashboard.html',
       level: 2,
       menuItems: [
           { icon: 'fa-clipboard-list', text: 'Órdenes', action: 'showAllOrders' },
@@ -34,7 +34,7 @@ const ROLES_CONFIG = {
   TECHNICIAN: {
       name: 'Técnico',
       color: '4e73df',
-      dashboard: '/assets/views/technician-dashboard.html',
+      dashboard: 'assets/views/technician-dashboard.html',
       level: 1,
       menuItems: [
           { icon: 'fa-tasks', text: 'Mis Órdenes', action: 'showMyOrders' },
@@ -131,7 +131,7 @@ function checkAuth() {
   
   if (!user) {
       if (currentPage !== 'login.html') {
-          window.location.href = 'login.html';
+          window.location.href = '/assets/views/login.html'; // <-- usa ruta absoluta
       }
       return;
   }
@@ -150,7 +150,7 @@ function checkAuth() {
 function logout() {
   if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
       sessionStorage.removeItem('currentUser');
-      window.location.href = 'login.html';
+      window.location.href = '/assets/views/login.html'; // <-- usa ruta absoluta
   }
 }
 
