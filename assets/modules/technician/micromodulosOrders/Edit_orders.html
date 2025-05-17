@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Orden</title>
+    <title>Editar Orden - FixPro</title>
+    
+    <!-- CSS Links -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/global.css">
 </head>
 <body>
@@ -18,63 +21,84 @@
         </div>
     </header>
 
-    <div class="container mt-5 pt-4">
+    <!-- Main Content -->
+    <main class="container mt-5 pt-4">
+        <!-- Page Header -->
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">Editar Orden</h1>
+            <h1 class="h2"><i class="fas fa-edit me-2"></i>Editar Orden</h1>
             <a href="../Orders.html" class="btn btn-secondary">
                 <i class="fas fa-arrow-left me-2"></i>Volver
             </a>
         </div>
+
+        <!-- Form Card -->
         <div class="row justify-content-center">
             <div class="col-lg-10 col-xl-8">
                 <div class="card shadow">
                     <div class="card-body">
-                        <form id="orderEditForm">
+                        <form id="orderEditForm" autocomplete="off">
+                            <!-- Client and Device Info -->
                             <div class="row">
+                                <!-- Client Info -->
                                 <div class="col-md-6">
-                                    <h5 class="mb-3"><i class="fas fa-user me-2"></i>Datos del Cliente</h5>
-                                    <div class="mb-3">
-                                        <label class="form-label">Nombre</label>
-                                        <p class="form-control-plaintext" id="clientName">Juan</p>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Apellido</label>
-                                        <p class="form-control-plaintext" id="clientLastName">Pérez</p>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Teléfono</label>
-                                        <p class="form-control-plaintext" id="clientPhone">555-1234</p>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Dirección</label>
-                                        <p class="form-control-plaintext" id="clientAddress">Calle 123, Ciudad</p>
-                                    </div>
+                                    <section class="mb-4">
+                                        <h5 class="mb-3"><i class="fas fa-user me-2"></i>Datos del Cliente</h5>
+                                        <div class="mb-3">
+                                            <label class="form-label">Nombre</label>
+                                            <p class="form-control-plaintext" id="clientName">Juan</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Apellido</label>
+                                            <p class="form-control-plaintext" id="clientLastName">Pérez</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Teléfono</label>
+                                            <p class="form-control-plaintext" id="clientPhone">555-1234</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Dirección</label>
+                                            <p class="form-control-plaintext" id="clientAddress">Calle 123, Ciudad</p>
+                                        </div>
+                                    </section>
                                 </div>
+                                
+                                <!-- Device Info -->
                                 <div class="col-md-6">
-                                    <h5 class="mb-3"><i class="fas fa-laptop me-2"></i>Datos del Dispositivo</h5>
-                                    <div class="mb-3">
-                                        <label class="form-label">Tipo de dispositivo</label>
-                                        <p class="form-control-plaintext" id="deviceType">Smartphone</p>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Modelo</label>
-                                        <p class="form-control-plaintext" id="deviceModel">iPhone 12</p>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Marca</label>
-                                        <p class="form-control-plaintext" id="deviceMarca">Apple</p>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Serial</label>
-                                        <p class="form-control-plaintext" id="deviceSerial">SN123456</p>
-                                    </div>
+                                    <section class="mb-4">
+                                        <h5 class="mb-3"><i class="fas fa-laptop me-2"></i>Datos del Dispositivo</h5>
+                                        <div class="mb-3">
+                                            <label class="form-label">Tipo de dispositivo</label>
+                                            <p class="form-control-plaintext" id="deviceType">Smartphone</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Modelo</label>
+                                            <p class="form-control-plaintext" id="deviceModel">iPhone 12</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Marca</label>
+                                            <p class="form-control-plaintext" id="deviceMarca">Apple</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Serial</label>
+                                            <p class="form-control-plaintext" id="deviceSerial">SN123456</p>
+                                        </div>
+                                    </section>
                                 </div>
                             </div>
-                            <div class="mb-3">
+
+                            <!-- Problem Description -->
+                            <section class="mb-4">
                                 <label for="problemDescription" class="form-label">Descripción del problema</label>
-                                <textarea class="form-control auto-expand" id="problemDescription" rows="2" required style="min-height: 100px; overflow-y: hidden;"></textarea>
-                            </div>
-                            <div class="row">
+                                <textarea class="form-control auto-expand" id="problemDescription" rows="3" required 
+                                    style="min-height: 120px; overflow-y: auto;" 
+                                    placeholder="Describe el problema con el mayor detalle posible..."></textarea>
+                                <div class="form-text text-muted">
+                                    Sé específico: incluye síntomas, cuándo ocurre el problema y cualquier intento previo de reparación.
+                                </div>
+                            </section>
+
+                            <!-- Technician and Date -->
+                            <div class="row mb-4">
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Técnico asignado</label>
@@ -88,22 +112,85 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+
+                            <!-- Add Parts Section -->
+                            <section class="border rounded p-3 mb-4 bg-light">
+                                <h6 class="mb-3"><i class="fas fa-plus-circle me-2"></i>Añadir repuesto desde inventario</h6>
+                                <div class="row g-3 align-items-end">
+                                    <div class="col-md-2">
+                                        <label class="form-label mb-1">Marca</label>
+                                        <select class="form-select form-select-sm">
+                                            <option value="">Todas</option>
+                                            <option>Apple</option>
+                                            <option>Samsung</option>
+                                            <option>Xiaomi</option>
+                                            <option>Huawei</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label mb-1">Modelo</label>
+                                        <select class="form-select form-select-sm">
+                                            <option value="">Todos</option>
+                                            <option>iPhone 12</option>
+                                            <option>Galaxy S21</option>
+                                            <option>Redmi Note 10</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label mb-1">Tipo</label>
+                                        <select class="form-select form-select-sm">
+                                            <option value="">Todos</option>
+                                            <option>Pantalla</option>
+                                            <option>Batería</option>
+                                            <option>Conector de carga</option>
+                                            <option>Módulo de cámara</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label mb-1">Repuesto</label>
+                                        <select class="form-select form-select-sm">
+                                            <option value="">Seleccione</option>
+                                            <option>Pantalla iPhone 12</option>
+                                            <option>Batería Galaxy S21</option>
+                                            <option>Conector de carga Redmi Note 10</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label class="form-label mb-1">Cantidad</label>
+                                        <input type="number" min="1" class="form-control form-control-sm" value="1">
+                                    </div>
+                                    <div class="col-md-2 mt-2">
+                                        <button type="button" class="btn btn-sm btn-success w-100 mt-4">
+                                            <i class="fas fa-plus-circle"></i> Añadir
+                                        </button>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Form Actions -->
+                            <section class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <a href="../Orders.html" class="btn btn-secondary me-md-2">Cancelar</a>
-                                <button type="submit" class="btn btn-primary btn-add">Guardar Cambios</button>
-                            </div>
-                            <script>
-                                document.getElementById('orderEditForm').addEventListener('submit', function(e) {
-                                    e.preventDefault();
-                                    // Aquí puedes agregar la lógica para guardar la descripción editada
-                                    window.location.href = "../Orders.html";
-                                });
-                            </script>
+                                <button type="submit" class="btn btn-primary btn-add">
+                                    <i class="fas fa-save me-2"></i>Guardar Cambios
+                                </button>
+                            </section>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        document.getElementById('orderEditForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Aquí puedes agregar la lógica para guardar la descripción editada
+            window.location.href = "../Orders.html";
+        });
+    </script>
+    
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
