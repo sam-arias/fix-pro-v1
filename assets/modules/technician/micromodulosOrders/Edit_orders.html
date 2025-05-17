@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Orden</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/global.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="navbar navbar-expand-md navbar-dark shadow-sm bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Technician</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="container mt-5 pt-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Editar Orden</h1>
+            <a href="../Orders.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form id="orderEditForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 class="mb-3"><i class="fas fa-user me-2"></i>Datos del Cliente</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nombre</label>
+                                        <p class="form-control-plaintext" id="clientName">Juan</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Apellido</label>
+                                        <p class="form-control-plaintext" id="clientLastName">Pérez</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Teléfono</label>
+                                        <p class="form-control-plaintext" id="clientPhone">555-1234</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Dirección</label>
+                                        <p class="form-control-plaintext" id="clientAddress">Calle 123, Ciudad</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="mb-3"><i class="fas fa-laptop me-2"></i>Datos del Dispositivo</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Tipo de dispositivo</label>
+                                        <p class="form-control-plaintext" id="deviceType">Smartphone</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Modelo</label>
+                                        <p class="form-control-plaintext" id="deviceModel">iPhone 12</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Marca</label>
+                                        <p class="form-control-plaintext" id="deviceMarca">Apple</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Serial</label>
+                                        <p class="form-control-plaintext" id="deviceSerial">SN123456</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="problemDescription" class="form-label">Descripción del problema</label>
+                                <textarea class="form-control auto-expand" id="problemDescription" rows="2" required style="min-height: 100px; overflow-y: hidden;"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Técnico asignado</label>
+                                        <p class="form-control-plaintext" id="technician">Carlos López</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Fecha y hora estimada</label>
+                                        <p class="form-control-plaintext" id="estimatedDate">2024-06-15 10:00</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                                <a href="../Orders.html" class="btn btn-secondary me-md-2">Cancelar</a>
+                                <button type="submit" class="btn btn-primary btn-add">Guardar Cambios</button>
+                            </div>
+                            <script>
+                                document.getElementById('orderEditForm').addEventListener('submit', function(e) {
+                                    e.preventDefault();
+                                    // Aquí puedes agregar la lógica para guardar la descripción editada
+                                    window.location.href = "../Orders.html";
+                                });
+                            </script>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

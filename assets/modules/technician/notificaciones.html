@@ -1,64 +1,181 @@
-
-// =============================
-// NOTIFICACIONES
-// =============================
-
-let notifications = [];
-
-function showNotifications() {
-    const mainContent = document.getElementById('mainContent');
-    
-    mainContent.innerHTML = `
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Notificaciones</h1>
-        <button class="btn btn-outline-danger" onclick="clearAllNotifications()">
-          <i class="fas fa-trash me-1"></i> Limpiar todo
-        </button>
-      </div>
-      
-      <div class="card">
-        <div class="card-body">
-          <div class="list-group">
-            ${notifications.map(notification => `
-              <a href="#" class="list-group-item list-group-item-action ${!notification.read ? 'active' : ''}" 
-                 onclick="viewNotification(${notification.id})">
-                <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">${notification.title}</h5>
-                  <small>${formatTimeAgo(notification.date)}</small>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/global.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="navbar navbar-expand-md navbar-dark shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-tools me-2"></i>FixPro <span class="badge bg-light text-dark ms-1">Técnico</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="dropdown ms-auto">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="/assets/img/profile-placeholder.png" alt="Técnico" width="36" height="36" class="rounded-circle me-2 border border-2 border-light">
+                        <span class="d-none d-md-inline" id="username-display"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
+                        <li><a class="dropdown-item" href="perfil.html"><i class="fas fa-user-cog me-2"></i> Perfil</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Cerrar sesión</a></li>
+                    </ul>
                 </div>
-                <p class="mb-1">${notification.message}</p>
-                <small class="text-muted">${formatNotificationType(notification.type)}</small>
-              </a>
-            `).join('')}
-          </div>
+            </div>
         </div>
-      </div>
-    `;
-}
+    </header>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse vh-100" style="min-height:100vh;">
+              <div class="sidebar-sticky pt-3 h-100 d-flex flex-column">
+                <ul class="nav flex-column mb-auto">
+                  <li class="nav-item">
+                    <a class="nav-link active" href="/views/technician-dashboard.html">
+                      <i class="fas fa-tachometer-alt me-2"></i>
+                      Inicio
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/assets/modules/technician/Orders.html">
+                      <i class="fas fa-clipboard-list me-2"></i>
+                      Órdenes
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/assets/modules/technician/perfil.html">
+                      <i class="fas fa-user me-2"></i>
+                      Perfil
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/assets/modules/technician/notificaciones.html">
+                    <i class="fas fa-bell me-2"></i>
+                    Notificaciones
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4" id="mainContent">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Notificaciones</h1>
+                    <button class="btn btn-outline-danger" id="clearAllBtn">
+                        <i class="fas fa-trash me-1"></i> Limpiar todo
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="list-group" id="notificationsList">
+                            <!-- Notificaciones se insertan por JS -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // =============================
+        // NOTIFICACIONES
+        // =============================
 
-function viewNotification(notificationId) {
-    const notification = notifications.find(n => n.id === notificationId);
-    if (!notification) return;
-    
-    // Marcar como leída
-    notification.read = true;
-    
-    // Mostrar detalles según el tipo de notificación
-    switch(notification.type) {
-      case 'assignment':
-        // Redirigir a la orden asignada
-        const orderId = parseInt(notification.message.match(/#(\d+)/)[1]);
-        viewOrderDetails(orderId);
-        break;
-      default:
-        alert(notification.message);
-        showNotifications(); // Recargar notificaciones
-    }
-}
+        let notifications = [
+            {
+                id: 1,
+                title: "Nueva asignación",
+                message: "Se te ha asignado la orden #201",
+                date: new Date(Date.now() - 3600 * 1000),
+                type: "assignment",
+                read: false
+            },
+            {
+                id: 2,
+                title: "Recordatorio",
+                message: "Tienes una orden pendiente por completar.",
+                date: new Date(Date.now() - 7200 * 1000),
+                type: "reminder",
+                read: false
+            }
+        ];
 
-function clearAllNotifications() {
-    if (confirm('¿Eliminar todas las notificaciones?')) {
-      notifications = notifications.filter(n => !n.read);
-      showNotifications();
-    }
-}
+        function formatTimeAgo(date) {
+            const now = new Date();
+            const diff = Math.floor((now - new Date(date)) / 60000); // minutos
+            if (diff < 1) return "ahora";
+            if (diff < 60) return `${diff} min`;
+            const hours = Math.floor(diff / 60);
+            if (hours < 24) return `${hours} h`;
+            const days = Math.floor(hours / 24);
+            return `${days} d`;
+        }
+
+        function formatNotificationType(type) {
+            switch(type) {
+                case "assignment": return "Asignación";
+                case "reminder": return "Recordatorio";
+                default: return "Notificación";
+            }
+        }
+
+        function renderNotifications() {
+            const list = document.getElementById('notificationsList');
+            if (!notifications.length) {
+                list.innerHTML = `<div class="text-center text-muted py-4">No hay notificaciones.</div>`;
+                return;
+            }
+            list.innerHTML = notifications.map(notification => `
+                <a href="#" class="list-group-item list-group-item-action ${!notification.read ? 'active' : ''}" 
+                   onclick="viewNotification(${notification.id}); return false;">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">${notification.title}</h5>
+                        <small>${formatTimeAgo(notification.date)}</small>
+                    </div>
+                    <p class="mb-1">${notification.message}</p>
+                    <small class="text-muted">${formatNotificationType(notification.type)}</small>
+                </a>
+            `).join('');
+        }
+
+        function viewNotification(notificationId) {
+            const notification = notifications.find(n => n.id === notificationId);
+            if (!notification) return;
+            notification.read = true;
+            renderNotifications();
+            // Mostrar detalles según el tipo de notificación
+            switch(notification.type) {
+                case 'assignment':
+                    // Redirigir a la orden asignada
+                    const orderId = parseInt(notification.message.match(/#(\d+)/)[1]);
+                    // Aquí deberías llamar a viewOrderDetails(orderId) si existe
+                    alert(`Ir a detalles de la orden #${orderId}`);
+                    break;
+                default:
+                    alert(notification.message);
+            }
+        }
+
+        function clearAllNotifications() {
+            if (confirm('¿Eliminar todas las notificaciones?')) {
+                notifications = notifications.filter(n => !n.read);
+                renderNotifications();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderNotifications();
+            document.getElementById('clearAllBtn').addEventListener('click', clearAllNotifications);
+        });
+    </script>
+</body>
+</html>
