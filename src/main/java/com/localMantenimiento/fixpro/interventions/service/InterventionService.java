@@ -20,7 +20,7 @@ public interface InterventionService {
 
   public Optional<InterventionDetails> getInterventionDetailsById(Long id);
 
-  public ArrayList<Integer> getSalesInformation();
+  public ArrayList<Integer> getSalesInformation(Long id);
 
   public List<InterventionOrder> getTop5RecentInterventionOrders();
 }

@@ -30,7 +30,9 @@ public class PersonServiceImpl implements PersonService {
   @Override
   public boolean registerPerson(Person newPerson) {
     if(!personRepository.existsByEmail(newPerson.getEmail())) {
-      newPerson.encryptPassword(passwordEncoder);
+      if(newPerson.getPassword() != null) {
+        newPerson.encryptPassword(passwordEncoder);
+      }
       personRepository.save(newPerson);
       return true;
     }
@@ -41,7 +43,11 @@ public class PersonServiceImpl implements PersonService {
   public boolean updatePerson(Long id, Person updatedPerson) {
     if(personRepository.existsById(id)) {
       updatedPerson.setId(id);
-      updatedPerson.encryptPassword(passwordEncoder);
+      if(updatedPerson.getPassword() != null) {
+        updatedPerson.encryptPassword(passwordEncoder);
+      }else{
+        updatedPerson.setPassword(personRepository.findById(id).get().getPassword());
+      }
       personRepository.save(updatedPerson);
       return true;
     }

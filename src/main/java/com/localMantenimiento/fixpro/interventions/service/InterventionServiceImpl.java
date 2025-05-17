@@ -8,6 +8,7 @@ import com.localMantenimiento.fixpro.spare_part.repository.UsedSparePartReposito
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -76,12 +77,13 @@ public class InterventionServiceImpl implements InterventionService {
   }
 
   @Override
-  public ArrayList<Integer> getSalesInformation() {
-    List<InterventionOrder> orders = interventionOrderRepository.findAll();
+  public ArrayList<Integer> getSalesInformation(Long id) {
+    List<InterventionOrder> ordersToday = interventionOrderRepository.findByDay(LocalDate.now());
     List<InterventionOrder> ordersCompleted = interventionOrderRepository.findByInterventionStatus("Completada");
     List<InterventionOrder> pendingOrders = interventionOrderRepository.findByInterventionStatus("Pendiente");
     List<InterventionOrder> ordersInProcess = interventionOrderRepository.findByInterventionStatus("En Proceso");
-    return new ArrayList<>(Arrays.asList(orders.size(), ordersCompleted.size(), pendingOrders.size(), ordersInProcess.size()));
+    List<InterventionOrder> assignedOrders = interventionOrderRepository.findByPeople(id);
+    return new ArrayList<>(Arrays.asList(ordersToday.size(), ordersCompleted.size(), pendingOrders.size(), ordersInProcess.size()));
   }
 
   public List<InterventionOrder> getTop5RecentInterventionOrders() {

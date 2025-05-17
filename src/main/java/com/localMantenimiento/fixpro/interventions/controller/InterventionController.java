@@ -4,6 +4,7 @@ import com.localMantenimiento.fixpro.interventions.model.InterventionDetails;
 import com.localMantenimiento.fixpro.interventions.model.InterventionOrder;
 import com.localMantenimiento.fixpro.interventions.service.InterventionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -63,10 +64,9 @@ public class InterventionController {
   }
 
   @GetMapping("/orders/sales-information")
-  public ArrayList<Integer> getSalesInformation() {
-    return interventionService.getSalesInformation();
+  public ArrayList<Integer> getSalesInformation(@RequestBody Long id) {
+    return interventionService.getSalesInformation(id);
   }
-
 
   @GetMapping("/orders/recent-orders")
   public List<InterventionOrder> getTop5RecentInterventionOrders() {
