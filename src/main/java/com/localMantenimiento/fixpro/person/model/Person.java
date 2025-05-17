@@ -40,7 +40,7 @@ public class Person {
   private String address;
 
   @Column(name = "availability")
-  private Boolean availability;
+  private String availability;
 
   @ManyToOne
   @JoinColumn(name = "FK_role_id", nullable = false)

@@ -31,4 +31,6 @@ public interface PersonService {
 
 
   public Role login(String email, String password);
+  public void changeAvailability(Long id);
+  public Boolean changePassword(Long id, String oldPassword, String newPassword);
 }

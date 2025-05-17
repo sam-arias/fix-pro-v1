@@ -118,4 +118,14 @@ public class PersonController {
 
     return ResponseEntity.ok(response);
   }
+
+  @DeleteMapping("/{id}")
+  public void changeAvailability(@PathVariable Long id){
+    personService.changeAvailability(id);
+  }
+
+  @PutMapping("/change-password/{id}")
+  public Boolean changePassword(@PathVariable Long id, @RequestBody String oldPassword, @RequestBody String newPassword){
+    return personService.changePassword(id, oldPassword, newPassword);
+  }
 }

@@ -67,7 +67,7 @@ public class PersonServiceImpl implements PersonService {
   @Override
   public Optional<List<Person>> getPeopleByRole(Long roleId) {
     if(roleRepository.existsById(roleId)) {
-      return personRepository.findPersonByRoleId(roleId);
+      return personRepository.findPersonByRoleIdAndAvailabilityNot(roleId, "Desactivado");
     }
     return Optional.empty();
   }
@@ -76,7 +76,7 @@ public class PersonServiceImpl implements PersonService {
   public Optional<List<Person>> getPeopleByRoleAndSpecialty(Long roleId, Long specialtyId) {
     if (roleRepository.existsById(roleId) && specialtyRepository.existsById(specialtyId)) {
 
-      return Optional.of(personRepository.findByRoleIdAndSpecialtiesId(roleId, specialtyId));
+      return Optional.of(personRepository.findByRoleIdAndSpecialtiesIdAndAvailabilityNot(roleId, specialtyId, "Desactivado"));
     }
     return Optional.empty();
   }
@@ -145,12 +145,36 @@ public class PersonServiceImpl implements PersonService {
   @Override
   public Role login(String email, String password) {
     Optional<Person> person = personRepository.findByEmail(email);
-    if (!person.isPresent()) {
+    if (person.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
     }
     if (!passwordEncoder.matches(password, person.get().getPassword())) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Contraseña incorrecta");
     }
     return person.get().getRole();
+  }
+
+  @Override
+  public void changeAvailability(Long id) {
+    Optional<Person> person = personRepository.findById(id);
+    if (person.isEmpty()) {
+      return;
+    }
+    person.get().setAvailability("Desactivado");
+  }
+
+  @Override
+  public Boolean changePassword(Long id, String oldPassword, String newPassword) {
+    Optional<Person> person = personRepository.findById(id);
+    if (person.isEmpty()) {
+      return false;
+    }
+    if (passwordEncoder.matches(oldPassword, person.get().getPassword()) && !passwordEncoder.matches(newPassword, person.get().getPassword())) {
+      person.get().setPassword(newPassword);
+      person.get().encryptPassword(passwordEncoder);
+      personRepository.save(person.get());
+      return true;
+    }
+    return false;
   }
 }
