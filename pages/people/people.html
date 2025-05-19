@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FixPro - Administrador</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/public/assets/css/main.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse bg-dark">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-tools text-white fs-1 mb-2"></i>
+                        <h4 class="text-white fs-4">FixPro Management</h4>
+                        <p class="text-white fs-6">Panel de Control</p>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="../dashboard/admin-dashboard.html">
+                                <i class="bi bi-house-door me-2"></i>Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="../inventory/inventory.html">
+                                <i class="bi bi-box-seam me-2"></i>Inventario
+                            </a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link active" href="people.html">
+                                <i class="bi bi-people me-2"></i>Gestión del Personal
+                            </a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="../people/profile.html">
+                              <i class="bi bi-person-circle"></i> Mi Perfil
+                            </a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="#" id="logoutBtn""><i class="fas fa-sign-out-alt fs-5  me-2"></i>Cerrar sesión</a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="#">
+                                <i class="bi bi-gear me-2"></i>Configuración
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Gestión de Personal</h1>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
+                        <i class="bi bi-person-plus"></i> Añadir Empleado
+                    </button>
+                </div>
+
+                <!-- Botón para mostrar/ocultar opciones avanzadas -->
+                <div class="mb-3">
+                    <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#advancedOptions" aria-expanded="false" aria-controls="advancedOptions">
+                        <i class="bi bi-person-gear"></i> Crear nuevos roles y especialidades
+                    </button>
+                </div>
+
+                <div class="collapse row" id="advancedOptions">
+                    <!-- Apartado para añadir roles -->
+                    <div class="card col-md-6">
+                        <div class="card-header">
+                            <strong>Añadir Rol</strong>
+                        </div>
+                        <div class="card-body">
+                            <form class="row g-3 align-items-center">
+                                <div class="col-md-8">
+                                    <label for="newRoleName" class="form-label mb-1">Nombre del Rol</label>
+                                    <input type="text" class="form-control" id="newRoleName" placeholder="Ej: Técnico" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <button id="create-new-role-btn" type="button" class="btn btn-success mt-4 w-100">Añadir Rol</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Apartado para añadir especialidades -->
+                    <div class="card col-md-6">
+                        <div class="card-header">
+                            <strong>Añadir Especialidad</strong>
+                        </div>
+                        <div class="card-body">
+                            <form class="row g-3 align-items-center">
+                                <div class="col-md-8">
+                                    <label for="newSpecialtyName" class="form-label mb-1">Nombre de la Especialidad</label>
+                                    <input type="text" class="form-control" id="newSpecialtyName" placeholder="Ej: Telefonos" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <button id="create-new-specialty-btn" type="button" class="btn btn-success mt-4 w-100">Añadir Especialidad</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buscador y filtros -->
+                <div class="card mb-4 search-container">
+                    <div class="card-body">
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input id="search-email" type="text" class="form-control" placeholder="Buscar por correo">
+                                    <button id = "search-email-btn" class="btn btn-primary" type="button">Buscar</button>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filter-by-role">
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filter-by-specialty">
+                                </select>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <button id = "clean-filters" class="btn btn-outline-secondary w-100">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Limpiar filtros
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de Empleados -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Lista de Empleados</h5>
+                        <div class="text-muted small">
+                            Mostrando 3 de 3 empleados
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombres</th>
+                                        <th>Apellidos</th>
+                                        <th>Correo</th>
+                                        <th>Teléfono</th>
+                                        <th>Rol</th>
+                                        <th>Disponibilidad</th>
+                                        <th>Especialidades</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="employeeTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para Añadir Empleado -->
+                <div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addEmployeeModalLabel">Añadir Nuevo Empleado</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addEmployeeForm">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="name" class="form-label">Nombres</label>
+                                            <input type="text" class="form-control" id="name" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="lastName" class="form-label">Apellidos</label>
+                                            <input type="text" class="form-control" id="lastName" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Correo electrónico</label>
+                                        <input type="email" class="form-control" id="email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Contraseña</label>
+                                        <input type="password" class="form-control" id="password" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="address" class="form-label">Dirección</label>
+                                        <input type="text" class="form-control" id="address">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label">Teléfono</label>
+                                        <input type="tel" class="form-control" id="phone">
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="role" class="form-label">Rol</label>
+                                            <select class="form-select" id="role" required>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Especialidades</label>
+                                        <div class="specialties-container">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="cancel-add-btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button id="save-employee-btn" type="button" class="btn btn-primary">Guardar Empleado</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para Editar Empleado -->
+                <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editEmployeeModalLabel">Editar Empleado</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editEmployeeForm">
+                                    <input type="hidden" id="editEmployeeId" value="">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="editFirstName" class="form-label">Nombres</label>
+                                            <input type="text" class="form-control" id="editName" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="editLastName" class="form-label">Apellidos</label>
+                                            <input type="text" class="form-control" id="editLastName" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editEmail" class="form-label">Correo electrónico</label>
+                                        <input type="email" class="form-control" id="editEmail" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editPassword" class="form-label">Contraseña</label>
+                                        <input type="password" class="form-control" id="editPassword" placeholder="Dejar en blanco para no cambiar">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editAddress" class="form-label">Dirección</label>
+                                        <input type="text" class="form-control" id="editAddress">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editPhone" class="form-label">Teléfono</label>
+                                        <input type="tel" class="form-control" id="editPhone">
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="editRole" class="form-label">Rol</label>
+                                            <select class="form-select" id="editRole" required>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Especialidades</label>
+                                        <div class="specialties-container">
+                                            <!-- Las especialidades se cargarán dinámicamente aquí -->
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id = "cancel-edit-btn">Cancelar</button>
+                                <button type="button" class="btn btn-primary" id="save-edit-btn">Guardar Cambios</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/assets/js/main.js"></script>
+    <script type="module" src="/public/assets/js/modules/people.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FixPro - Órdenes Asignadas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/public/assets/css/main.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse bg-dark">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-tools text-white fs-1 mb-2"></i>
+                        <h4 class="text-white fs-4">FixPro Management</h4>
+                        <p class="text-white fs-6">Panel de Control</p>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="../dashboard/technician-dashboard.html">
+                                <i class="bi bi-house-door me-2"></i>Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link active" href="assigned-orders.html">
+                                <i class="bi bi-file-earmark-text me-2"></i>Órdenes Asignadas
+                            </a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="../people/profile.html">
+                                <i class="bi bi-person-circle"></i> Mi Perfil
+                            </a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="#" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt fs-5 me-2"></i>Cerrar sesión
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Órdenes Asignadas</h1>
+                </div>
+
+                <!-- Buscador (ahora filtro de estado) -->
+                <div class="card mb-4 search-container">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <label class="input-group-text" for="filterStatus"><i class="bi bi-funnel"></i> Estado</label>
+                                    <select class="form-select" id="filterStatus">
+                                        <option value="">Todos</option>
+                                        <option value="En Proceso">En Proceso</option>
+                                        <option value="Completada">Completada</option>
+                                        <option value="Pendiente">Pendiente</option>
+                                    </select>
+                                    <button class="btn btn-primary" type="button">Filtrar</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <button class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Limpiar filtro
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de Órdenes Asignadas -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Órdenes Asignadas</h5>
+                        <div class="text-muted small">
+                            Mostrando 4 de 4 órdenes
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Cliente</th>
+                                        <th>Equipo</th>
+                                        <th>Estado</th>
+                                        <th>Fecha Entrada</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#2001</td>
+                                        <td>Juan Pérez</td>
+                                        <td>iPhone 12</td>
+                                        <td><span class="badge bg-warning status-badge">En Proceso</span></td>
+                                        <td>2023-05-20</td>
+                                        <td class="action-buttons">
+                                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#viewOrderModal"><i class="bi bi-eye"></i></button>
+                                            <button class="btn btn-sm btn-success"><i class="bi bi-check2"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#2002</td>
+                                        <td>María Gómez</td>
+                                        <td>Samsung S21</td>
+                                        <td><span class="badge bg-success status-badge">Completada</span></td>
+                                        <td>2023-05-19</td>
+                                        <td class="action-buttons">
+                                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#viewOrderModal"><i class="bi bi-eye"></i></button>
+                                            <button class="btn btn-sm btn-success" disabled><i class="bi bi-check2"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#2003</td>
+                                        <td>Carlos Ruiz</td>
+                                        <td>MacBook Pro</td>
+                                        <td><span class="badge bg-danger status-badge">Pendiente</span></td>
+                                        <td>2023-05-18</td>
+                                        <td class="action-buttons">
+                                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#viewOrderModal"><i class="bi bi-eye"></i></button>
+                                            <button class="btn btn-sm btn-success"><i class="bi bi-check2"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#2004</td>
+                                        <td>Ana López</td>
+                                        <td>iPhone 13 Pro</td>
+                                        <td><span class="badge bg-success status-badge">Completada</span></td>
+                                        <td>2023-05-17</td>
+                                        <td class="action-buttons">
+                                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#viewOrderModal"><i class="bi bi-eye"></i></button>
+                                            <button class="btn btn-sm btn-success" disabled><i class="bi bi-check2"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Ver Detalles de Orden -->
+                <div class="modal fade" id="viewOrderModal" tabindex="-1" aria-labelledby="viewOrderModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="viewOrderModalLabel">Detalles de la Orden</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <h6>Información de la Orden</h6>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>ID:</span>
+                                                <span class="fw-bold">#2001</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>Estado:</span>
+                                                <span class="badge bg-warning status-badge">En Proceso</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>Fecha Entrada:</span>
+                                                <span>2023-05-20</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>Posible Fecha Entrega:</span>
+                                                <span>2023-05-22</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Datos del Cliente</h6>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>Nombre:</span>
+                                                <span class="fw-bold">Juan Pérez</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>Teléfono:</span>
+                                                <span class="fw-bold">+51 987654321</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <span>Dirección:</span>
+                                                <span>Av. Los Rosales 123</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- Apartado Equipo -->
+                                <div class="mb-3">
+                                    <h6>Datos del Equipo</h6>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>Tipo:</span>
+                                            <span>Teléfono</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>Marca:</span>
+                                            <span>Apple</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>Modelo:</span>
+                                            <span>iPhone 12</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>Número de Serie:</span>
+                                            <span>SN123456</span>
+                                        </li>
+                                        <!-- NUEVO: Contraseña del equipo -->
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <span>Contraseña del equipo:</span>
+                                            <span>1234</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Descripción del Daño</h6>
+                                    <div class="card mb-2">
+                                        <div class="card-body">
+                                            Pantalla rota
+                                        </div>
+                                    </div>
+                                    <!-- Apartado para editar detalle del problema -->
+                                    <label class="form-label">Editar Detalle del Problema</label>
+                                    <textarea class="form-control mb-2" rows="2" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';">Pantalla rota</textarea>
+                                    <button class="btn btn-sm btn-primary mb-3">Guardar Detalle</button>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Diagnóstico Técnico</h6>
+                                    <div class="card mb-2">
+                                        <div class="card-body">
+                                            Requiere cambio de pantalla
+                                        </div>
+                                    </div>
+                                    <!-- Apartado para editar diagnóstico técnico -->
+                                    <label class="form-label">Editar Diagnóstico Técnico</label>
+                                    <textarea class="form-control mb-2" rows="2" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';">Requiere cambio de pantalla</textarea>
+                                    <button class="btn btn-sm btn-primary mb-3">Guardar Diagnóstico</button>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Repuestos Usados</h6>
+                                    <div class="card mb-2">
+                                        <div class="card-body" style="max-height: 180px; overflow-y: auto;">
+                                            <ul class="list-group mb-3">
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Pantalla
+                                                    <span>
+                                                        <span class="badge bg-primary rounded-pill me-2">1</span>
+                                                        <button class="btn btn-sm btn-outline-danger py-0 px-2" title="Eliminar">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Batería
+                                                    <span>
+                                                        <span class="badge bg-primary rounded-pill me-2">1</span>
+                                                        <button class="btn btn-sm btn-outline-danger py-0 px-2" title="Eliminar">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Conector de carga
+                                                    <span>
+                                                        <span class="badge bg-primary rounded-pill me-2">2</span>
+                                                        <button class="btn btn-sm btn-outline-danger py-0 px-2" title="Eliminar">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Módulo de cámara
+                                                    <span>
+                                                        <span class="badge bg-primary rounded-pill me-2">1</span>
+                                                        <button class="btn btn-sm btn-outline-danger py-0 px-2" title="Eliminar">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!-- Formulario para añadir repuesto desde inventario (fuera del scroll) -->
+                                    <form class="row g-2 align-items-end mt-2">
+                                        <div class="col-md-3">
+                                            <label class="form-label mb-1">Marca</label>
+                                            <select class="form-select form-select-sm">
+                                                <option value="">Todas</option>
+                                                <option>Apple</option>
+                                                <option>Samsung</option>
+                                                <option>Xiaomi</option>
+                                                <option>Huawei</option>
+                                                <!-- ...otras marcas... -->
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label mb-1">Modelo</label>
+                                            <select class="form-select form-select-sm">
+                                                <option value="">Todos</option>
+                                                <option>iPhone 12</option>
+                                                <option>Galaxy S21</option>
+                                                <option>Redmi Note 10</option>
+                                                <!-- ...otros modelos... -->
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label mb-1">Tipo</label>
+                                            <select class="form-select form-select-sm">
+                                                <option value="">Todos</option>
+                                                <option>Pantalla</option>
+                                                <option>Batería</option>
+                                                <option>Conector de carga</option>
+                                                <option>Módulo de cámara</option>
+                                                <!-- ...otros tipos... -->
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label mb-1">Repuesto</label>
+                                            <select class="form-select form-select-sm">
+                                                <option value="">Seleccione</option>
+                                                <option>Pantalla iPhone 12</option>
+                                                <option>Batería Galaxy S21</option>
+                                                <option>Conector de carga Redmi Note 10</option>
+                                                <!-- ...repuestos filtrados... -->
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 mt-2">
+                                            <label class="form-label mb-1">Cantidad</label>
+                                            <input type="number" min="1" class="form-control form-control-sm" value="1">
+                                        </div>
+                                        <div class="col-md-3 mt-2">
+                                            <button type="button" class="btn btn-sm btn-success w-100 mt-4">
+                                                <i class="bi bi-plus-circle"></i> Añadir
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/assets/js/main.js"></script>
+</body>
+</html>

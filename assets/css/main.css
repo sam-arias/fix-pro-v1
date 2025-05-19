@@ -1,0 +1,89 @@
+.sidebar {
+    min-height: 100vh;
+    background-color: #212529;
+}
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.75);
+}
+.sidebar .nav-link:hover {
+    color: white;
+}
+.sidebar .nav-link.active {
+    color: white;
+    background-color: #0d6efd;
+}
+.card-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+.action-buttons .btn {
+    margin-right: 5px;
+}
+.badge-availability {
+    font-size: 0.8rem;
+    padding: 0.35em 0.65em;
+}
+.profile-header {
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+.nav-pills .nav-link.active {
+    background-color: #0d6efd;
+}
+.password-strength {
+    height: 5px;
+    margin-top: 5px;
+    background-color: #e9ecef;
+}
+.password-strength-bar {
+    height: 100%;
+    width: 0;
+    transition: width 0.3s;
+}
+.status-badge {
+    padding: 0.35em 0.65em;
+    font-size: 0.85em;
+}
+.order-action {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+.search-container {
+    margin-bottom: 20px;
+}
+.specialties-container {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 5px;
+}
+.card-summary {
+    transition: transform 0.2s;
+}
+.card-summary:hover {
+    transform: translateY(-5px);
+}
+.nav-link {
+    color: #adb5bd;
+}
+.nav-link:hover, .nav-link.active {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.filter-section {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+.filter-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #495057;
+}
+.filter-group {
+    margin-bottom: 15px;
+}
