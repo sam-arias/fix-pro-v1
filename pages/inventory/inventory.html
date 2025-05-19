@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FixPro - Administrador</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/public/assets/css/main.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse bg-dark">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-tools text-white fs-1 mb-2"></i>
+                        <h4 class="text-white fs-4">FixPro Management</h4>
+                        <p class="text-white fs-6">Panel de Control</p>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="../dashboard/admin-dashboard.html">
+                                <i class="bi bi-house-door me-2"></i>Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link active" href="inventory.html">
+                                <i class="bi bi-box-seam me-2"></i>Inventario
+                            </a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="../people/people.html">
+                                <i class="bi bi-people me-2"></i>Gestión del Personal
+                            </a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="../people/profile.html">
+                              <i class="bi bi-person-circle"></i> Mi Perfil
+                            </a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="#" id="logoutBtn""><i class="fas fa-sign-out-alt fs-5  me-2"></i>Cerrar sesión</a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="#">
+                                <i class="bi bi-gear me-2"></i>Configuración
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Gestión de Inventario</h1>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSparePartModal">
+                        <i class="bi bi-plus-circle"></i> Añadir Repuesto
+                    </button>
+                </div>
+
+                <!-- Filtros -->
+                <div class="filter-section mb-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="filter-group">
+                                <h6 class="filter-title"><i class="bi bi-tag me-2"></i>Filtrar por Marca</h6>
+                                <select class="form-select form-select-sm">
+                                    <option selected>Todas las marcas</option>
+                                    <option>Apple</option>
+                                    <option>Samsung</option>
+                                    <option>Xiaomi</option>
+                                    <option>Huawei</option>
+                                    <option>Otras</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="filter-group">
+                                <h6 class="filter-title"><i class="bi bi-phone me-2"></i>Filtrar por Modelo</h6>
+                                <select class="form-select form-select-sm">
+                                    <option selected>Todos los modelos</option>
+                                    <option>iPhone 12</option>
+                                    <option>iPhone 13</option>
+                                    <option>Galaxy S21</option>
+                                    <option>Redmi Note 10</option>
+                                    <option>Otros</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="filter-group">
+                                <h6 class="filter-title"><i class="bi bi-grid me-2"></i>Filtrar por Tipo</h6>
+                                <select class="form-select form-select-sm">
+                                    <option selected>Todos los tipos</option>
+                                    <option>Pantalla</option>
+                                    <option>Batería</option>
+                                    <option>Conector de carga</option>
+                                    <option>Módulo de cámara</option>
+                                    <option>Placa base</option>
+                                    <option>Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12 text-end">
+                            <button class="btn btn-sm btn-outline-secondary me-2">
+                                <i class="bi bi-arrow-counterclockwise"></i> Limpiar filtros
+                            </button>
+                            <button class="btn btn-sm btn-primary">
+                                <i class="bi bi-funnel"></i> Aplicar filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de Repuestos -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Lista de Repuestos</h5>
+                        <div class="text-muted small">
+                            Mostrando 4 de 4 repuestos
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Marca</th>
+                                        <th>Modelo</th>
+                                        <th>Tipo</th>
+                                        <th>Stock</th>
+                                        <th>Precio Unitario</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>   
+                                </tbody>                                
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para Añadir Repuesto -->
+                <div class="modal fade" id="addSparePartModal" tabindex="-1" aria-labelledby="addSparePartModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addSparePartModalLabel">Añadir Nuevo Repuesto</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addSparePartForm">
+                                    <div class="mb-3">
+                                        <label for="brand" class="form-label">Marca</label>
+                                        <input type="text" class="form-control" id="brand" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="model" class="form-label">Modelo</label>
+                                        <input type="text" class="form-control" id="model" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="type" class="form-label">Tipo de repuesto</label>
+                                        <select class="form-select" id="type" required>
+                                            <option value="">Seleccione un tipo</option>
+                                            <option value="Pantalla">Pantalla</option>
+                                            <option value="Batería">Batería</option>
+                                            <option value="Conector de carga">Conector de carga</option>
+                                            <option value="Módulo de cámara">Módulo de cámara</option>
+                                            <option value="Placa base">Placa base</option>
+                                            <option value="Otro">Otro</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="stock" class="form-label">Stock</label>
+                                        <input type="number" class="form-control" id="stock" min="0" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="unitPrice" class="form-label">Precio Unitario ($)</label>
+                                        <input type="number" step="0.01" class="form-control" id="unitPrice" min="0" required>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button id = "save-spare-part-btn" type="button" class="btn btn-primary">Guardar Repuesto</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para Editar Repuesto -->
+                <div class="modal fade" id="editSparePartModal" tabindex="-1" aria-labelledby="editSparePartModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editSparePartModalLabel">Editar Repuesto</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editSparePartForm">
+                                    <div class="mb-3">
+                                        <label for="editBrand" class="form-label">Marca</label>
+                                        <input type="text" class="form-control" id="editBrand" value="Apple" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editModel" class="form-label">Modelo</label>
+                                        <input type="text" class="form-control" id="editModel" value="iPhone 12" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editType" class="form-label">Tipo de repuesto</label>
+                                        <select class="form-select" id="editType" required>
+                                            <option value="Pantalla" selected>Pantalla</option>
+                                            <option value="Batería">Batería</option>
+                                            <option value="Conector de carga">Conector de carga</option>
+                                            <option value="Módulo de cámara">Módulo de cámara</option>
+                                            <option value="Placa base">Placa base</option>
+                                            <option value="Otro">Otro</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Stock Actual (solo lectura) -->
+                                    <div class="mb-3">
+                                        <label class="form-label">Stock actual</label>
+                                        <input type="text" class="form-control bg-light" id="editCurrentStock" readonly>
+                                    </div>
+
+                                    <!-- Sección para Agregar Stock -->
+                                    <div class="mb-3 bg-light p-3 rounded">
+                                        <h6 class="text-success mb-3"><i class="bi bi-plus-circle"></i> Agregar Stock</h6>
+                                        <div class="input-group">
+                                            <button type="button" class="btn btn-outline-success" id="decreaseAddStock">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                            <input type="number" class="form-control" id="addStockInput" value="0" min="0" placeholder="Cantidad a agregar">
+                                            <button type="button" class="btn btn-outline-success" id="increaseAddStock">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sección para Reducir Stock -->
+                                    <div class="mb-3 bg-light p-3 rounded">
+                                        <h6 class="text-danger mb-3"><i class="bi bi-dash-circle"></i> Reducir Stock</h6>
+                                        <div class="input-group">
+                                            <button type="button" class="btn btn-outline-danger" id="decreaseReduceStock">
+                                                <i class="bi bi-dash"></i>
+                                            </button>
+                                            <input type="number" class="form-control" id="reduceStockInput" value="0" min="0" placeholder="Cantidad a reducir">
+                                            <button type="button" class="btn btn-outline-danger" id="increaseReduceStock">
+                                                <i class="bi bi-plus"></i>
+                                            </button>
+                                        </div>
+                                        <small class="text-muted" id="maxStockHelp">Máximo: 0 (stock actual)</small>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="editUnitPrice" class="form-label">Precio Unitario ($)</label>
+                                        <input type="number" step="0.01" class="form-control" id="editUnitPrice" value="120.00" min="0" required>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-primary">Guardar Cambios</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/assets/js/main.js"></script>
+    <script type="module" src="/public/assets/js/modules/inventory.js"defer></script>
+</body>
+</html>

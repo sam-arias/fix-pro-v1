@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FixPro - Técnico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/public/assets/css/main.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse bg-dark">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-tools text-white fs-1 mb-2"></i>
+                        <h4 class="text-white fs-4">FixPro Management</h4>
+                        <p class="text-white fs-6">Panel de Control</p>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item fs-5">
+                            <a class="nav-link active" href="technician-dashboard.html">
+                                <i class="bi bi-house-door me-2"></i>Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="../orders/assigned-orders.html">
+                                <i class="bi bi-file-earmark-text me-2"></i>Órdenes
+                            </a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="../people/profile.html">
+                                <i class="bi bi-person-circle"></i> Mi Perfil
+                            </a>
+                        </li>
+                        <li class="nav-item fs-5">
+                            <a class="nav-link" href="#" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt fs-5 me-2"></i>Cerrar sesión
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Técnico</h1>
+                </div>
+
+                <!-- Cards Resumen -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-white bg-primary h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-file-earmark-text card-icon"></i>
+                                <h5 class="card-title">Órdenes Asignadas</h5>
+                                <h2 class="card-text">12</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-white bg-warning h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-hourglass-split card-icon"></i>
+                                <h5 class="card-title">En Proceso</h5>
+                                <h2 class="card-text">4</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-white bg-success h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-check-circle card-icon"></i>
+                                <h5 class="card-title">Completadas</h5>
+                                <h2 class="card-text">7</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card text-white bg-danger h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-exclamation-triangle card-icon"></i>
+                                <h5 class="card-title">Pendientes</h5>
+                                <h2 class="card-text">1</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Órdenes asignadas -->
+                    <div class="col-md-7 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Órdenes Asignadas</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Cliente</th>
+                                                <th>Equipo</th>
+                                                <th>Estado</th>
+                                                <th>Fecha Entrada</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>#2001</td>
+                                                <td>Juan Pérez</td>
+                                                <td>iPhone 12</td>
+                                                <td><span class="badge bg-warning">En Proceso</span></td>
+                                                <td>2023-05-20</td>
+                                            </tr>
+                                            <tr>
+                                                <td>#2002</td>
+                                                <td>María Gómez</td>
+                                                <td>Samsung S21</td>
+                                                <td><span class="badge bg-success">Completada</span></td>
+                                                <td>2023-05-19</td>
+                                            </tr>
+                                            <tr>
+                                                <td>#2003</td>
+                                                <td>Carlos Ruiz</td>
+                                                <td>MacBook Pro</td>
+                                                <td><span class="badge bg-danger">Pendiente</span></td>
+                                                <td>2023-05-18</td>
+                                            </tr>
+                                            <tr>
+                                                <td>#2004</td>
+                                                <td>Ana López</td>
+                                                <td>iPhone 13 Pro</td>
+                                                <td><span class="badge bg-success">Completada</span></td>
+                                                <td>2023-05-17</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Repuestos usados recientemente -->
+                    <div class="col-md-5 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Repuestos Usados Recientemente</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Repuesto</th>
+                                                <th>Equipo</th>
+                                                <th>Fecha</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Pantalla</td>
+                                                <td>iPhone 12</td>
+                                                <td>2023-05-20</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Batería</td>
+                                                <td>Samsung S21</td>
+                                                <td>2023-05-19</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Placa Base</td>
+                                                <td>MacBook Pro</td>
+                                                <td>2023-05-18</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Módulo de cámara</td>
+                                                <td>iPhone 13 Pro</td>
+                                                <td>2023-05-17</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/assets/js/main.js"></script>
+</body>
+</html>
