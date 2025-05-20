@@ -21,6 +21,6 @@ public interface SparePartRepository extends JpaRepository<SparePart, Long> {
   @Query("SELECT sp FROM SparePart sp JOIN FETCH sp.brand b JOIN FETCH sp.type t WHERE  b.brandName = :brand AND  t.typeName = :type AND sp.model = :model")
   SparePart findSparePartByBrandAndTypeAndModel(@Param("brand") String brand, @Param("type") String type, @Param("model") String model);
 
-  boolean existsSparePartByBrandAndTypeAndModel(String brand, String type, String model);
+  boolean existsByBrandBrandNameAndTypeTypeNameAndModel(String brand, String type, String model);
   boolean existsById(Long id);
 }

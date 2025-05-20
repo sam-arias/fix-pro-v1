@@ -28,7 +28,7 @@ public class SparePartServiceImpl implements SparePartService {
 
   @Override
   public boolean registerSparePart(SparePart sparePart) {
-    if (!sparePartRepository.existsSparePartByBrandAndTypeAndModel(sparePart.getBrand().getBrandName(), sparePart.getType().getTypeName(), sparePart.getModel())) {
+    if (!sparePartRepository.existsByBrandBrandNameAndTypeTypeNameAndModel(sparePart.getBrand().getBrandName(), sparePart.getType().getTypeName(), sparePart.getModel())) {
       sparePartRepository.save(sparePart);
       return true;
     }

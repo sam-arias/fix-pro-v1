@@ -3,6 +3,7 @@ package com.localMantenimiento.fixpro.interventions.service;
 import com.localMantenimiento.fixpro.interventions.model.InterventionDetails;
 import com.localMantenimiento.fixpro.interventions.model.InterventionOrder;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,4 +24,10 @@ public interface InterventionService {
   public ArrayList<Integer> getSalesInformation(Long id);
 
   public List<InterventionOrder> getTop5RecentInterventionOrders();
+
+  public List<InterventionOrder> getOrdersByCustomerName(String customerName);
+
+  public List<InterventionOrder> getOrdersByDate(LocalDate date);
+
+  public List<InterventionOrder> getOrdersByCustomerNameAndDate(String customerName, LocalDate date);
 }

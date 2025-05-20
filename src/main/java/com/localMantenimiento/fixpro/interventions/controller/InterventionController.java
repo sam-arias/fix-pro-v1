@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,5 +72,20 @@ public class InterventionController {
   @GetMapping("/orders/recent-orders")
   public List<InterventionOrder> getTop5RecentInterventionOrders() {
     return interventionService.getTop5RecentInterventionOrders();
+  }
+
+  @GetMapping("/orders/by-customer-name/{customerName}")
+  public List<InterventionOrder> getOrdersByCustomerName(@PathVariable String customerName) {
+    return interventionService.getOrdersByCustomerName(customerName);
+  }
+
+  @GetMapping("/orders/by-day/{date}")
+  public List<InterventionOrder> getOrdersByDate(@PathVariable LocalDate date) {
+    return interventionService.getOrdersByDate(date);
+  }
+
+  @GetMapping("/orders/by-customer-and-day")
+  public List<InterventionOrder> getOrdersByCustomerNameAndDate(@RequestParam String customerName, @RequestParam LocalDate date) {
+    return interventionService.getOrdersByCustomerNameAndDate(customerName, date);
   }
 }

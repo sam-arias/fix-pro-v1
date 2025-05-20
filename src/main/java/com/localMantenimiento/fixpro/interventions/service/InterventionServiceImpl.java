@@ -82,11 +82,24 @@ public class InterventionServiceImpl implements InterventionService {
     List<InterventionOrder> ordersCompleted = interventionOrderRepository.findByInterventionStatus("Completada");
     List<InterventionOrder> pendingOrders = interventionOrderRepository.findByInterventionStatus("Pendiente");
     List<InterventionOrder> ordersInProcess = interventionOrderRepository.findByInterventionStatus("En Proceso");
-    List<InterventionOrder> assignedOrders = interventionOrderRepository.findByPeople(id);
+    List<InterventionOrder> assignedOrders = interventionOrderRepository.findByPeopleId(id);
     return new ArrayList<>(Arrays.asList(ordersToday.size(), ordersCompleted.size(), pendingOrders.size(), ordersInProcess.size()));
   }
 
   public List<InterventionOrder> getTop5RecentInterventionOrders() {
     return interventionOrderRepository.findTop5ByOrderByEntryDateDesc();
   }
+
+  public List<InterventionOrder> getOrdersByCustomerName(String customerName) {
+    return interventionOrderRepository.findByCustomerName(customerName);
+  }
+
+  public List<InterventionOrder> getOrdersByDate(LocalDate date) {
+    return interventionOrderRepository.findByDay(date);
+  }
+
+  public List<InterventionOrder> getOrdersByCustomerNameAndDate(String customerName, LocalDate date) {
+    return interventionOrderRepository.findByCustomerNameAndDate(customerName, date);
+  }
+
 }
