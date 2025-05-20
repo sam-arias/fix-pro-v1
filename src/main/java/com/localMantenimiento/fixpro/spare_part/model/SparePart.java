@@ -17,18 +17,23 @@ public class SparePart {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "type", nullable = false, length = 20)
-  private String type;
-
   @Column(name = "model", nullable = false, length = 20)
   private String model;
-
-  @Column(name = "brand", nullable = false, length = 20)
-  private String brand;
 
   @Column(name = "price", nullable = false)
   private Double price;
 
+  @Column(name = "availability", nullable = false)
+  private String availability;
+
   @Column(name = "stock", nullable = false)
   private Integer stock;
+
+  @ManyToOne
+  @JoinColumn(name = "brand_id", nullable = false)
+  private Brand brand;
+
+  @ManyToOne
+  @JoinColumn(name = "type_id", nullable = false)
+  private Type type;
 }

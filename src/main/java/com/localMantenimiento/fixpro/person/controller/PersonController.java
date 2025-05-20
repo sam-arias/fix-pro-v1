@@ -43,12 +43,12 @@ public class PersonController {
   }
 
   @GetMapping("/by-role/{roleId}")
-  public Optional<List<Person>> getPeopleByRole(@PathVariable Long roleId) {
+  public List<Person> getPeopleByRole(@PathVariable Long roleId) {
     return personService.getPeopleByRole(roleId);
   }
 
   @GetMapping("/by-role-and-specialty")
-  public Optional<List<Person>> getPeopleByRoleAndSpecialty(
+  public List<Person> getPeopleByRoleAndSpecialty(
       @RequestParam Long roleId,
       @RequestParam Long specialtyId) {
     return personService.getPeopleByRoleAndSpecialty(roleId, specialtyId);
@@ -65,14 +65,14 @@ public class PersonController {
     return personService.updateRole(id, updatedRole);
   }
 
-  @GetMapping("/roles/{id}")
+  @GetMapping("/roles/id/{id}")
   public Optional<Role> getRoleById(@PathVariable Long id) {
     return personService.getRoleById(id);
   }
 
 
   @GetMapping("/roles")
-  public Optional<List<Role>> getAllRoles() {
+  public List<Role> getAllRoles() {
     return personService.getAllRoles();
   }
 
@@ -87,13 +87,13 @@ public class PersonController {
     return personService.updateSpecialty(id, updatedSpecialty);
   }
 
-  @GetMapping("/specialties/{id}")
+  @GetMapping("/specialties/id/{id}")
   public Optional<Specialty> getSpecialtyById(@PathVariable Long id) {
     return personService.getSpecialtyById(id);
   }
 
   @GetMapping("/specialties")
-  public Optional<List<Specialty>> getAllSpecialties() {
+  public List<Specialty> getAllSpecialties() {
     return personService.getAllSpecialties();
   }
 
@@ -120,12 +120,29 @@ public class PersonController {
   }
 
   @PutMapping("/change-availability/{id}")
-  public void changeAvailability(@PathVariable Long id, @RequestParam String availability) {
-    personService.changeAvailability(id, availability);
+  public Boolean changeAvailability(@PathVariable Long id, @RequestParam String availability) {
+    return personService.changeAvailability(id, availability);
   }
 
   @PutMapping("/change-password/{id}")
   public Boolean changePassword(@PathVariable Long id, @RequestBody Map<String, String> passwords){
     return personService.changePassword(id, passwords.get("oldPassword"), passwords.get("newPassword"));
+  }
+
+
+  @GetMapping("/staff")
+  public List<Person> getPeopleByStaff() {
+    System.out.println(personService.getStaff());
+    return personService.getStaff();
+  }
+
+  @GetMapping("/roles/name/{name}")
+  public Role getRolesByName(@PathVariable String name) {
+    return personService.getRoleByName(name);
+  }
+
+  @GetMapping("/specialties/name/{name}")
+  public Specialty getSpecialtiesByName(@PathVariable String name) {
+    return personService.getSpecialtyByName(name);
   }
 }

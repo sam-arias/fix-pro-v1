@@ -14,23 +14,27 @@ public interface PersonService {
   public Optional<Person> getPersonById(Long id);
   public Optional<Person> getPersonByEmail(String email);
 
-  public Optional<List<Person>> getPeopleByRole(Long roleId);
-  public Optional<List<Person>> getPeopleByRoleAndSpecialty(Long roleId, Long specialtyId);
+  public List<Person> getPeopleByRole(Long roleId);
+  public List<Person> getPeopleByRoleAndSpecialty(Long roleId, Long specialtyId);
 
   public boolean addRole(Role newRole);
   public boolean updateRole(Long id, Role updatedRole);
 
   public Optional<Role> getRoleById(Long id);
-  public Optional<List<Role>> getAllRoles();
+  public List<Role> getAllRoles();
 
   public boolean addSpecialty(Specialty newSpecialty);
   public boolean updateSpecialty(Long id, Specialty updatedSpecialty);
 
   public Optional<Specialty> getSpecialtyById(Long id);
-  public Optional<List<Specialty>> getAllSpecialties();
+  public List<Specialty> getAllSpecialties();
 
 
   public Role login(String email, String password);
-  public void changeAvailability(Long id, String availability);
+  public Boolean changeAvailability(Long id, String availability);
   public Boolean changePassword(Long id, String oldPassword, String newPassword);
+  public List<Person> getStaff();
+
+  public Role getRoleByName(String roleName);
+  public Specialty getSpecialtyByName(String specialtyName);
 }

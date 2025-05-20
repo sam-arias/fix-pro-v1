@@ -2,6 +2,8 @@ package com.localMantenimiento.fixpro.spare_part.repository;
 
 import com.localMantenimiento.fixpro.spare_part.model.SparePart;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,10 +11,15 @@ import java.util.Optional;
 
 @Repository
 public interface SparePartRepository extends JpaRepository<SparePart, Long> {
-  Optional<List<SparePart>> findByType(String type);
-  Optional<List<SparePart>> findByModel(String model);
-  Optional<List<SparePart>> findByBrand(String brand);
-  Optional<SparePart> findSByBrandAndTypeAndModel(String brand, String type, String model);
+  @Query("SELECT sp FROM SparePart sp JOIN FETCH sp.type t WHERE t.typeName = :type")
+  List<SparePart> findByType(@Param("type") String type);
+  List<SparePart> findByModel(String model);
+
+  @Query("SELECT sp FROM SparePart sp JOIN FETCH sp.brand b WHERE b.brandName = :brand")
+  List<SparePart> findSparePartsByBrand(@Param("brand") String brand);
+
+  @Query("SELECT sp FROM SparePart sp JOIN FETCH sp.brand b JOIN FETCH sp.type t WHERE  b.brandName = :brand AND  t.typeName = :type AND sp.model = :model")
+  SparePart findSparePartByBrandAndTypeAndModel(@Param("brand") String brand, @Param("type") String type, @Param("model") String model);
 
   boolean existsSparePartByBrandAndTypeAndModel(String brand, String type, String model);
   boolean existsById(Long id);

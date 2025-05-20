@@ -1,6 +1,8 @@
 package com.localMantenimiento.fixpro.spare_part.controller;
 
+import com.localMantenimiento.fixpro.spare_part.model.Brand;
 import com.localMantenimiento.fixpro.spare_part.model.SparePart;
+import com.localMantenimiento.fixpro.spare_part.model.Type;
 import com.localMantenimiento.fixpro.spare_part.model.UsedSparePart;
 import com.localMantenimiento.fixpro.spare_part.service.SparePartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,23 +36,28 @@ public class SparePartController {
   }
 
   @GetMapping("/by-model/{model}")
-  public Optional<List<SparePart>> getSparePartByModel(@PathVariable String model) {
+  public List<SparePart> getSparePartByModel(@PathVariable String model) {
     return sparePartService.getSparePartByModel(model);
   }
 
   @GetMapping("/by-brand/{brand}")
-  public Optional<List<SparePart>> getSparePartByBrand(@PathVariable String brand) {
+  public List<SparePart> getSparePartByBrand(@PathVariable String brand) {
     return sparePartService.getSparePartByBrand(brand);
   }
 
   @GetMapping("/by-type/{type}")
-  public Optional<List<SparePart>> getSparePartByType(@PathVariable String type) {
+  public List<SparePart> getSparePartByType(@PathVariable String type) {
     return sparePartService.getSparePartByType(type);
   }
 
-  @GetMapping
-  public Optional<SparePart> getSparePartByBrandTypeAndModel(@RequestParam String brand, @RequestParam String type, @RequestParam String model) {
+  @GetMapping("by-all-atributes")
+  public SparePart getSparePartByBrandTypeAndModel(@RequestParam String brand, @RequestParam String type, @RequestParam String model) {
     return sparePartService.getSparePartByBrandAndTypeAndModel(brand, type, model);
+  }
+
+  @GetMapping
+  public List<SparePart> getAllSpareParts() {
+    return sparePartService.getAllSpareParts();
   }
 
   @PostMapping("/used-spare-parts")
@@ -68,5 +75,40 @@ public class SparePartController {
   @GetMapping("/used-spare-parts/{id}")
   public Optional<UsedSparePart> getUsedSparePartById(@PathVariable Long id) {
     return sparePartService.getUsedSparePartById(id);
+  }
+
+  @PutMapping("/change-availability/{id}")
+  public boolean changeAvailabilitySparePart(@PathVariable Long id, @RequestParam String availability) {
+    return sparePartService.changeAvailabilitySparePart(id, availability);
+  }
+
+  @PostMapping("/brand")
+  public boolean addBrand(@RequestBody Brand brand) {
+    return sparePartService.addBrand(brand);
+  }
+
+  @GetMapping("/brand/{brandName}")
+  public Optional<Brand> getBrandByName(@PathVariable String brandName) {
+    return sparePartService.getBrandByName(brandName);
+  }
+
+  @GetMapping("brand")
+  public List<Brand> getAllBrands() {
+    return sparePartService.getAllBrands();
+  }
+
+  @PostMapping("/type")
+  public boolean addType(@RequestBody Type type) {
+    return sparePartService.addType(type);
+  }
+
+  @GetMapping("/type/{typeName}")
+  public Optional<Type> getTypeByName(@PathVariable String typeName) {
+    return sparePartService.getTypeByName(typeName);
+  }
+
+  @GetMapping("/type")
+  public List<Type> getAllTypes() {
+    return sparePartService.getAllTypes();
   }
 }

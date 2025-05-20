@@ -29,4 +29,7 @@ public class Device {
   @Column(name = "serial", length = 25)
   private String serial;
 
+  @Column(name = "password", length = 20)
+  private String password;
+
 }

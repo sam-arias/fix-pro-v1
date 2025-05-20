@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.localMantenimiento.fixpro.interventions.model.InterventionOrder;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
@@ -46,11 +47,13 @@ public class Person {
   @JoinColumn(name = "FK_role_id", nullable = false)
   private Role role;
 
+  @ToString.Exclude
   @ManyToMany
   @JoinTable(name = "person_specialty", joinColumns = @JoinColumn(name = "person_id"),
   inverseJoinColumns = @JoinColumn(name = "specialty_id"))
   private List<Specialty> specialties;
 
+  @ToString.Exclude
   @ManyToMany(mappedBy = "people")
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private List<InterventionOrder> interventionOrders;

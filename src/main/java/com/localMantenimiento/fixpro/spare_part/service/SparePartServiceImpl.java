@@ -1,8 +1,12 @@
 package com.localMantenimiento.fixpro.spare_part.service;
 
+import com.localMantenimiento.fixpro.spare_part.model.Brand;
 import com.localMantenimiento.fixpro.spare_part.model.SparePart;
+import com.localMantenimiento.fixpro.spare_part.model.Type;
 import com.localMantenimiento.fixpro.spare_part.model.UsedSparePart;
+import com.localMantenimiento.fixpro.spare_part.repository.BrandRepository;
 import com.localMantenimiento.fixpro.spare_part.repository.SparePartRepository;
+import com.localMantenimiento.fixpro.spare_part.repository.TypeRepository;
 import com.localMantenimiento.fixpro.spare_part.repository.UsedSparePartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +21,14 @@ public class SparePartServiceImpl implements SparePartService {
   private SparePartRepository sparePartRepository;
   @Autowired
   private UsedSparePartRepository usedSparePartRepository;
+  @Autowired
+  private BrandRepository brandRepository;
+  @Autowired
+  private TypeRepository typeRepository;
 
   @Override
   public boolean registerSparePart(SparePart sparePart) {
-    if (!sparePartRepository.existsSparePartByBrandAndTypeAndModel(sparePart.getBrand(), sparePart.getType(), sparePart.getModel())) {
+    if (!sparePartRepository.existsSparePartByBrandAndTypeAndModel(sparePart.getBrand().getBrandName(), sparePart.getType().getTypeName(), sparePart.getModel())) {
       sparePartRepository.save(sparePart);
       return true;
     }
@@ -43,23 +51,28 @@ public class SparePartServiceImpl implements SparePartService {
   }
 
   @Override
-  public Optional<List<SparePart>> getSparePartByModel(String model) {
+  public List<SparePart> getSparePartByModel(String model) {
     return sparePartRepository.findByModel(model);
   }
 
   @Override
-  public Optional<List<SparePart>> getSparePartByBrand(String brand) {
-    return sparePartRepository.findByBrand(brand);
+  public List<SparePart> getSparePartByBrand(String brand) {
+    return sparePartRepository.findSparePartsByBrand(brand);
   }
 
   @Override
-  public Optional<List<SparePart>> getSparePartByType(String type) {
+  public List<SparePart> getSparePartByType(String type) {
     return sparePartRepository.findByType(type);
   }
 
   @Override
-  public Optional<SparePart> getSparePartByBrandAndTypeAndModel(String brand, String type, String model) {
-    return sparePartRepository.findSByBrandAndTypeAndModel(brand, type, model);
+  public SparePart getSparePartByBrandAndTypeAndModel(String brand, String type, String model) {
+    return sparePartRepository.findSparePartByBrandAndTypeAndModel(brand, type, model);
+  }
+
+  @Override
+  public List<SparePart> getAllSpareParts() {
+    return sparePartRepository.findAll();
   }
 
   @Override
@@ -88,5 +101,55 @@ public class SparePartServiceImpl implements SparePartService {
   @Override
   public Optional<UsedSparePart> getUsedSparePartById(Long id) {
     return usedSparePartRepository.findById(id);
+  }
+
+
+  @Override
+  public boolean changeAvailabilitySparePart(Long id, String availability) {
+    Optional<SparePart> sparePart = sparePartRepository.findById(id);
+    if (sparePart.isPresent()) {
+      sparePart.get().setAvailability(availability);
+      sparePartRepository.save(sparePart.get());
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public boolean addBrand(Brand brand) {
+    if (!brandRepository.existsByBrandName(brand.getBrandName())) {
+      brandRepository.save(brand);
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public Optional<Brand> getBrandByName(String brandName) {
+    return brandRepository.findByBrandName(brandName);
+  }
+
+  @Override
+  public List<Brand> getAllBrands() {
+    return brandRepository.findAll();
+  }
+
+  @Override
+  public boolean addType(Type type) {
+    if (!typeRepository.existsByTypeName(type.getTypeName())) {
+      typeRepository.save(type);
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public Optional<Type> getTypeByName(String typeName) {
+    return typeRepository.findByTypeName(typeName);
+  }
+
+  @Override
+  public List<Type> getAllTypes() {
+    return typeRepository.findAll();
   }
 }

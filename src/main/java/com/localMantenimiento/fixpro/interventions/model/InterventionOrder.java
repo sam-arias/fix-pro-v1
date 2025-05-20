@@ -5,6 +5,8 @@ import com.localMantenimiento.fixpro.device.model.Device;
 import com.localMantenimiento.fixpro.person.model.Person;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -38,6 +40,7 @@ public class InterventionOrder {
   @JoinColumn(name = "FK_device_id", nullable = false)
   private Device device;
 
+  @ToString.Exclude
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @ManyToMany
   @JoinTable(name = "intervention_order_person", joinColumns = @JoinColumn(name = "intervention_order_id"),

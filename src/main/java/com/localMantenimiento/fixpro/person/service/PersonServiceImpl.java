@@ -35,8 +35,9 @@ public class PersonServiceImpl implements PersonService {
       }
       personRepository.save(newPerson);
       return true;
+    }else {
+      return false;
     }
-    return false;
   }
 
   @Override
@@ -65,17 +66,13 @@ public class PersonServiceImpl implements PersonService {
   }
 
   @Override
-  public Optional<List<Person>> getPeopleByRole(Long roleId) {
-    return Optional.of(personRepository.findPersonByRoleId(roleId));
+  public List<Person> getPeopleByRole(Long roleId) {
+    return personRepository.findPersonByRoleId(roleId);
   }
 
   @Override
-  public Optional<List<Person>> getPeopleByRoleAndSpecialty(Long roleId, Long specialtyId) {
-    if (roleRepository.existsById(roleId) && specialtyRepository.existsById(specialtyId)) {
-
-      return Optional.of(personRepository.findByRoleIdAndSpecialtiesId(roleId, specialtyId));
-    }
-    return Optional.empty();
+  public List<Person> getPeopleByRoleAndSpecialty(Long roleId, Long specialtyId) {
+    return personRepository.findByRoleIdAndSpecialtiesId(roleId, specialtyId);
   }
 
   @Override
@@ -106,8 +103,8 @@ public class PersonServiceImpl implements PersonService {
   }
 
   @Override
-  public Optional<List<Role>> getAllRoles() {
-    return Optional.of(roleRepository.findAll());
+  public List<Role> getAllRoles() {
+    return roleRepository.findAllRoles();
   }
 
   @Override
@@ -135,8 +132,8 @@ public class PersonServiceImpl implements PersonService {
   }
 
   @Override
-  public Optional<List<Specialty>> getAllSpecialties() {
-    return Optional.of(specialtyRepository.findAll());
+  public List<Specialty> getAllSpecialties() {
+    return specialtyRepository.findAll();
   }
 
   @Override
@@ -152,12 +149,13 @@ public class PersonServiceImpl implements PersonService {
   }
 
   @Override
-  public void changeAvailability(Long id, String availability) {
+  public Boolean changeAvailability(Long id, String availability) {
     Optional<Person> person = personRepository.findById(id);
-    if (person.isEmpty()) {return;}
+    if (person.isEmpty()) {return false;}
     person.get().setId(id);
     person.get().setAvailability(availability);
     personRepository.save(person.get());
+    return true;
   }
 
   @Override
@@ -172,5 +170,22 @@ public class PersonServiceImpl implements PersonService {
       return true;
     }
     return false;
+  }
+
+  @Override
+  public List<Person> getStaff() {
+    System.out.println(personRepository.findStaff());
+    return personRepository.findStaff();
+  }
+
+
+  @Override
+  public Role getRoleByName(String roleName) {
+    return roleRepository.findByRoleName(roleName);
+  }
+
+  @Override
+  public Specialty getSpecialtyByName(String specialtyName) {
+    return specialtyRepository.findSpecialtyBySpecialtyName(specialtyName);
   }
 }
