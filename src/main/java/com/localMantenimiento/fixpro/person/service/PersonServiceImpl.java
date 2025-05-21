@@ -28,16 +28,15 @@ public class PersonServiceImpl implements PersonService {
 
 
   @Override
-  public boolean registerPerson(Person newPerson) {
-    if(!personRepository.existsByEmail(newPerson.getEmail())) {
+  public Optional<Person> registerPerson(Person newPerson) {
+    if(newPerson.getRole().getRoleName().equals("Cliente") || !personRepository.existsByEmail(newPerson.getEmail())) {
       if(newPerson.getPassword() != null) {
         newPerson.encryptPassword(passwordEncoder);
       }
       personRepository.save(newPerson);
-      return true;
-    }else {
-      return false;
+      return Optional.of(newPerson);
     }
+    return Optional.empty();
   }
 
   @Override

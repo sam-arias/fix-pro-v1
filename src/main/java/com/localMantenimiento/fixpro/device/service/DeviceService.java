@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DeviceService {
-  public boolean registerDevice(Device newDevice);
+  public Device registerDevice(Device newDevice);
   public boolean updateDevice(Long id, Device updatedDevice);
 
   public Optional<Device> getDeviceById(Long id);

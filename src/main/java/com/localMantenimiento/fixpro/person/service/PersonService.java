@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PersonService {
-  public boolean registerPerson(Person newPerson);
+  public Optional<Person> registerPerson(Person newPerson);
   public boolean updatePerson(Long id,Person updatedPerson);
 
   public Optional<Person> getPersonById(Long id);

@@ -17,7 +17,7 @@ public class DeviceController {
 
   // Registrar un nuevo dispositivo
   @PostMapping
-  public boolean registerDevice(@RequestBody Device newDevice) {
+  public Device registerDevice(@RequestBody Device newDevice) {
     return deviceService.registerDevice(newDevice);
   }
 

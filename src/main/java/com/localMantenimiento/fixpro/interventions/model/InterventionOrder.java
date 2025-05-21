@@ -36,6 +36,7 @@ public class InterventionOrder {
     this.entryDate = LocalDateTime.now();
   }
 
+  @ToString.Exclude
   @ManyToOne
   @JoinColumn(name = "FK_device_id", nullable = false)
   private Device device;

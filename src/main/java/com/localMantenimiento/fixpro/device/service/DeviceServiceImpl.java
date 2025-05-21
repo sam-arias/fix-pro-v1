@@ -15,9 +15,10 @@ public class DeviceServiceImpl implements DeviceService{
   private DeviceRepository deviceRepository;
 
   @Override
-  public boolean registerDevice(Device newDevice) {
+  public Device registerDevice(Device newDevice) {
     deviceRepository.save(newDevice);
-    return true;
+    System.out.println(newDevice);
+    return newDevice;
   }
 
   @Override

@@ -23,7 +23,7 @@ public class PersonController {
   PersonService personService;
 
   @PostMapping
-  public boolean registerPerson(@RequestBody Person newPerson) {
+  public Optional<Person> registerPerson(@RequestBody Person newPerson) {
     return personService.registerPerson(newPerson);
   }
 
