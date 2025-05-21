@@ -1,9 +1,11 @@
 package com.localMantenimiento.fixpro.interventions.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,7 +27,8 @@ public class InterventionDetails {
   @Column(name = "total_cost")
   private Double totalCost;
 
-  @ManyToOne
-  @JoinColumn(name = "FK_intervention_order_id")
-  private InterventionOrder interventionOrderOrder;
+  @OneToOne
+  @JsonBackReference
+  @JoinColumn(name = "FK_intervention_order_id")// Este lado se omite al generar JSON
+  private InterventionOrder interventionOrder;
 }

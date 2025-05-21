@@ -25,9 +25,9 @@ public class InterventionServiceImpl implements InterventionService {
   UsedSparePartRepository usedSparePartRepository;
 
   @Override
-  public boolean createInterventionOrder(InterventionOrder newInterventionOrder) {
+  public Optional<InterventionOrder> createInterventionOrder(InterventionOrder newInterventionOrder) {
     interventionOrderRepository.save(newInterventionOrder);
-    return true;
+    return Optional.of(newInterventionOrder);
   }
 
   @Override
@@ -90,16 +90,20 @@ public class InterventionServiceImpl implements InterventionService {
     return interventionOrderRepository.findTop5ByOrderByEntryDateDesc();
   }
 
-  public List<InterventionOrder> getOrdersByCustomerName(String customerName) {
-    return interventionOrderRepository.findByCustomerName(customerName);
+  public List<InterventionOrder> getOrdersByCustomerName(String customerName, String customerLastName) {
+    return interventionOrderRepository.findByCustomerName(customerName, customerLastName);
   }
 
   public List<InterventionOrder> getOrdersByDate(LocalDate date) {
     return interventionOrderRepository.findByDay(date);
   }
 
-  public List<InterventionOrder> getOrdersByCustomerNameAndDate(String customerName, LocalDate date) {
-    return interventionOrderRepository.findByCustomerNameAndDate(customerName, date);
+  public List<InterventionOrder> getOrdersByCustomerNameAndDate(String customerName, String customerLastName, LocalDate date) {
+    return interventionOrderRepository.findByCustomerNameAndDate(customerName, customerLastName, date);
   }
 
+  @Override
+  public Optional<InterventionDetails> getInterventionDetilsByOrderId(Long orderId) {
+    return interventionDetailsRepository.getInterventionDetailsByOrderId(orderId);
+  }
 }

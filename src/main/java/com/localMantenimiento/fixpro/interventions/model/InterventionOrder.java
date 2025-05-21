@@ -1,5 +1,6 @@
 package com.localMantenimiento.fixpro.interventions.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.localMantenimiento.fixpro.device.model.Device;
 import com.localMantenimiento.fixpro.person.model.Person;
@@ -41,7 +42,6 @@ public class InterventionOrder {
   @JoinColumn(name = "FK_device_id", nullable = false)
   private Device device;
 
-  @ToString.Exclude
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @ManyToMany
   @JoinTable(name = "intervention_order_person", joinColumns = @JoinColumn(name = "intervention_order_id"),
@@ -58,4 +58,7 @@ public class InterventionOrder {
         .collect(Collectors.toList());
   }
 
+  @OneToOne(mappedBy = "interventionOrder")
+  @JsonManagedReference  // Este lado se incluye en el JSON
+  private InterventionDetails details;
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InterventionService {
-  public boolean createInterventionOrder(InterventionOrder newInterventionOrder);
+  public Optional<InterventionOrder> createInterventionOrder(InterventionOrder newInterventionOrder);
   public boolean updateInterventionOrder(Long id, InterventionOrder updatedInterventionOrder);
 
   public Optional<InterventionOrder> getInterventionOrderById(Long id);
@@ -25,9 +25,12 @@ public interface InterventionService {
 
   public List<InterventionOrder> getTop5RecentInterventionOrders();
 
-  public List<InterventionOrder> getOrdersByCustomerName(String customerName);
+  public List<InterventionOrder> getOrdersByCustomerName(String customerName, String customerLastName);
 
   public List<InterventionOrder> getOrdersByDate(LocalDate date);
 
-  public List<InterventionOrder> getOrdersByCustomerNameAndDate(String customerName, LocalDate date);
+  public List<InterventionOrder> getOrdersByCustomerNameAndDate(String customerName, String customerLastName, LocalDate date);
+
+  public Optional<InterventionDetails> getInterventionDetilsByOrderId(Long orderId);
+
 }

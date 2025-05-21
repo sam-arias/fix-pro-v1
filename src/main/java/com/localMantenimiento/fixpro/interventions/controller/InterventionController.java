@@ -4,7 +4,6 @@ import com.localMantenimiento.fixpro.interventions.model.InterventionDetails;
 import com.localMantenimiento.fixpro.interventions.model.InterventionOrder;
 import com.localMantenimiento.fixpro.interventions.service.InterventionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -22,7 +21,7 @@ public class InterventionController {
 
   // Intervention Order endpoints
   @PostMapping("/orders")
-  public boolean createInterventionOrder(@RequestBody InterventionOrder newInterventionOrder) {
+  public Optional<InterventionOrder> createInterventionOrder(@RequestBody InterventionOrder newInterventionOrder) {
     return interventionService.createInterventionOrder(newInterventionOrder);
   }
 
@@ -74,9 +73,9 @@ public class InterventionController {
     return interventionService.getTop5RecentInterventionOrders();
   }
 
-  @GetMapping("/orders/by-customer-name/{customerName}")
-  public List<InterventionOrder> getOrdersByCustomerName(@PathVariable String customerName) {
-    return interventionService.getOrdersByCustomerName(customerName);
+  @GetMapping("/orders/by-customer-name")
+  public List<InterventionOrder> getOrdersByCustomerName(@RequestParam String customerName, @RequestParam String customerLastName) {
+    return interventionService.getOrdersByCustomerName(customerName, customerLastName);
   }
 
   @GetMapping("/orders/by-day/{date}")
@@ -85,7 +84,12 @@ public class InterventionController {
   }
 
   @GetMapping("/orders/by-customer-and-day")
-  public List<InterventionOrder> getOrdersByCustomerNameAndDate(@RequestParam String customerName, @RequestParam LocalDate date) {
-    return interventionService.getOrdersByCustomerNameAndDate(customerName, date);
+  public List<InterventionOrder> getOrdersByCustomerNameAndDate(@RequestParam String customerName, @RequestParam String customerLastName, @RequestParam LocalDate date) {
+    return interventionService.getOrdersByCustomerNameAndDate(customerName, customerLastName, date);
+  }
+
+  @GetMapping("/details/by-order-id/{orderId}")
+  public Optional<InterventionDetails> getInterventionDetilsByOrderId(@PathVariable Long orderId) {
+    return interventionService.getInterventionDetilsByOrderId(orderId);
   }
 }
