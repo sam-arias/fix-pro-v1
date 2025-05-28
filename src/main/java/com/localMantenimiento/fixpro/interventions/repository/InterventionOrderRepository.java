@@ -30,4 +30,5 @@ public interface InterventionOrderRepository extends JpaRepository<InterventionO
 
   @Query("SELECT o FROM InterventionOrder o JOIN o.people p WHERE p.name = :name AND p.lastName = :lastName AND DATE(o.entryDate) = :date")
   List<InterventionOrder> findByCustomerNameAndDate(@Param("name") String name, @Param("lastName") String  lastName,@Param("date") LocalDate date);
+
 }
