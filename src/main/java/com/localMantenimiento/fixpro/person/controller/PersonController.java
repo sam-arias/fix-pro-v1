@@ -126,7 +126,7 @@ public class PersonController {
 
   @PutMapping("/change-password/{id}")
   public Boolean changePassword(@PathVariable Long id, @RequestBody Map<String, String> passwords){
-    return personService.changePassword(id, passwords.get("oldPassword"), passwords.get("newPassword"));
+    return personService.changePassword(id, passwords.get("currentPassword"), passwords.get("newPassword"));
   }
 
 

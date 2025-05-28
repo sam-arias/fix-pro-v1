@@ -42,9 +42,9 @@ public class InterventionController {
     return interventionService.getAllInterventionOrders();
   }
 
-  @GetMapping("/orders/status/{status}")
-  public List<InterventionOrder> getInterventionOrdersByStatus(@PathVariable String status) {
-    return interventionService.getInterventionOrdersByStatus(status);
+  @GetMapping("/orders/by-technician-id-and-status")
+  public List<InterventionOrder> getInterventionOrdersByTechnicianIdAndStatus(@RequestParam Long technicianId, @RequestParam String status) {
+    return interventionService.getInterventionOrdersByTechnicianIdAndStatus(technicianId, status);
   }
 
   // Intervention Details endpoints
@@ -92,4 +92,10 @@ public class InterventionController {
   public Optional<InterventionDetails> getInterventionDetilsByOrderId(@PathVariable Long orderId) {
     return interventionService.getInterventionDetilsByOrderId(orderId);
   }
+
+  @GetMapping("/orders/by-technician-id/{technicianId}")
+  public List<InterventionOrder> getOrdersByTechnicianId(@PathVariable Long technicianId) {
+    return interventionService.getOrdersByTechnicianId(technicianId);
+  }
+
 }

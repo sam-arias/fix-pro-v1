@@ -51,8 +51,8 @@ public class InterventionServiceImpl implements InterventionService {
   }
 
   @Override
-  public List<InterventionOrder> getInterventionOrdersByStatus(String status) {
-    return interventionOrderRepository.findByInterventionStatus(status);
+  public List<InterventionOrder> getInterventionOrdersByTechnicianIdAndStatus(Long technicianId ,String status) {
+    return interventionOrderRepository.findByPeopleIdAndInterventionStatus(technicianId,status);
   }
 
   @Override
@@ -105,5 +105,10 @@ public class InterventionServiceImpl implements InterventionService {
   @Override
   public Optional<InterventionDetails> getInterventionDetilsByOrderId(Long orderId) {
     return interventionDetailsRepository.getInterventionDetailsByOrderId(orderId);
+  }
+
+  @Override
+  public List<InterventionOrder> getOrdersByTechnicianId(Long technicianId) {
+    return interventionOrderRepository.findByPeopleId(technicianId);
   }
 }

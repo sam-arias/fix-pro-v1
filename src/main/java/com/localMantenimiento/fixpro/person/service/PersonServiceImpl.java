@@ -158,12 +158,12 @@ public class PersonServiceImpl implements PersonService {
   }
 
   @Override
-  public Boolean changePassword(Long id, String oldPassword, String newPassword) {
+  public Boolean changePassword(Long id, String currentPassword, String newPassword) {
     Optional<Person> person = personRepository.findById(id);
     if (person.isEmpty()) {
       return false;
     }
-    if (passwordEncoder.matches(oldPassword, person.get().getPassword()) && !passwordEncoder.matches(newPassword, person.get().getPassword())) {
+    if (passwordEncoder.matches(currentPassword, person.get().getPassword()) && !passwordEncoder.matches(newPassword, person.get().getPassword())) {
       person.get().setPassword(passwordEncoder.encode(newPassword));
       personRepository.save(person.get());
       return true;

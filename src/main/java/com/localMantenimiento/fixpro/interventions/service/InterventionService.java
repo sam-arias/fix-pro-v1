@@ -14,7 +14,7 @@ public interface InterventionService {
 
   public Optional<InterventionOrder> getInterventionOrderById(Long id);
   public Optional<List<InterventionOrder>> getAllInterventionOrders();
-  public List<InterventionOrder> getInterventionOrdersByStatus(String status);
+  public List<InterventionOrder> getInterventionOrdersByTechnicianIdAndStatus(Long technicianId, String status);
 
   public boolean createInterventionDetails(InterventionDetails newInterventionDetails);
   public boolean updateInterventionDetails(Long id, InterventionDetails updatedInterventionDetails);
@@ -26,6 +26,8 @@ public interface InterventionService {
   public List<InterventionOrder> getTop5RecentInterventionOrders();
 
   public List<InterventionOrder> getOrdersByCustomerName(String customerName, String customerLastName);
+
+  public List<InterventionOrder> getOrdersByTechnicianId(Long technicianId);
 
   public List<InterventionOrder> getOrdersByDate(LocalDate date);
 

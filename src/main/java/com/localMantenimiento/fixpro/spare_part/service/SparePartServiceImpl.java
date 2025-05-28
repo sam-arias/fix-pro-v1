@@ -98,6 +98,8 @@ public class SparePartServiceImpl implements SparePartService {
     return false;
   }
 
+  
+
   @Override
   public Optional<UsedSparePart> getUsedSparePartById(Long id) {
     return usedSparePartRepository.findById(id);

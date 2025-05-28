@@ -32,7 +32,7 @@ public interface PersonService {
 
   public Role login(String email, String password);
   public Boolean changeAvailability(Long id, String availability);
-  public Boolean changePassword(Long id, String oldPassword, String newPassword);
+  public Boolean changePassword(Long id, String currentPassword, String newPassword);
   public List<Person> getStaff();
 
   public Role getRoleByName(String roleName);
