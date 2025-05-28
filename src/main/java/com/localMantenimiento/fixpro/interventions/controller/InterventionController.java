@@ -64,8 +64,8 @@ public class InterventionController {
   }
 
   @GetMapping("/orders/sales-information")
-  public ArrayList<Integer> getSalesInformation(@RequestBody Long id) {
-    return interventionService.getSalesInformation(id);
+  public ArrayList<Integer> getSalesInformation(@RequestBody Long personId) {
+    return interventionService.getSalesInformation(personId);
   }
 
   @GetMapping("/orders/recent-orders")

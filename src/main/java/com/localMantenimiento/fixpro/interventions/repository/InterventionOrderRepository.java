@@ -22,6 +22,8 @@ public interface InterventionOrderRepository extends JpaRepository<InterventionO
   @Query("SELECT o FROM InterventionOrder o JOIN o.people p WHERE p.id = :id")
   List<InterventionOrder> findByPeopleId(@Param("id") Long id);
 
+  @Query("SELECT o FROM InterventionOrder o JOIN o.people p WHERE p.id = :id AND DATE(o.entryDate) = :date")
+  List<InterventionOrder> findByPeopleIdAndDate(@Param("id") Long id, @Param("date") LocalDate date);
 
   @Query("SELECT  o FROM InterventionOrder o JOIN o.people p WHERE p.name = :name AND p.lastName = :lastName  AND  p.role.roleName = 'Cliente'")
   List<InterventionOrder> findByCustomerName(@Param("name") String name, @Param("lastName") String customerLastName);
