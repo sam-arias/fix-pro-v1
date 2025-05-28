@@ -29,7 +29,7 @@ public class PersonServiceImpl implements PersonService {
 
   @Override
   public Optional<Person> registerPerson(Person newPerson) {
-    if(newPerson.getRole().getRoleName().equals("Cliente") || !personRepository.existsByEmail(newPerson.getEmail())) {
+    if(newPerson.getRole() != null && ("Cliente".equals(newPerson.getRole().getRoleName()) || !personRepository.existsByEmail(newPerson.getEmail()))) {
       if(newPerson.getPassword() != null) {
         newPerson.encryptPassword(passwordEncoder);
       }
