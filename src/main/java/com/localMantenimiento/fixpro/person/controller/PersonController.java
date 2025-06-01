@@ -3,7 +3,6 @@ import com.localMantenimiento.fixpro.person.model.Person;
 import com.localMantenimiento.fixpro.person.model.Specialty;
 import com.localMantenimiento.fixpro.person.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -130,10 +129,9 @@ public class PersonController {
   }
 
 
-  @GetMapping("/staff")
-  public List<Person> getPeopleByStaff() {
-    System.out.println(personService.getStaff());
-    return personService.getStaff();
+  @GetMapping("/staff/{personId}")
+  public List<Person> getPeopleByStaff(@PathVariable Long personId) {
+    return personService.getStaff(personId);
   }
 
   @GetMapping("/roles/name/{name}")

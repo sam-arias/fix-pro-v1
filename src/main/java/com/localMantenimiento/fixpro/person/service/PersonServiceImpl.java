@@ -141,6 +141,9 @@ public class PersonServiceImpl implements PersonService {
     if (person.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
     }
+    if (person.get().getAvailability().equals("Desactivado")) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario Desactivado");
+    }
     if (!passwordEncoder.matches(password, person.get().getPassword())) {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Contraseña incorrecta");
     }
@@ -172,9 +175,8 @@ public class PersonServiceImpl implements PersonService {
   }
 
   @Override
-  public List<Person> getStaff() {
-    System.out.println(personRepository.findStaff());
-    return personRepository.findStaff();
+  public List<Person> getStaff(Long personId) {
+    return personRepository.findStaff(personId);
   }
 
 

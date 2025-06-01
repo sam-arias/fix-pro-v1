@@ -23,6 +23,6 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
       @Param("roleId") Long roleId,
       @Param("specialtyId") Long specialtyId);
 
-  @Query("SELECT DISTINCT  p FROM  Person p JOIN FETCH p.role r WHERE r.roleName != 'Cliente' AND p.availability != 'Desactivado'")
-  List<Person> findStaff();
+  @Query("SELECT DISTINCT  p FROM  Person p JOIN FETCH p.role r WHERE r.roleName != 'Cliente' AND p.id != :personId  AND p.availability != 'Desactivado'")
+  List<Person> findStaff(@Param("personId") Long personId);
 }

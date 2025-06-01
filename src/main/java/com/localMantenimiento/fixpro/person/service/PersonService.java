@@ -33,7 +33,7 @@ public interface PersonService {
   public Role login(String email, String password);
   public Boolean changeAvailability(Long id, String availability);
   public Boolean changePassword(Long id, String currentPassword, String newPassword);
-  public List<Person> getStaff();
+  public List<Person> getStaff(Long personId);
 
   public Role getRoleByName(String roleName);
   public Specialty getSpecialtyByName(String specialtyName);
