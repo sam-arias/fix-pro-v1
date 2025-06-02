@@ -4,9 +4,9 @@ import com.localMantenimiento.fixpro.spare_part.model.BrandSparePart;
 import com.localMantenimiento.fixpro.spare_part.model.SparePart;
 import com.localMantenimiento.fixpro.spare_part.model.TypeSparePart;
 import com.localMantenimiento.fixpro.spare_part.model.UsedSparePart;
-import com.localMantenimiento.fixpro.spare_part.repository.BrandRepository;
+import com.localMantenimiento.fixpro.spare_part.repository.BrandSparePartRepository;
 import com.localMantenimiento.fixpro.spare_part.repository.SparePartRepository;
-import com.localMantenimiento.fixpro.spare_part.repository.TypeRepository;
+import com.localMantenimiento.fixpro.spare_part.repository.TypeSparePartRepository;
 import com.localMantenimiento.fixpro.spare_part.repository.UsedSparePartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,9 +22,9 @@ public class SparePartServiceImpl implements SparePartService {
   @Autowired
   private UsedSparePartRepository usedSparePartRepository;
   @Autowired
-  private BrandRepository brandRepository;
+  private BrandSparePartRepository brandSparePartRepository;
   @Autowired
-  private TypeRepository typeRepository;
+  private TypeSparePartRepository typeSparePartRepository;
 
   @Override
   public boolean registerSparePart(SparePart sparePart) {
@@ -119,8 +119,8 @@ public class SparePartServiceImpl implements SparePartService {
 
   @Override
   public boolean addBrand(BrandSparePart brandSparePart) {
-    if (!brandRepository.existsByBrandName(brandSparePart.getBrandName())) {
-      brandRepository.save(brandSparePart);
+    if (!brandSparePartRepository.existsByBrandName(brandSparePart.getBrandName())) {
+      brandSparePartRepository.save(brandSparePart);
       return true;
     }
     return false;
@@ -128,18 +128,18 @@ public class SparePartServiceImpl implements SparePartService {
 
   @Override
   public Optional<BrandSparePart> getBrandByName(String brandName) {
-    return brandRepository.findByBrandName(brandName);
+    return brandSparePartRepository.findByBrandName(brandName);
   }
 
   @Override
   public List<BrandSparePart> getAllBrands() {
-    return brandRepository.findAll();
+    return brandSparePartRepository.findAll();
   }
 
   @Override
   public boolean addType(TypeSparePart typeSparePart) {
-    if (!typeRepository.existsByTypeName(typeSparePart.getTypeName())) {
-      typeRepository.save(typeSparePart);
+    if (!typeSparePartRepository.existsByTypeName(typeSparePart.getTypeName())) {
+      typeSparePartRepository.save(typeSparePart);
       return true;
     }
     return false;
@@ -147,11 +147,11 @@ public class SparePartServiceImpl implements SparePartService {
 
   @Override
   public Optional<TypeSparePart> getTypeByName(String typeName) {
-    return typeRepository.findByTypeName(typeName);
+    return typeSparePartRepository.findByTypeName(typeName);
   }
 
   @Override
   public List<TypeSparePart> getAllTypes() {
-    return typeRepository.findAll();
+    return typeSparePartRepository.findAll();
   }
 }

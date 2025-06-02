@@ -1,14 +1,15 @@
 package com.localMantenimiento.fixpro.device.repository;
 
-import com.localMantenimiento.fixpro.device.model.BrandDevice;
+import com.localMantenimiento.fixpro.device.model.TypeDevice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface BrandRepository extends JpaRepository<BrandDevice, Long> {
+public interface TypeDeviceRepository extends JpaRepository<TypeDevice, Long> {
   boolean existsById(Long id);
-  boolean existsByBrandName(String name);
-  Optional<BrandDevice> findByBrandName(String name);
+  Optional<TypeDevice> findByTypeName(String name);
+  boolean existsByTypeName(String name);
+
 }

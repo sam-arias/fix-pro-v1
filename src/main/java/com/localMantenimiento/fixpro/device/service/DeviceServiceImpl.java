@@ -4,8 +4,8 @@ import com.localMantenimiento.fixpro.device.model.BrandDevice;
 import com.localMantenimiento.fixpro.device.model.Device;
 import com.localMantenimiento.fixpro.device.model.TypeDevice;
 import com.localMantenimiento.fixpro.device.repository.DeviceRepository;
-import com.localMantenimiento.fixpro.device.repository.TypeRepository;
-import com.localMantenimiento.fixpro.device.repository.BrandRepository;
+import com.localMantenimiento.fixpro.device.repository.TypeDeviceRepository;
+import com.localMantenimiento.fixpro.device.repository.BrandDeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +18,9 @@ public class DeviceServiceImpl implements DeviceService{
   @Autowired
   private DeviceRepository deviceRepository;
   @Autowired
-  private BrandRepository brandRepository;
+  private BrandDeviceRepository brandDeviceRepository;
   @Autowired
-  private TypeRepository typeRepository;
+  private TypeDeviceRepository typeDeviceRepository;
 
   @Override
   public Device registerDevice(Device newDevice) {
@@ -71,8 +71,8 @@ public class DeviceServiceImpl implements DeviceService{
 
   @Override
   public boolean addBrand(BrandDevice brandDevice) {
-    if (!brandRepository.existsByBrandName(brandDevice.getBrandName())) {
-      brandRepository.save(brandDevice);
+    if (!brandDeviceRepository.existsByBrandName(brandDevice.getBrandName())) {
+      brandDeviceRepository.save(brandDevice);
       return true;
     }
     return false;
@@ -80,18 +80,18 @@ public class DeviceServiceImpl implements DeviceService{
 
   @Override
   public Optional<BrandDevice> getBrandByName(String brandName) {
-    return brandRepository.findByBrandName(brandName);
+    return brandDeviceRepository.findByBrandName(brandName);
   }
 
   @Override
   public List<BrandDevice> getAllBrands() {
-    return brandRepository.findAll();
+    return brandDeviceRepository.findAll();
   }
 
   @Override
   public boolean addType(TypeDevice typeDevice) {
-    if (!typeRepository.existsByTypeName(typeDevice.getTypeName())) {
-      typeRepository.save(typeDevice);
+    if (!typeDeviceRepository.existsByTypeName(typeDevice.getTypeName())) {
+      typeDeviceRepository.save(typeDevice);
       return true;
     }
     return false;
@@ -99,11 +99,11 @@ public class DeviceServiceImpl implements DeviceService{
 
   @Override
   public Optional<TypeDevice> getTypeByName(String typeName) {
-    return typeRepository.findByTypeName(typeName);
+    return typeDeviceRepository.findByTypeName(typeName);
   }
 
   @Override
   public List<TypeDevice> getAllTypes() {
-    return typeRepository.findAll();
+    return typeDeviceRepository.findAll();
   }
 }
