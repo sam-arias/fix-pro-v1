@@ -1,8 +1,8 @@
 package com.localMantenimiento.fixpro.spare_part.controller;
 
-import com.localMantenimiento.fixpro.spare_part.model.Brand;
+import com.localMantenimiento.fixpro.spare_part.model.BrandSparePart;
 import com.localMantenimiento.fixpro.spare_part.model.SparePart;
-import com.localMantenimiento.fixpro.spare_part.model.Type;
+import com.localMantenimiento.fixpro.spare_part.model.TypeSparePart;
 import com.localMantenimiento.fixpro.spare_part.model.UsedSparePart;
 import com.localMantenimiento.fixpro.spare_part.service.SparePartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,32 +83,32 @@ public class SparePartController {
   }
 
   @PostMapping("/brand")
-  public boolean addBrand(@RequestBody Brand brand) {
-    return sparePartService.addBrand(brand);
+  public boolean addBrand(@RequestBody BrandSparePart brandSparePart) {
+    return sparePartService.addBrand(brandSparePart);
   }
 
   @GetMapping("/brand/{brandName}")
-  public Optional<Brand> getBrandByName(@PathVariable String brandName) {
+  public Optional<BrandSparePart> getBrandByName(@PathVariable String brandName) {
     return sparePartService.getBrandByName(brandName);
   }
 
   @GetMapping("brand")
-  public List<Brand> getAllBrands() {
+  public List<BrandSparePart> getAllBrands() {
     return sparePartService.getAllBrands();
   }
 
   @PostMapping("/type")
-  public boolean addType(@RequestBody Type type) {
-    return sparePartService.addType(type);
+  public boolean addType(@RequestBody TypeSparePart typeSparePart) {
+    return sparePartService.addType(typeSparePart);
   }
 
   @GetMapping("/type/{typeName}")
-  public Optional<Type> getTypeByName(@PathVariable String typeName) {
+  public Optional<TypeSparePart> getTypeByName(@PathVariable String typeName) {
     return sparePartService.getTypeByName(typeName);
   }
 
   @GetMapping("/type")
-  public List<Type> getAllTypes() {
+  public List<TypeSparePart> getAllTypes() {
     return sparePartService.getAllTypes();
   }
 }

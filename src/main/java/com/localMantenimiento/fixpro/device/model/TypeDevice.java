@@ -1,4 +1,4 @@
-package com.localMantenimiento.fixpro.spare_part.model;
+package com.localMantenimiento.fixpro.device.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "type")
-public class Type {
+@Table(name = "type_device")
+public class TypeDevice {
   @Id
   @Column(name = "id", nullable = false)
   @GeneratedValue(strategy = GenerationType.IDENTITY)

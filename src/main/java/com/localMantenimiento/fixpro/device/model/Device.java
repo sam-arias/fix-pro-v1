@@ -20,16 +20,18 @@ public class Device {
   @Column(name = "type", nullable = false, length = 20)
   private String type;
 
-  @Column(name = "brand", nullable = false, length = 20)
-  private String brand;
-
-  @Column(name = "model", nullable = false, length = 20)
-  private String model;
-
   @Column(name = "serial", length = 25)
   private String serial;
 
   @Column(name = "password", length = 20)
   private String password;
+
+  @ManyToOne
+  @JoinColumn(name = "brand_id", nullable = false)
+  private BrandDevice brandDevice;
+
+  @ManyToOne
+  @JoinColumn(name = "type_id", nullable = false)
+  private TypeDevice typeDevice;
 
 }

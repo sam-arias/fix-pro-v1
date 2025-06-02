@@ -1,8 +1,8 @@
 package com.localMantenimiento.fixpro.spare_part.service;
 
-import com.localMantenimiento.fixpro.spare_part.model.Brand;
+import com.localMantenimiento.fixpro.spare_part.model.BrandSparePart;
 import com.localMantenimiento.fixpro.spare_part.model.SparePart;
-import com.localMantenimiento.fixpro.spare_part.model.Type;
+import com.localMantenimiento.fixpro.spare_part.model.TypeSparePart;
 import com.localMantenimiento.fixpro.spare_part.model.UsedSparePart;
 
 import java.util.List;
@@ -26,11 +26,11 @@ public interface SparePartService {
 
   public boolean changeAvailabilitySparePart(Long id, String availability);
 
-  public boolean addBrand(Brand brand);
-  public Optional<Brand> getBrandByName(String brandName);
-  public List<Brand> getAllBrands();
+  public boolean addBrand(BrandSparePart brandSparePart);
+  public Optional<BrandSparePart> getBrandByName(String brandName);
+  public List<BrandSparePart> getAllBrands();
 
-  public boolean addType(Type type);
-  public Optional<Type> getTypeByName(String typeName);
-  public List<Type> getAllTypes();
+  public boolean addType(TypeSparePart typeSparePart);
+  public Optional<TypeSparePart> getTypeByName(String typeName);
+  public List<TypeSparePart> getAllTypes();
 }

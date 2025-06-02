@@ -1,6 +1,8 @@
 package com.localMantenimiento.fixpro.device.controller;
 
+import com.localMantenimiento.fixpro.device.model.BrandDevice;
 import com.localMantenimiento.fixpro.device.model.Device;
+import com.localMantenimiento.fixpro.device.model.TypeDevice;
 import com.localMantenimiento.fixpro.device.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -61,5 +63,36 @@ public class DeviceController {
   @GetMapping("/model/{model}")
   public Optional<List<Device>> getDevicesByModel(@PathVariable String model) {
     return deviceService.getDevicesByModel(model);
+  }
+
+
+  @PostMapping("/brand")
+  public boolean addBrand(@RequestBody BrandDevice brandDevice) {
+    return deviceService.addBrand(brandDevice);
+  }
+
+  @GetMapping("/brand/{brandName}")
+  public Optional<BrandDevice> getBrandByName(@PathVariable String brandName) {
+    return deviceService.getBrandByName(brandName);
+  }
+
+  @GetMapping("brand")
+  public List<BrandDevice> getAllBrands() {
+    return deviceService.getAllBrands();
+  }
+
+  @PostMapping("/type")
+  public boolean addType(@RequestBody TypeDevice typeDevice) {
+    return deviceService.addType(typeDevice);
+  }
+
+  @GetMapping("/type/{typeName}")
+  public Optional<TypeDevice> getTypeByName(@PathVariable String typeName) {
+    return deviceService.getTypeByName(typeName);
+  }
+
+  @GetMapping("/type")
+  public List<TypeDevice> getAllTypes() {
+    return deviceService.getAllTypes();
   }
 }

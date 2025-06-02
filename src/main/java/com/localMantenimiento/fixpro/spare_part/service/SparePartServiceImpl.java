@@ -1,8 +1,8 @@
 package com.localMantenimiento.fixpro.spare_part.service;
 
-import com.localMantenimiento.fixpro.spare_part.model.Brand;
+import com.localMantenimiento.fixpro.spare_part.model.BrandSparePart;
 import com.localMantenimiento.fixpro.spare_part.model.SparePart;
-import com.localMantenimiento.fixpro.spare_part.model.Type;
+import com.localMantenimiento.fixpro.spare_part.model.TypeSparePart;
 import com.localMantenimiento.fixpro.spare_part.model.UsedSparePart;
 import com.localMantenimiento.fixpro.spare_part.repository.BrandRepository;
 import com.localMantenimiento.fixpro.spare_part.repository.SparePartRepository;
@@ -28,7 +28,7 @@ public class SparePartServiceImpl implements SparePartService {
 
   @Override
   public boolean registerSparePart(SparePart sparePart) {
-    if (!sparePartRepository.existsByBrandBrandNameAndTypeTypeNameAndModel(sparePart.getBrand().getBrandName(), sparePart.getType().getTypeName(), sparePart.getModel())) {
+    if (!sparePartRepository.existsByBrandBrandNameAndTypeTypeNameAndModel(sparePart.getBrandSparePart().getBrandName(), sparePart.getTypeSparePart().getTypeName(), sparePart.getModel())) {
       sparePartRepository.save(sparePart);
       return true;
     }
@@ -118,40 +118,40 @@ public class SparePartServiceImpl implements SparePartService {
   }
 
   @Override
-  public boolean addBrand(Brand brand) {
-    if (!brandRepository.existsByBrandName(brand.getBrandName())) {
-      brandRepository.save(brand);
+  public boolean addBrand(BrandSparePart brandSparePart) {
+    if (!brandRepository.existsByBrandName(brandSparePart.getBrandName())) {
+      brandRepository.save(brandSparePart);
       return true;
     }
     return false;
   }
 
   @Override
-  public Optional<Brand> getBrandByName(String brandName) {
+  public Optional<BrandSparePart> getBrandByName(String brandName) {
     return brandRepository.findByBrandName(brandName);
   }
 
   @Override
-  public List<Brand> getAllBrands() {
+  public List<BrandSparePart> getAllBrands() {
     return brandRepository.findAll();
   }
 
   @Override
-  public boolean addType(Type type) {
-    if (!typeRepository.existsByTypeName(type.getTypeName())) {
-      typeRepository.save(type);
+  public boolean addType(TypeSparePart typeSparePart) {
+    if (!typeRepository.existsByTypeName(typeSparePart.getTypeName())) {
+      typeRepository.save(typeSparePart);
       return true;
     }
     return false;
   }
 
   @Override
-  public Optional<Type> getTypeByName(String typeName) {
+  public Optional<TypeSparePart> getTypeByName(String typeName) {
     return typeRepository.findByTypeName(typeName);
   }
 
   @Override
-  public List<Type> getAllTypes() {
+  public List<TypeSparePart> getAllTypes() {
     return typeRepository.findAll();
   }
 }
