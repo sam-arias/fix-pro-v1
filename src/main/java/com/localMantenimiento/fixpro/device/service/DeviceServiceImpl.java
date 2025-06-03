@@ -55,16 +55,6 @@ public class DeviceServiceImpl implements DeviceService{
   }
 
   @Override
-  public Optional<List<Device>> getDevicesByBrand(String brand) {
-    return deviceRepository.findByBrand(brand);
-  }
-
-  @Override
-  public Optional<List<Device>> getDevicesByType(String type) {
-    return deviceRepository.findByType(type);
-  }
-
-  @Override
   public Optional<List<Device>> getDevicesByModel(String model) {
     return deviceRepository.findByModel(model);
   }

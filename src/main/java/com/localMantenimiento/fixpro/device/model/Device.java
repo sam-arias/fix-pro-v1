@@ -17,8 +17,8 @@ public class Device {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "type", nullable = false, length = 20)
-  private String type;
+  @Column(name = "model", nullable = false, length = 20)
+  private String model;
 
   @Column(name = "serial", length = 25)
   private String serial;

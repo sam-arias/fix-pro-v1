@@ -11,16 +11,16 @@ import java.util.Optional;
 
 @Repository
 public interface SparePartRepository extends JpaRepository<SparePart, Long> {
-  @Query("SELECT sp FROM SparePart sp JOIN FETCH sp.type t WHERE t.typeName = :type")
+  @Query("SELECT sp FROM SparePart sp JOIN FETCH sp.typeSparePart t WHERE t.typeName = :type")
   List<SparePart> findByType(@Param("type") String type);
   List<SparePart> findByModel(String model);
 
-  @Query("SELECT sp FROM SparePart sp JOIN FETCH sp.brand b WHERE b.brandName = :brand")
+  @Query("SELECT sp FROM SparePart sp JOIN FETCH sp.brandSparePart b WHERE b.brandName = :brand")
   List<SparePart> findSparePartsByBrand(@Param("brand") String brand);
 
-  @Query("SELECT sp FROM SparePart sp JOIN FETCH sp.brand b JOIN FETCH sp.type t WHERE  b.brandName = :brand AND  t.typeName = :type AND sp.model = :model")
+  @Query("SELECT sp FROM SparePart sp JOIN FETCH sp.brandSparePart b JOIN FETCH sp.typeSparePart t WHERE  b.brandName = :brand AND  t.typeName = :type AND sp.model = :model")
   SparePart findSparePartByBrandAndTypeAndModel(@Param("brand") String brand, @Param("type") String type, @Param("model") String model);
 
-  boolean existsByBrandBrandNameAndTypeTypeNameAndModel(String brand, String type, String model);
+  boolean existsByBrandSparePartBrandNameAndTypeSparePartTypeNameAndModel(String brand, String type, String model);
   boolean existsById(Long id);
 }

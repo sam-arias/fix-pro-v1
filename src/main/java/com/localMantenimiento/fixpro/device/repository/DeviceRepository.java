@@ -12,7 +12,5 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
   boolean existsDeviceById(Long id);
 
   Optional<Device> findDeviceBySerial(String serial);
-  Optional<List<Device>> findByType(String type);
-  Optional<List<Device>> findByBrand(String brand);
   Optional<List<Device>> findByModel(String model);
 }

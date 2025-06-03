@@ -47,18 +47,6 @@ public class DeviceController {
     return deviceService.getAllDevices();
   }
 
-  // Obtener dispositivos por marca
-  @GetMapping("/brand/{brand}")
-  public Optional<List<Device>> getDevicesByBrand(@PathVariable String brand) {
-    return deviceService.getDevicesByBrand(brand);
-  }
-
-  // Obtener dispositivos por tipo
-  @GetMapping("/type/{type}")
-  public Optional<List<Device>> getDevicesByType(@PathVariable String type) {
-    return deviceService.getDevicesByType(type);
-  }
-
   // Obtener dispositivos por modelo
   @GetMapping("/model/{model}")
   public Optional<List<Device>> getDevicesByModel(@PathVariable String model) {
