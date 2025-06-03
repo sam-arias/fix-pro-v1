@@ -77,13 +77,13 @@ public class InterventionServiceImpl implements InterventionService {
   }
 
   @Override
-  public ArrayList<Integer> getSalesInformation(Long personId) {
+  public List<Integer> getSalesInformation(Long personId) {
     List<InterventionOrder> ordersToday = interventionOrderRepository.findByDay(LocalDate.now());
     List<InterventionOrder> ordersCompleted = interventionOrderRepository.findByInterventionStatus("Completada");
     List<InterventionOrder> pendingOrders = interventionOrderRepository.findByInterventionStatus("Pendiente");
     List<InterventionOrder> ordersInProcess = interventionOrderRepository.findByInterventionStatus("En Proceso");
     List<InterventionOrder> assignedOrders = interventionOrderRepository.findByPeopleIdAndDate(personId, LocalDate.now());
-    return new ArrayList<>(Arrays.asList(ordersToday.size(), ordersCompleted.size(), pendingOrders.size(), ordersInProcess.size(), assignedOrders.size()));
+    return Arrays.asList(ordersToday.size(), ordersCompleted.size(), pendingOrders.size(), ordersInProcess.size(), assignedOrders.size());
   }
 
   public List<InterventionOrder> getTop5RecentInterventionOrders() {

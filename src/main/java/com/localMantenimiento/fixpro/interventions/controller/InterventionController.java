@@ -63,8 +63,8 @@ public class InterventionController {
     return interventionService.getInterventionDetailsById(id);
   }
 
-  @GetMapping("/orders/sales-information")
-  public ArrayList<Integer> getSalesInformation(@RequestBody Long personId) {
+  @GetMapping("/orders/sales-information/{personId}")
+  public List<Integer> getSalesInformation(@PathVariable Long personId) {
     return interventionService.getSalesInformation(personId);
   }
 
