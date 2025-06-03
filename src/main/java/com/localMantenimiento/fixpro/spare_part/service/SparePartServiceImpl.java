@@ -67,6 +67,8 @@ public class SparePartServiceImpl implements SparePartService {
 
   @Override
   public SparePart getSparePartByBrandAndTypeAndModel(String brand, String type, String model) {
+
+    System.out.println(sparePartRepository.findSparePartByBrandAndTypeAndModel(brand, type, model).getId());
     return sparePartRepository.findSparePartByBrandAndTypeAndModel(brand, type, model);
   }
 
@@ -82,6 +84,7 @@ public class SparePartServiceImpl implements SparePartService {
       int newStock = sparePart.get().getStock() - newUsedSparePart.getQuantity();
       sparePart.get().setStock(newStock);
       sparePartRepository.save(sparePart.get());
+      usedSparePartRepository.save(newUsedSparePart);
       return true;
     } else {
       return false;
