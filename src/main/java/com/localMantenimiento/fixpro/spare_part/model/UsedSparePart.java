@@ -22,7 +22,7 @@ public class UsedSparePart {
   private Integer quantity;
 
   @Column(name = "cost_spare_parts")
-  private Double costSpareParts;
+  private Float costSpareParts;
 
   @ManyToOne
   @JoinColumn(name = "FK_intervention_detail_id")

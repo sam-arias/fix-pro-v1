@@ -111,4 +111,14 @@ public class SparePartController {
   public List<TypeSparePart> getAllTypes() {
     return sparePartService.getAllTypes();
   }
+
+  @DeleteMapping("/used-spare-parts/{id}")
+  public boolean deleteUsedSparePart(@PathVariable Long id) {
+    return sparePartService.deleteUsedSparePart(id);
+  }
+
+  @GetMapping("/used-spare-parts/by-intervention-details-id/{interventionDetailsId}")
+  public List<UsedSparePart> getUsedSparePartsByInterventionDetailsId(@PathVariable Long interventionDetailsId) {
+    return sparePartService.getUsedSparePartsByInterventiondetailsId(interventionDetailsId);
+  }
 }

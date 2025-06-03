@@ -33,4 +33,7 @@ public interface SparePartService {
   public boolean addType(TypeSparePart typeSparePart);
   public Optional<TypeSparePart> getTypeByName(String typeName);
   public List<TypeSparePart> getAllTypes();
+  public  boolean deleteUsedSparePart(Long id);
+
+  public List<UsedSparePart> getUsedSparePartsByInterventiondetailsId(Long interventionDetailsId);
 }

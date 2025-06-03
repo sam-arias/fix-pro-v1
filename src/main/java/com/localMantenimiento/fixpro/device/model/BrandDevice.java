@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "brand_name")
+@Table(name = "brand_Device")
 public class BrandDevice {
   @Id
   @Column(name = "id", nullable = false)

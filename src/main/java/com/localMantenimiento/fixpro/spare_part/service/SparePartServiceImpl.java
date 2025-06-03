@@ -1,5 +1,7 @@
 package com.localMantenimiento.fixpro.spare_part.service;
 
+import com.localMantenimiento.fixpro.interventions.model.InterventionDetails;
+import com.localMantenimiento.fixpro.interventions.repository.InterventionDetailsRepository;
 import com.localMantenimiento.fixpro.spare_part.model.BrandSparePart;
 import com.localMantenimiento.fixpro.spare_part.model.SparePart;
 import com.localMantenimiento.fixpro.spare_part.model.TypeSparePart;
@@ -25,6 +27,8 @@ public class SparePartServiceImpl implements SparePartService {
   private BrandSparePartRepository brandSparePartRepository;
   @Autowired
   private TypeSparePartRepository typeSparePartRepository;
+  @Autowired
+  private InterventionDetailsRepository interventionDetailsRepository;
 
   @Override
   public boolean registerSparePart(SparePart sparePart) {
@@ -83,6 +87,12 @@ public class SparePartServiceImpl implements SparePartService {
     if (sparePart.isPresent() && sparePart.get().getStock() != 0 && sparePart.get().getStock() >= newUsedSparePart.getQuantity()) {
       int newStock = sparePart.get().getStock() - newUsedSparePart.getQuantity();
       sparePart.get().setStock(newStock);
+
+      InterventionDetails interventionDetails = newUsedSparePart.getInterventionDetails();
+      float newTotalCost = interventionDetails.getTotalCost() + newUsedSparePart.getCostSpareParts();
+      interventionDetails.setTotalCost(newTotalCost);
+
+      interventionDetailsRepository.save(interventionDetails);
       sparePartRepository.save(sparePart.get());
       usedSparePartRepository.save(newUsedSparePart);
       return true;
@@ -156,5 +166,30 @@ public class SparePartServiceImpl implements SparePartService {
   @Override
   public List<TypeSparePart> getAllTypes() {
     return typeSparePartRepository.findAll();
+  }
+
+  @Override
+  public  boolean deleteUsedSparePart(Long id) {
+    if(usedSparePartRepository.existsById(id)) {
+      UsedSparePart usedSparePart = usedSparePartRepository.findById(id).get();
+      SparePart sparePart = usedSparePart.getSparePart();
+      sparePart.setStock(sparePart.getStock() + usedSparePart.getQuantity());
+
+      InterventionDetails interventionDetails = usedSparePart.getInterventionDetails();
+      float newTotalCost = interventionDetails.getTotalCost() - usedSparePart.getCostSpareParts();
+      interventionDetails.setTotalCost(newTotalCost);
+
+      interventionDetailsRepository.save(interventionDetails);
+      sparePartRepository.save(sparePart);
+      usedSparePartRepository.deleteById(id);
+      return true;
+    }
+    return false;
+  }
+
+
+  @Override
+  public List<UsedSparePart> getUsedSparePartsByInterventiondetailsId(Long interventionDetailsId) {
+    return usedSparePartRepository.findUsedSparePartByinterventionDetailsId(interventionDetailsId);
   }
 }

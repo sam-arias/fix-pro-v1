@@ -21,7 +21,7 @@ public class SparePart {
   private String model;
 
   @Column(name = "price", nullable = false)
-  private Double price;
+  private Float price= 0.0f;
 
   @Column(name = "availability", nullable = false)
   private String availability;

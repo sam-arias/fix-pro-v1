@@ -25,7 +25,7 @@ public class InterventionDetails {
   private String solutionDescription;
 
   @Column(name = "total_cost")
-  private Double totalCost;
+  private Float totalCost= 0.0f;
 
   @OneToOne
   @JsonBackReference
