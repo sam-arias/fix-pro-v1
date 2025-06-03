@@ -19,7 +19,7 @@ public interface InterventionOrderRepository extends JpaRepository<InterventionO
   @Query("SELECT o FROM InterventionOrder o WHERE DATE(o.entryDate) = :date")
   List<InterventionOrder> findByDay(@Param("date") LocalDate date);
 
-  @Query("SELECT DISTINCT o FROM InterventionOrder o JOIN o.people p WHERE p.id = :id  AND o.interventionStatus != 'Completada'")
+  @Query("SELECT DISTINCT o FROM InterventionOrder o JOIN o.people p WHERE p.id = :id  AND (o.interventionStatus != 'Completada' AND o.interventionStatus != 'Entregada')")
   List<InterventionOrder> findByPeopleId(@Param("id") Long id);
 
   @Query("SELECT o FROM InterventionOrder o JOIN o.people p WHERE p.id = :id AND DATE(o.entryDate) = :date")
