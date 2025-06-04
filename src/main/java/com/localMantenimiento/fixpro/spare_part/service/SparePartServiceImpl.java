@@ -84,11 +84,13 @@ public class SparePartServiceImpl implements SparePartService {
   @Override
   public boolean useSparePart(UsedSparePart newUsedSparePart) {
     Optional<SparePart> sparePart = sparePartRepository.findById(newUsedSparePart.getSparePart().getId());
+
     if (sparePart.isPresent() && sparePart.get().getStock() != 0 && sparePart.get().getStock() >= newUsedSparePart.getQuantity()) {
       int newStock = sparePart.get().getStock() - newUsedSparePart.getQuantity();
       sparePart.get().setStock(newStock);
 
-      InterventionDetails interventionDetails = newUsedSparePart.getInterventionDetails();
+      InterventionDetails interventionDetails = interventionDetailsRepository.getInterventionDetailsById(newUsedSparePart.getInterventionDetails().getId());
+      interventionDetails.setId(newUsedSparePart.getInterventionDetails().getId());
       float newTotalCost = interventionDetails.getTotalCost() + newUsedSparePart.getCostSpareParts();
       interventionDetails.setTotalCost(newTotalCost);
 

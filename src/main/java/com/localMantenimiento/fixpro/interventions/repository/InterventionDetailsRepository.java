@@ -14,4 +14,6 @@ public interface InterventionDetailsRepository extends JpaRepository<Interventio
 
   @Query("SELECT od FROM InterventionDetails od WHERE od.interventionOrder.id = :orderId")
   Optional<InterventionDetails> getInterventionDetailsByOrderId(@Param("orderId") Long orderId);
+
+  InterventionDetails getInterventionDetailsById(Long id);
 }
