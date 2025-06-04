@@ -177,7 +177,7 @@ public class SparePartServiceImpl implements SparePartService {
       SparePart sparePart = usedSparePart.getSparePart();
       sparePart.setStock(sparePart.getStock() + usedSparePart.getQuantity());
 
-      InterventionDetails interventionDetails = usedSparePart.getInterventionDetails();
+      InterventionDetails interventionDetails = interventionDetailsRepository.getInterventionDetailsById(usedSparePart.getInterventionDetails().getId());
       float newTotalCost = interventionDetails.getTotalCost() - usedSparePart.getCostSpareParts();
       interventionDetails.setTotalCost(newTotalCost);
 
