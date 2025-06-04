@@ -72,8 +72,7 @@ public class SparePartServiceImpl implements SparePartService {
   @Override
   public SparePart getSparePartByBrandAndTypeAndModel(String brand, String type, String model) {
 
-    System.out.println(sparePartRepository.findSparePartByBrandAndTypeAndModel(brand, type, model).getId());
-    return sparePartRepository.findSparePartByBrandAndTypeAndModel(brand, type, model);
+    return sparePartRepository.findByBrandSparePartBrandNameAndTypeSparePartTypeNameAndModel(brand, type, model);
   }
 
   @Override
